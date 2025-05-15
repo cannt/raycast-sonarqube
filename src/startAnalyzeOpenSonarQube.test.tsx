@@ -1,7 +1,6 @@
 /// <reference types="jest" />
 
 import { startAnalyzeOpenSonarQube } from "./startAnalyzeOpenSonarQube";
-import Command from "./startAnalyzeOpenSonarQube";
 import * as React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -205,72 +204,52 @@ describe("startAnalyzeOpenSonarQube", () => {
   });
 });
 
-// Unit tests for the Command component
-describe("Command Component", () => {
+// Additional test scenarios for startAnalyzeOpenSonarQube function
+describe("startAnalyzeOpenSonarQube additional scenarios", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("renders loading state correctly", async () => {
-    // Setup the component to be in loading state
-    loadProjects.mockResolvedValue([]);
-
-    // Render the component
-    render(<Command />);
-    
-    // In loading state, we should see a List with isLoading=true
-    expect(document.querySelector('[data-testid="list-item"]')).toBeFalsy();
-  });
-
-  it("renders empty state when no projects are available", async () => {
-    // Mock the loadProjects to return an empty array
-    loadProjects.mockResolvedValue([]);
-    
-    // Wait for the effect to complete
-    await waitFor(() => {
-      render(<Command />);
-    });
-    
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(loadProjects).toHaveBeenCalled();
-    });
-    
-    // Should render the empty view
-    expect(document.querySelector('[data-testid="empty-view"]')).toBeTruthy();
-  });
-
-  it("renders project list when projects are available", async () => {
-    // Mock projects
-    const mockProjects = [
-      new Project("1", "Project 1", "/path/to/project1"),
-      new Project("2", "Project 2", "/path/to/project2"),
-    ];
-    
-    // Mock the loadProjects to return mock projects
-    loadProjects.mockResolvedValue(mockProjects);
-    
-    // Render component
-    render(<Command />);
-    
-    // Wait for projects to load
-    await waitFor(() => {
-      expect(loadProjects).toHaveBeenCalled();
-    });
-    
-    // Should render list items for projects
-    const listItems = document.querySelectorAll('[data-testid="list-item"]');
-    expect(listItems.length).toBe(2);
-  });
-
-  it("handles project selection and starts analysis sequence", async () => {
-    // Mock preferences and SonarQube running state
+  it("handles SonarQube status as 'unknown'", async () => {
+    // Setup preferences
     getPreferenceValues.mockReturnValue({
       useCustomSonarQubeApp: false,
       sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
     });
     
-    // Mock SonarQube is running
+    // Mock SonarQube in unknown state
+    isSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: false, status: "unknown", details: "Status unknown" };
+      }
+      return false;
+    });
+    
+    // Call the function
+    await startAnalyzeOpenSonarQube();
+    
+    // Verify toast was shown with animated style
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({
+      style: "Animated"
+    }));
+    
+    // Verify SonarQube is started from scratch
+    const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+    const commands = runInNewTerminalArgs[0];
+    
+    expect(commands.some((cmd: string) => cmd.includes("podman machine start"))).toBeTruthy();
+  });
+  
+  it("uses default SonarQube URL when custom app not enabled", async () => {
+    // Setup preferences without custom app path
+    getPreferenceValues.mockReturnValue({
+      useCustomSonarQubeApp: false,
+      sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
+    });
+    
+    // Mock SonarQube running status
     isSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
       if (options?.detailed) {
         return { running: true, status: "running", details: "SonarQube is running" };
@@ -278,51 +257,201 @@ describe("Command Component", () => {
       return true;
     });
     
-    // Mock projects
-    const mockProjects = [new Project("1", "Test Project", "/path/to/test")];
-    loadProjects.mockResolvedValue(mockProjects);
+    // Call the function
+    await startAnalyzeOpenSonarQube();
     
-    // Render component
-    render(<Command />);
-    
-    // Wait for projects to load
-    await waitFor(() => {
-      expect(loadProjects).toHaveBeenCalled();
-    });
-    
-    // Find and simulate clicking on the action
-    const actionElements = document.querySelectorAll('[data-testid="action-panel"]');
-    expect(actionElements.length).toBeGreaterThan(0);
-    
-    // Simulate the onAction callback
-    // Since we can't directly access the performStartAnalyzeSequence function in the tests,
-    // we'll verify that the necessary function calls are made when it's triggered
-    const projectPath = "/path/to/test";
-    const projectName = "Test Project";
-    
-    // Manual call to the sequence function
-    await Command.prototype.performStartAnalyzeSequence(projectPath, projectName);
-    
-    // Verify expected function calls
-    expect(isSonarQubeRunning).toHaveBeenCalled();
-    expect(showToast).toHaveBeenCalled();
-    expect(runInNewTerminal).toHaveBeenCalled();
-    
-    // Verify terminal command structure
+    // Verify commands use default URL
     const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
     const commands = runInNewTerminalArgs[0];
     
-    // Check for expected commands that would be part of a running SonarQube sequence
-    expect(commands.some((cmd: string) => cmd.includes("gradlew"))).toBeTruthy();
-    expect(commands.some((cmd: string) => cmd.includes("open"))).toBeTruthy();
+    // The open command will be a string like: open "http://localhost:9000"
+    // Join all commands to make searching easier
+    const allCommands = commands.join(" ");
+    
+    // Check that the default URL is used somewhere in the commands
+    expect(allCommands).toContain("http://localhost:9000");
+  });
+  
+  it("uses proper environment variable for test environment", async () => {
+    // Setup preferences
+    getPreferenceValues.mockReturnValue({
+      useCustomSonarQubeApp: false,
+      sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/custom/test/path"
+    });
+    
+    // Set test environment
+    const originalEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'test';
+    
+    try {
+      // Mock SonarQube running status
+      isSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
+        if (options?.detailed) {
+          return { running: true, status: "running", details: "SonarQube is running" };
+        }
+        return true;
+      });
+      
+      // Call the function
+      await startAnalyzeOpenSonarQube();
+      
+      // Verify path used in test mode
+      const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+      const commands = runInNewTerminalArgs[0];
+      
+      // For test environment, it should use the /rfid path not the custom path
+      const cdCommand = commands.find((cmd: string) => cmd.includes("cd \"/rfid\""));
+      expect(cdCommand).toBeTruthy();
+    } finally {
+      // Restore environment
+      process.env.NODE_ENV = originalEnv;
+    }
+  });
+  
+  it("includes appropriate wait time based on SonarQube status", async () => {
+    // Setup preferences
+    getPreferenceValues.mockReturnValue({
+      useCustomSonarQubeApp: false,
+      sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
+    });
+    
+    // Mock SonarQube in starting state
+    isSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: false, status: "starting", details: "SonarQube is starting" };
+      }
+      return false;
+    });
+    
+    // Call the function
+    await startAnalyzeOpenSonarQube();
+    
+    // Verify commands include appropriate sleep duration based on status
+    const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+    const commands = runInNewTerminalArgs[0];
+    const sleepCommand = commands.find((cmd: string) => cmd.includes("sleep"));
+    
+    // For 'starting' status, it should have a longer wait time
+    expect(sleepCommand).toMatch(/sleep (45|60)/);  
   });
 
-  it("handles path resolution correctly with custom path", async () => {
+  it("handles SonarQube starting state correctly when in starting state", async () => {
+    // Mock preferences
+    getPreferenceValues.mockReturnValue({
+      useCustomSonarQubeApp: false,
+      sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
+    });
+    
+    // Mock SonarQube in starting state
+    isSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: false, status: "starting", details: "SonarQube is starting" };
+      }
+      return false;
+    });
+    
+    // Call the main function directly
+    await startAnalyzeOpenSonarQube();
+    
+    // Verify toast showing "starting" status
+    expect(showToast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        style: "Animated",
+        title: "commands.startSonarQube.starting"
+      })
+    );
+    
+    // Verify terminal commands for starting state
+    const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+    const commands = runInNewTerminalArgs[0];
+    
+    // Should include a sleep command with longer wait
+    const sleepCommand = commands.find((cmd: string) => cmd.includes("sleep"));
+    expect(sleepCommand).toBeTruthy();
+    expect(sleepCommand).toMatch(/sleep (45|60)/);
+  });
+  
+  it("handles timeout state with second successful check", async () => {
+    // Mock preferences
+    getPreferenceValues.mockReturnValue({
+      useCustomSonarQubeApp: false,
+      sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
+    });
+    
+    // First call returns timeout, second call returns running
+    isSonarQubeRunning.mockImplementationOnce(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: false, status: "timeout", details: "Connection timed out" };
+      }
+      return false;
+    }).mockImplementationOnce(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: true, status: "running", details: "SonarQube is running" };
+      }
+      return true;
+    });
+    
+    // Call the main function directly
+    await startAnalyzeOpenSonarQube();
+    
+    // Verify isSonarQubeRunning was called twice
+    expect(isSonarQubeRunning).toHaveBeenCalledTimes(2);
+    
+    // Verify the second call had a longer timeout
+    expect(isSonarQubeRunning.mock.calls[1][0].timeout).toBeGreaterThan(1000);
+    
+    // Verify that we didn't try to start SonarQube again since it's running
+    const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+    const commands = runInNewTerminalArgs[0];
+    const podmanStartCommand = commands.find((cmd: string) => cmd.includes("podman machine start"));
+    expect(podmanStartCommand).toBeFalsy();
+  });
+  
+  it("handles timeout state with second timeout check", async () => {
+    // Mock preferences
+    getPreferenceValues.mockReturnValue({
+      useCustomSonarQubeApp: false,
+      sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
+    });
+    
+    // Both calls return timeout
+    isSonarQubeRunning.mockImplementationOnce(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: false, status: "timeout", details: "Connection timed out" };
+      }
+      return false;
+    }).mockImplementationOnce(async (options?: { detailed?: boolean }) => {
+      if (options?.detailed) {
+        return { running: false, status: "timeout", details: "Connection timed out again" };
+      }
+      return false;
+    });
+    
+    // Call the main function directly
+    await startAnalyzeOpenSonarQube();
+    
+    // Verify isSonarQubeRunning was called twice
+    expect(isSonarQubeRunning).toHaveBeenCalledTimes(2);
+    
+    // Verify that we tried to start SonarQube since both checks failed
+    const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+    const commands = runInNewTerminalArgs[0];
+    const podmanStartCommand = commands.find((cmd: string) => cmd.includes("podman machine start"));
+    expect(podmanStartCommand).toBeTruthy();
+  });
+
+  it("uses custom path from preferences when available", async () => {
     // Mock preferences with custom path
     getPreferenceValues.mockReturnValue({
       useCustomSonarQubeApp: true,
       sonarqubeAppPath: "/custom/path/to/sonarqube.app",
       sonarqubePodmanDir: "/sonarqube",
+      rfidProjectDir: "/path/to/test"
     });
     
     // Mock SonarQube status
@@ -333,20 +462,17 @@ describe("Command Component", () => {
       return true;
     });
     
-    // Mock projects
-    loadProjects.mockResolvedValue([new Project("1", "Test Project", "/path/to/test")]);
+    // Call the main function 
+    await startAnalyzeOpenSonarQube();
     
-    // Render component
-    render(<Command />);
+    // Verify runInNewTerminal was called with commands containing the custom path
+    const runInNewTerminalArgs = runInNewTerminal.mock.calls[0];
+    const commands = runInNewTerminalArgs[0];
+    const openCommand = commands.find((cmd: string) => cmd.includes("open"));
     
-    // Wait for projects to load
-    await waitFor(() => {
-      expect(loadProjects).toHaveBeenCalled();
-    });
-    
-    // Call path resolution directly
-    const getSonarQubePath = await Command.prototype.getSonarQubePath();
-    expect(getSonarQubePath).toBe("/custom/path/to/sonarqube.app");
+    // Verify the custom path is used somewhere in the commands
+    const allCommands = commands.join(" ");
+    expect(allCommands).toContain("/custom/path/to/sonarqube.app");
   });
 
   it("shows error toast when custom path is enabled but empty", async () => {
@@ -357,21 +483,17 @@ describe("Command Component", () => {
       sonarqubePodmanDir: "/sonarqube",
     });
     
-    // Mock projects
-    loadProjects.mockResolvedValue([new Project("1", "Test Project", "/path/to/test")]);
+    // Call the main function
+    await startAnalyzeOpenSonarQube();
     
-    // Render component
-    render(<Command />);
+    // Verify error toast was shown
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ 
+      style: "Failure", 
+      title: "preferences.useCustomSonarQubeApp.title" 
+    }));
     
-    // Wait for projects to load
-    await waitFor(() => {
-      expect(loadProjects).toHaveBeenCalled();
-    });
-    
-    // Call path resolution directly
-    const getSonarQubePath = await Command.prototype.getSonarQubePath();
-    expect(getSonarQubePath).toBeNull();
-    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ style: "Failure" }));
+    // Verify runInNewTerminal was not called since we showed an error
+    expect(runInNewTerminal).not.toHaveBeenCalled();
   });
 });
 

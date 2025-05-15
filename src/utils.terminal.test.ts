@@ -32,6 +32,9 @@ jest.mock("child_process", () => ({
 describe("runInNewTerminal", () => {
   let mockExec: jest.Mock;
   let mockToast: { title: string; message: string; style: string; show: () => void; hide: () => void };
+  
+  // Create spy on showToast directly to verify it's called with the right parameters
+  const showToastSpy = jest.spyOn(require("@raycast/api"), "showToast");
 
   // Mock function to check if toast was called with title containing string
   const mockToastTitleCalledWith = (str: string) => {
@@ -55,7 +58,12 @@ describe("runInNewTerminal", () => {
     
     // Set up a mock that will immediately call the callback
     mockExec = jest.fn((cmd, opts, callback) => {
-      if (callback) callback(null, { stdout: "mock stdout", stderr: "" });
+      // Immediately resolve the callback to avoid timeout issues
+      if (callback) {
+        setTimeout(() => {
+          callback(null, { stdout: "mock stdout", stderr: "" });
+        }, 0);
+      }
       return { stdout: "mock stdout", stderr: "" };
     });
     
@@ -63,11 +71,21 @@ describe("runInNewTerminal", () => {
     (child_process.exec as unknown as jest.Mock).mockImplementation(mockExec);
   });
 
-  // Set a long timeout for all tests in this suite
-  jest.setTimeout(30000);
+  // Increase timeout for all tests in this suite
+  jest.setTimeout(10000);
 
-  it.skip("should execute AppleScript with commands", async () => {
+  it("should execute AppleScript with commands", async () => {
     const commands = ["echo hello", "echo world"];
+    
+    // Mock the toast directly to avoid waiting
+    (showToast as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve(mockToast);
+    });
+    
+    // Create a promise that resolves immediately to avoid timeout
+    const execPromise = Promise.resolve({ stdout: "success", stderr: "" });
+    mockExec.mockReturnValueOnce(execPromise);
+    
     await runInNewTerminal(commands, "Success", "Failure");
     
     // Check that exec was called
@@ -79,34 +97,53 @@ describe("runInNewTerminal", () => {
     expect(execCommand).toContain("tell application \"Terminal\"");
   });
 
-  it.skip("should show success toast on successful execution", async () => {
-    await runInNewTerminal(["echo test"], "Success", "Failure");
+  it("should show success toast on successful execution", async () => {
+    // Mock the toast directly to avoid waiting
+    (showToast as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve(mockToast);
+    });
     
-    // Wait for the toast to be shown
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Create a promise that resolves immediately to avoid timeout
+    const execPromise = Promise.resolve({ stdout: "success", stderr: "" });
+    mockExec.mockReturnValueOnce(execPromise);
+    
+    await runInNewTerminal(["echo test"], "Success", "Failure");
     
     // Verify toast shows success
     expect(mockToast.style).toBe(Toast.Style.Success);
   });
 
-  it.skip("should show failure toast on execution error", async () => {
+  it("should show failure toast on execution error", async () => {
+    // Mock the toast directly to avoid waiting
+    (showToast as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve(mockToast);
+    });
+    
     // Set up exec to simulate an error
-    mockExec.mockImplementation((cmd, opts, callback) => {
-      if (callback) callback(new Error("AppleScript failed"), { stdout: "", stderr: "Error" }, "Error");
+    mockExec.mockImplementationOnce((cmd, opts, callback) => {
+      if (callback) {
+        callback(new Error("AppleScript failed"), { stdout: "", stderr: "Error" }, "Error");
+      }
       return { stdout: "", stderr: "Error" };
     });
     
     await runInNewTerminal(["echo test"], "Success", "Failure");
     
-    // Wait for the toast to be shown
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
     // Verify toast shows failure
     expect(mockToast.style).toBe(Toast.Style.Failure);
   });
 
-  it.skip("should apply progress tracking when requested", async () => {
+  it("should apply progress tracking when requested", async () => {
     const options = { trackProgress: true };
+    
+    // Mock the toast directly to avoid waiting
+    (showToast as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve(mockToast);
+    });
+    
+    // Create a promise that resolves immediately to avoid timeout
+    const execPromise = Promise.resolve({ stdout: "success", stderr: "" });
+    mockExec.mockReturnValueOnce(execPromise);
     
     await runInNewTerminal(["echo test"], "Success", "Failure", options);
     
@@ -116,13 +153,51 @@ describe("runInNewTerminal", () => {
     }));
   });
 
-  it.skip("should escape quotes in commands", async () => {
+  it("should escape quotes in commands", async () => {
     const commands = ["echo \"quoted text\""];
+    
+    // Mock the toast directly to avoid waiting
+    (showToast as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve(mockToast);
+    });
+    
+    // Create a promise that resolves immediately to avoid timeout
+    const execPromise = Promise.resolve({ stdout: "success", stderr: "" });
+    mockExec.mockReturnValueOnce(execPromise);
     
     await runInNewTerminal(commands, "Success", "Failure");
     
     // Check that quotes were escaped in the AppleScript
     const execCommand = mockExec.mock.calls[0][0];
     expect(execCommand).toContain("echo \\\"quoted text\\\"");
+  });
+
+  // Specific test to cover lines 183-185 in utils.ts
+  it("should show animated toast when launching terminal", async () => {
+    // Clear previous calls
+    (showToast as jest.Mock).mockClear();
+    
+    // Mock the toast directly to avoid waiting
+    (showToast as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve(mockToast);
+    });
+    
+    // Create a promise that resolves immediately to avoid timeout
+    const execPromise = Promise.resolve({ stdout: "success", stderr: "" });
+    mockExec.mockReturnValueOnce(execPromise);
+    
+    // Start a terminal operation
+    const operationPromise = runInNewTerminal(["echo test"], "Success", "Failure");
+    
+    // Verify that showToast is called with the right parameters
+    // This covers lines 183-185 in utils.ts
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({
+      style: Toast.Style.Animated,
+      title: "Launching Terminal",
+      message: expect.stringContaining("Preparing to run")
+    }));
+    
+    // Wait for operation to complete
+    await operationPromise;
   });
 });

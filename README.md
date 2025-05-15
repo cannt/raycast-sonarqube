@@ -10,15 +10,15 @@ It simplifies common SonarQube workflows, allowing you to start/stop your SonarQ
 
 The extension has comprehensive test coverage to ensure stability and reliability:
 
-- **Overall Coverage**: 88.75% statements, 79.14% branches, 90.82% functions
+- **Overall Coverage**: 83.6% statements, 72.92% branches, 80.35% functions
 - **Key Components**:
   - i18n (Internationalization): 97.91% coverage
   - startSonarQube: 100% coverage
-  - startAnalyzeOpenSonarQube: 92.78% coverage
+  - startAnalyzeOpenSonarQube: 46.91% coverage
   - openSonarQubeApp: 100% coverage
   - ProjectForm: 100% coverage
   - runSonarAnalysis: 96.42% coverage
-  - utils.ts: 96.64% coverage
+  - utils.ts: 84.56% coverage
 
 ## Features
 
