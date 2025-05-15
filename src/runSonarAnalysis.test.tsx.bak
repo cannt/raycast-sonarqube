@@ -1,0 +1,95 @@
+import React from "react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+// @ts-ignore
+import Command from "./runSonarAnalysis";
+
+jest.mock("@raycast/api", () => ({
+  getPreferenceValues: jest.fn(() => ({})),
+  showToast: jest.fn().mockResolvedValue({ style: '', title: '', message: '' }),
+  Toast: { Style: { Animated: 'Animated', Success: 'Success', Failure: 'Failure' } },
+  openExtensionPreferences: jest.fn(),
+  List: Object.assign(
+    ({ children }: React.PropsWithChildren<any>) => <div>{children}</div>,
+    {
+      Item: ({ children }: React.PropsWithChildren<any>) => <div>{children}</div>,
+      EmptyView: ({ children }: React.PropsWithChildren<any>) => <div>{children}</div>,
+    }
+  ) as any,
+  ActionPanel: Object.assign(
+    ({ children }: React.PropsWithChildren<any>) => <div>{children}</div>,
+    {
+      Section: ({ children }: React.PropsWithChildren<any>) => <div>{children}</div>,
+    }
+  ) as any,
+  Action: (({ title, onAction }: { title: string; onAction: () => void }) => <button onClick={onAction}>{title}</button>) as any,
+  Icon: {},
+  useNavigation: () => ({ push: jest.fn(), pop: jest.fn() }),
+  Form: {
+    TextField: ({ id, onChange, defaultValue }: { id: string; onChange?: (val: string) => void; defaultValue?: string }) => <input data-testid={id} defaultValue={defaultValue} onChange={e => onChange && onChange((e.target as HTMLInputElement).value)} />, 
+    Submit: ({ title }: { title: string }) => <button>{title}</button>,
+  },
+  confirmAlert: jest.fn(() => Promise.resolve(true)),
+  Keyboard: { Shortcut: { Common: { Edit: "edit" } } }
+}));
+
+jest.mock("./utils", () => ({
+  loadProjects: jest.fn(() => Promise.resolve([])),
+  saveProjects: jest.fn(() => Promise.resolve()),
+  runInNewTerminal: jest.fn(() => Promise.resolve()),
+  generateId: jest.fn(() => "mock-id"),
+}));
+
+const { loadProjects, saveProjects, runInNewTerminal } = require("./utils");
+
+// Basic smoke test for rendering and project CRUD
+
+describe("runSonarAnalysis UI", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("renders without crashing and shows empty state", async () => {
+    loadProjects.mockResolvedValue([]);
+    const { findByText } = render(<Command />);
+    expect(await findByText(/No projects/i)).toBeTruthy();
+  });
+
+  it("can add a new project", async () => {
+    loadProjects.mockResolvedValue([]);
+    const { findByText, getByTestId } = render(<Command />);
+    // Simulate add project
+    const addButton = await findByText(/Add Project/i);
+    fireEvent.click(addButton);
+    // Fill form
+    fireEvent.change(getByTestId("name"), { target: { value: "Test Project" } });
+    fireEvent.change(getByTestId("path"), { target: { value: "/tmp/project" } });
+    const submitButton = await findByText(/Save/i);
+    fireEvent.click(submitButton);
+    await waitFor(() => expect(saveProjects).toHaveBeenCalled());
+  });
+
+  it("validates project form input", async () => {
+    loadProjects.mockResolvedValue([]);
+    const { findByText, getByTestId } = render(<Command />);
+    const addButton = await findByText(/Add Project/i);
+    fireEvent.click(addButton);
+    // Try submitting empty
+    const submitButton = await findByText(/Save/i);
+    fireEvent.click(submitButton);
+    // Should not call saveProjects
+    await waitFor(() => expect(saveProjects).not.toHaveBeenCalled());
+    // Fill invalid path
+    fireEvent.change(getByTestId("name"), { target: { value: "Test" } });
+    fireEvent.change(getByTestId("path"), { target: { value: "not/abs" } });
+    fireEvent.click(submitButton);
+    await waitFor(() => expect(saveProjects).not.toHaveBeenCalled());
+  });
+
+  it("runs analysis when selecting project", async () => {
+    loadProjects.mockResolvedValue([{ id: "mock-id", name: "Test Project", path: "/tmp/project" }]);
+    const { findByText } = render(<Command />);
+    const runButton = await findByText(/Run Analysis/i);
+    fireEvent.click(runButton);
+    await waitFor(() => expect(runInNewTerminal).toHaveBeenCalled());
+  });
+});
