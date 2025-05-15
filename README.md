@@ -10,11 +10,12 @@ It simplifies common SonarQube workflows, allowing you to start/stop your SonarQ
 
 The extension has comprehensive test coverage to ensure stability and reliability:
 
-- **Overall Coverage**: 87.35% statements, 77.34% branches, 83.15% functions
+- **Overall Coverage**: 88.75% statements, 79.14% branches, 90.82% functions
 - **Key Components**:
   - i18n (Internationalization): 97.91% coverage
   - startSonarQube: 100% coverage
   - startAnalyzeOpenSonarQube: 92.78% coverage
+  - openSonarQubeApp: 100% coverage
   - ProjectForm: 100% coverage
   - runSonarAnalysis: 96.42% coverage
   - utils.ts: 96.64% coverage
@@ -123,7 +124,7 @@ File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -------------------|---------|----------|---------|---------|-------------------
 All files          |   97.53 |     97.25 |   91.84 |   97.48 |                   
  ProjectForm.tsx   |     100 |      100 |     100 |     100 |                   
- openSonarQubeApp  |   89.47 |    85.71 |      50 |   89.47 | 20-21             
+ openSonarQubeApp  |     100 |      100 |     100 |     100 |                   
  runSonarAnalysis  |   96.29 |    91.66 |   88.88 |   96.07 | 123,177           
  startAnalyzeOpen  |   92.78 |    83.65 |   87.50 |   92.64 | 42-49,328-335     
  startSonarQube    |     100 |      100 |     100 |     100 |                   
@@ -202,11 +203,11 @@ We've organized our tests by component, making it easy to maintain and extend. Y
 
 ### Recently Shipped
 
-- **Improved Test Coverage**: Enhanced test coverage for the startAnalyzeOpenSonarQube component, bringing overall statement coverage to over 87%
+- **Improved Test Coverage**: Enhanced test coverage for both startAnalyzeOpenSonarQube and openSonarQubeApp components, bringing overall statement coverage to over 88% and function coverage to over 90%
 
 ### Coming Soon
 
-- **Complete 100% Test Coverage**: Working towards achieving complete test coverage across all components
+- **Complete 100% Test Coverage**: Working towards achieving complete test coverage across all components (primary focus on i18n module which is at 60.41%)
 - **Codecov Integration**: Adding Codecov to provide visual coverage reports and track changes over time
 - **Auto-releases**: Setting up automatic releases when version changes are detected
 
