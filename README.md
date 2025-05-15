@@ -10,12 +10,14 @@ It simplifies common SonarQube workflows, allowing you to start/stop your SonarQ
 
 The extension has comprehensive test coverage to ensure stability and reliability:
 
-- **Overall Coverage**: 78.22% statements, 68.5% branches, 73.21% functions
+- **Overall Coverage**: 87.35% statements, 77.34% branches, 83.15% functions
 - **Key Components**:
   - i18n (Internationalization): 97.91% coverage
   - startSonarQube: 100% coverage
+  - startAnalyzeOpenSonarQube: 92.78% coverage
   - ProjectForm: 100% coverage
   - runSonarAnalysis: 96.42% coverage
+  - utils.ts: 96.64% coverage
 
 ## Features
 
@@ -119,13 +121,14 @@ This extension includes a comprehensive test suite with near-complete coverage a
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   97.27 |     97.1 |   89.18 |   97.18 |                   
+All files          |   97.53 |     97.25 |   91.84 |   97.48 |                   
  ProjectForm.tsx   |     100 |      100 |     100 |     100 |                   
  openSonarQubeApp  |   89.47 |    85.71 |      50 |   89.47 | 20-21             
  runSonarAnalysis  |   96.29 |    91.66 |   88.88 |   96.07 | 123,177           
+ startAnalyzeOpen  |   92.78 |    83.65 |   87.50 |   92.64 | 42-49,328-335     
  startSonarQube    |     100 |      100 |     100 |     100 |                   
  stopSonarQube     |     100 |      100 |     100 |     100 |                   
- utils.ts          |     100 |      100 |     100 |     100 |                   
+ utils.ts          |   96.64 |      100 |     100 |   96.64 | 183-185            
 -------------------|---------|----------|---------|---------|-------------------
 ```
 
@@ -198,6 +201,14 @@ We've organized our tests by component, making it easy to maintain and extend. Y
 ## What's Next on Our Roadmap
 
 ### Recently Shipped
+
+- **Improved Test Coverage**: Enhanced test coverage for the startAnalyzeOpenSonarQube component, bringing overall statement coverage to over 87%
+
+### Coming Soon
+
+- **Complete 100% Test Coverage**: Working towards achieving complete test coverage across all components
+- **Codecov Integration**: Adding Codecov to provide visual coverage reports and track changes over time
+- **Auto-releases**: Setting up automatic releases when version changes are detected
 
 *   **Enhanced SonarQube Status Detection (May 2025):**
     *   ✅ Intelligent status detection with detailed information about SonarQube state
