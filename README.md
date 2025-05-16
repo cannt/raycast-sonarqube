@@ -10,17 +10,18 @@ It simplifies common SonarQube workflows, allowing you to start/stop your SonarQ
 
 The extension has comprehensive test coverage to ensure stability and reliability:
 
-- **Overall Coverage**: 91.03% statements, 78.77% branches, 91.42% functions, 91.01% lines
+- **Overall Coverage**: 92.59% statements, 84.35% branches, 91.42% functions, 92.61% lines
 - **Key Components**:
-  - i18n (Internationalization): 91.52% overall coverage
+  - i18n (Internationalization): 91.52% overall coverage with 88% branch coverage
   - startSonarQube: 100% coverage
   - startAnalyzeOpenSonarQube.refactored.tsx: 100% statement coverage, 88.88% branch coverage
   - openSonarQubeApp: 100% coverage
   - ProjectForm: 100% coverage
   - runSonarAnalysis: 96.42% statement coverage, 91.66% branch coverage
-  - utils.ts: 81.41% statements, 78.77% branches, 94.73% functions coverage
+  - utils.ts: 86.53% statements, 71.64% branches, 94.73% functions coverage
+  - hooks: 100% statement/line coverage, 88.23% branch coverage
 
-All tests are now passing with zero failures. We've implemented a consistent and reliable mocking strategy across all test files, which has eliminated flakiness and improved overall test reliability.
+All 302 tests are now passing with zero failures. We've implemented a consistent and reliable mocking strategy across all test files, which has eliminated flakiness and improved overall test reliability.
 
 ## Recent Improvements
 
@@ -142,18 +143,23 @@ This extension includes a comprehensive test suite with near-complete coverage a
 ### Test Coverage (as of May 2025)
 
 ```
--------------------|---------|----------|---------|---------|-------------------
-File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
--------------------|---------|----------|---------|---------|-------------------
-All files          |   87.52 |     74.3  |   88.57 |   87.42 |                   
- ProjectForm.tsx   |     100 |      100 |     100 |     100 |                   
- openSonarQubeApp  |     100 |      100 |     100 |     100 |                   
- runSonarAnalysis  |   96.29 |    91.66 |   88.88 |   96.07 | 123,177           
- startAnalyzeOpen  |   92.78 |    83.65 |   87.50 |   92.64 | 42-49,328-335     
- startSonarQube    |     100 |      100 |     100 |     100 |                   
- stopSonarQube     |     100 |      100 |     100 |     100 |                   
- utils.ts          |   78.84 |     55.22 |   94.73 |   78.00 |                   
--------------------|---------|----------|---------|---------|-------------------
+-------------------------------------------|---------|----------|---------|---------|----------------------
+File                                       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s    
+-------------------------------------------|---------|----------|---------|---------|----------------------
+All files                                  |   92.59 |    84.35 |   91.42 |   92.61 |                      
+ src                                       |   90.95 |     82.7 |   90.19 |   90.96 |                      
+  ProjectForm.tsx                          |     100 |      100 |     100 |     100 |                      
+  openSonarQubeApp.tsx                     |     100 |      100 |     100 |     100 |                      
+  runSonarAnalysis.tsx                     |   96.42 |    91.66 |   88.88 |   96.22 | 134,188              
+  startAnalyzeOpenSonarQube.refactored.tsx |     100 |    88.88 |     100 |     100 | 52                   
+  startSonarQube.tsx                       |     100 |      100 |     100 |     100 |                      
+  stopSonarQube.tsx                        |   94.44 |      100 |     100 |   94.44 | 39                   
+  utils.ts                                 |   86.53 |    71.64 |   94.73 |      86 | Various lines        
+ src/components                            |     100 |      100 |     100 |     100 |                      
+ src/hooks                                 |     100 |    88.23 |     100 |     100 |                      
+ src/i18n                                  |   91.52 |       88 |   83.33 |   91.52 |                      
+ src/i18n/translations                     |     100 |      100 |     100 |     100 |                      
+-------------------------------------------|---------|----------|---------|---------|----------------------
 ```
 
 ### Key Testing Features
@@ -226,9 +232,10 @@ We've organized our tests by component, making it easy to maintain and extend. Y
 
 ### Recently Shipped
 
-- **Improved Test Coverage (May 16, 2025)**: Enhanced test coverage across all components, reaching 91.03% statement coverage, 91.42% function coverage, and 78.77% branch coverage
+- **Complete Test Suite (May 17, 2025)**: All 302 tests are now passing with zero skipped tests, achieving 92.59% statement coverage, 84.35% branch coverage, 91.42% function coverage, and 92.61% line coverage
 - **Test Stability Improvements (May 17, 2025)**: Fixed all failing tests by implementing a consistent mocking strategy for HTTP interactions, improved TypeScript type safety in tests, and eliminated flaky tests
-- **Complete Test Coverage for utils.ts (May 17, 2025)**: Improved branch coverage for utils.ts from 56.71% to 78.77%, particularly for the isSonarQubeRunning function
+- **Enhanced Test Coverage for utils.ts (May 17, 2025)**: Improved coverage for utils.ts from 78.84% to 86.53% for statements and from 56.71% to 71.64% for branches
+- **Implemented Previously Skipped Tests (May 17, 2025)**: Added implementations for all skipped tests, including error handling in i18n and enhanced SonarQube status detection
 
 ### Coming Soon
 

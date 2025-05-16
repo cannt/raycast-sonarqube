@@ -148,10 +148,34 @@ describe("i18n utils", () => {
       expect(i18n.t(complexKey)).toBe(complexKey);
     });
     
-    // Skip this test as it's hard to force internal errors in the function
-    it.skip("handles errors gracefully in the translation process", () => {
-      // This test is skipped because it's difficult to reliably force errors
-      // in the translation process without modifying the core implementation
+    it("handles errors gracefully in the translation process", () => {
+      mockGetPreferenceValues.mockReturnValue({ language: "en" });
+      
+      // Create a faulty translation object by temporarily modifying it
+      const original = { ...en };
+      Object.defineProperty(en, "common", {
+        get: function() {
+          throw new Error("Simulated error in translation process");
+        }
+      });
+      
+      // Now trying to access a key under "common" should throw an error
+      // that will be caught by the error handling in the t function
+      const result = i18n.t("common.success");
+      
+      // The function should return the original key rather than throwing
+      expect(result).toBe("common.success");
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining("Error translating key: common.success"),
+        expect.any(Error)
+      );
+      
+      // Restore the original object to avoid affecting other tests
+      Object.defineProperty(en, "common", {
+        value: original.common,
+        writable: true,
+        configurable: true
+      });
     });
     
     it("handles errors when getting language", () => {
