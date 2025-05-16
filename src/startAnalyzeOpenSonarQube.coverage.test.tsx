@@ -1,5 +1,16 @@
 import { startAnalyzeOpenSonarQube } from "./startAnalyzeOpenSonarQube";
 
+jest.mock("@/utils", () => ({
+  ...jest.requireActual("@/utils"), // Import and retain default behavior for other utils
+  isSonarQubeRunning: jest.fn().mockResolvedValue({ 
+    running: true, 
+    status: "running", 
+    details: "Mocked: SonarQube is running normally" 
+  }),
+  // Add mocks for other utils functions if they are called and cause issues
+  // e.g., runInNewTerminal: jest.fn().mockResolvedValue(undefined),
+}));
+
 // This file is just to provide basic coverage for the startAnalyzeOpenSonarQube component
 // Since the component is complex and contains UI elements, we're taking a simplified approach
 // to improve coverage

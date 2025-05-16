@@ -244,48 +244,64 @@ export async function isSonarQubeRunning(options?: {
   
   while (attemptCount <= maxRetries) {
     attemptCount++;
-    
     try {
       const result = await checkSonarQubeStatus(timeoutMs);
-      
+      // If status check is successful
       if (detailed) {
         if (result.status === "up") {
           return { running: true, status: "running", details: "SonarQube is running normally" };
         } else if (result.status === "starting") {
           return { running: false, status: "starting", details: "SonarQube is still starting up" };
         } else {
-          return { running: false, status: "error", details: `SonarQube returned status: ${result.status}` };
+          // This case might indicate an unexpected successful response format from SonarQube
+          return { running: false, status: "unknown_success_response", details: `SonarQube returned status: ${result.status}` };
         }
       }
-      
+      // Not detailed, just return boolean for 'up'
       return result.status === "up";
     } catch (error) {
       lastError = error instanceof Error ? error.message : String(error);
-      
-      // If we've reached max retries, give up
+      // If this was the last attempt, break to proceed to final handling
       if (attemptCount > maxRetries) {
         break;
       }
-      
-      // Exponential backoff between retries (500ms, 1000ms, 2000ms, etc.)
+      // Exponential backoff before next retry
       const delay = Math.min(500 * Math.pow(2, attemptCount - 1), 5000);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
-  }
-  
-  // If we get here, all attempts failed
+  } // End of while loop
+
+  // If we get here, all attempts failed. 'lastError' holds the error from the last attempt.
+
   if (detailed) {
-    // Differentiate between connection refused (server down) and timeout (server might be starting)
-    if (lastError.includes("ECONNREFUSED")) {
+    const originalLastErrorString = String(lastError);
+    const lowerLastError = originalLastErrorString.toLowerCase();
+    const charCodes = originalLastErrorString.split('').map(c => c.charCodeAt(0)).join(',');
+
+    // Direct check for the exact string, case-insensitive
+    const isExactTimeoutString = (originalLastErrorString === "Request timed out" || lowerLastError === "request timed out");
+    // Regex check (current method)
+    const regexFindsTimeout = /timeout/i.test(originalLastErrorString);
+    
+    // Combine checks: prefer exact match, fall back to regex
+    const combinedIncludesTimeout = isExactTimeoutString || regexFindsTimeout;
+
+    if (originalLastErrorString.includes("ECONNREFUSED")) {
       return { running: false, status: "down", details: "SonarQube server is not running" };
-    } else if (lastError.includes("timeout")) {
+    } else if (combinedIncludesTimeout) {
       return { running: false, status: "timeout", details: "SonarQube server is not responding (may be starting)" };
     } else {
-      return { running: false, status: "error", details: `Error checking SonarQube: ${lastError}` };
+      // This is the branch that's unexpectedly being hit for timeouts
+      return { 
+        running: false, 
+        status: "error", 
+        details: `Error checking SonarQube: ${lastError || "Unknown error"}` 
+      };
     }
+  } else { // Not detailed, return simple boolean
+    // All attempts failed, so SonarQube is not considered running.
+    return false;
   }
-  
-  return false;
 };
 
 /**

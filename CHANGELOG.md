@@ -2,6 +2,11 @@
 
 All notable changes to the SonarQube Tools extension will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Resolved persistent test failure in `isSonarQubeRunning` related to timeout detection logic, improving reliability of server status checks.
+
 ## [1.1.0] - 2025-05-14
 
 ### Added

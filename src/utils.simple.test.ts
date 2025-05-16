@@ -1,11 +1,15 @@
 /// <reference types="jest" />
-import { 
-  SONARQUBE_PROJECTS_STORAGE_KEY, 
-  runCommand, 
-  isSonarQubeRunning, 
-  generateId, 
-  loadProjects, 
-  saveProjects 
+
+jest.unmock("@/utils");
+
+// Import the entire module to avoid potential circular dependencies
+import {
+  SONARQUBE_PROJECTS_STORAGE_KEY,
+  runCommand,
+  isSonarQubeRunning,
+  generateId,
+  loadProjects,
+  saveProjects,
 } from "./utils";
 
 // Simple test to verify we can access exports

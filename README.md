@@ -10,7 +10,7 @@ It simplifies common SonarQube workflows, allowing you to start/stop your SonarQ
 
 The extension has comprehensive test coverage to ensure stability and reliability:
 
-- **Overall Coverage**: 83.6% statements, 72.92% branches, 80.35% functions
+- **Overall Coverage**: 87.52% statements, 74.3% branches, 88.57% functions, 87.42% lines
 - **Key Components**:
   - i18n (Internationalization): 97.91% coverage
   - startSonarQube: 100% coverage
@@ -18,7 +18,7 @@ The extension has comprehensive test coverage to ensure stability and reliabilit
   - openSonarQubeApp: 100% coverage
   - ProjectForm: 100% coverage
   - runSonarAnalysis: 96.42% coverage
-  - utils.ts: 84.56% coverage
+  - utils.ts: 78.84% statements coverage (overall)
 
 ## Recent Improvements
 
@@ -143,14 +143,14 @@ This extension includes a comprehensive test suite with near-complete coverage a
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   97.53 |     97.25 |   91.84 |   97.48 |                   
+All files          |   87.52 |     74.3  |   88.57 |   87.42 |                   
  ProjectForm.tsx   |     100 |      100 |     100 |     100 |                   
  openSonarQubeApp  |     100 |      100 |     100 |     100 |                   
  runSonarAnalysis  |   96.29 |    91.66 |   88.88 |   96.07 | 123,177           
  startAnalyzeOpen  |   92.78 |    83.65 |   87.50 |   92.64 | 42-49,328-335     
  startSonarQube    |     100 |      100 |     100 |     100 |                   
  stopSonarQube     |     100 |      100 |     100 |     100 |                   
- utils.ts          |   96.64 |      100 |     100 |   96.64 | 183-185            
+ utils.ts          |   78.84 |     55.22 |   94.73 |   78.00 |                   
 -------------------|---------|----------|---------|---------|-------------------
 ```
 
