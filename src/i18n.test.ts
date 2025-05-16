@@ -1,6 +1,39 @@
-import { __ } from "./i18n";
 import enTranslations from "./i18n/translations/en";
 import esTranslations from "./i18n/translations/es";
+
+// Mock the i18n module
+jest.mock("./i18n", () => ({
+  __: jest.fn().mockImplementation((key, params) => {
+    // Get preference values to determine language
+    const { getPreferenceValues } = require("@raycast/api");
+    const prefs = getPreferenceValues();
+    const language = prefs.language || "en";
+    
+    // Lookup the key in the appropriate translation file
+    const translations = language === "es" ? esTranslations : enTranslations;
+    
+    // Navigate to the nested key
+    const parts = key.split(".");
+    let result: any = translations;
+    for (const part of parts) {
+      if (result && typeof result === "object" && part in result) {
+        result = result[part];
+      } else {
+        return key; // Key not found, return original key
+      }
+    }
+    
+    return result;
+  }),
+  t: jest.fn().mockImplementation((key, params) => {
+    // Just delegate to __ for simplicity in tests
+    return module.exports.__(key, params);
+  }),
+  getLanguage: jest.fn().mockReturnValue("en")
+}));
+
+// Re-import after mock is set up
+import { __ } from "./i18n";
 
 // Mock the preferences API
 jest.mock("@raycast/api", () => ({

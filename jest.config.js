@@ -4,5 +4,15 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
-  }
+  },
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts'],
+  moduleNameMapper: {
+    "^@raycast/api": "<rootDir>/node_modules/@raycast/api",
+    "^@/(.*)$": "<rootDir>/src/$1"
+  },
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}",
+    "!src/tests/**",
+    "!**/node_modules/**"
+  ]
 };

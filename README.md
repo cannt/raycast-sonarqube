@@ -14,11 +14,32 @@ The extension has comprehensive test coverage to ensure stability and reliabilit
 - **Key Components**:
   - i18n (Internationalization): 97.91% coverage
   - startSonarQube: 100% coverage
-  - startAnalyzeOpenSonarQube: 46.91% coverage
+  - startAnalyzeOpenSonarQube: 46.91% coverage (refactored into smaller components)
   - openSonarQubeApp: 100% coverage
   - ProjectForm: 100% coverage
   - runSonarAnalysis: 96.42% coverage
   - utils.ts: 84.56% coverage
+
+## Recent Improvements
+
+### Component Architecture Refactoring (May 16, 2025)
+
+The `startAnalyzeOpenSonarQube` component has been refactored into smaller, more testable pieces:
+
+- **Custom Hooks**:
+  - `useProjectLoader`: Manages loading and state for projects
+  - `useSonarQubePath`: Handles resolving the SonarQube path from preferences
+  - `useCommandSequencer`: Contains the command sequence execution logic
+
+- **UI Components**:
+  - `ProjectEmptyState`: Handles the empty state UI when no projects are available
+  - `ProjectListItem`: Renders individual project items
+  - `ProjectsList`: Main list component that integrates the above components
+
+This refactoring improves:
+- **Testability**: Each component and hook has a single responsibility
+- **Maintainability**: Easier to understand and modify individual parts
+- **Reusability**: Components can be reused in other parts of the application
 
 ## Features
 

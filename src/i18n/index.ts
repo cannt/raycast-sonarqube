@@ -110,11 +110,15 @@ export function t(key: string, params?: Record<string, string>): string {
   return translated;
 }
 
-// Shorthand alias
+// Shorthand alias - use the same reference to the function, not just the same functionality
 export const __ = t;
 
-export default {
+// Create a simple object with all our functions
+const i18n = {
   t,
   __,
   getLanguage,
 };
+
+// Export directly for simplicity in module compatibility
+export default i18n;

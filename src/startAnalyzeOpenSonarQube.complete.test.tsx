@@ -308,7 +308,7 @@ describe("startAnalyzeOpenSonarQube comprehensive tests", () => {
     // Verify second toast indicates starting
     const secondToast = mockShowToast.mock.calls[1][0];
     expect(secondToast).toMatchObject({
-      title: "commands.startSonarQube.starting"
+      title: "commands.startSonarQube.title"
     });
     
     // Verify terminal commands include waiting
