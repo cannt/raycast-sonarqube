@@ -338,6 +338,269 @@ describe("Utils", () => {
       // Restore the original http.get implementation
       httpGetSpy.mockRestore();
     });
+    
+    it("should handle ECONNREFUSED error in detailed mode", async () => {
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          if (event === 'error') {
+            setTimeout(() => {
+              if (this.listeners["error"]) this.listeners["error"](new Error("ECONNREFUSED"));
+            }, 0);
+          }
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get to return our emitter
+      jest.spyOn(http, 'get').mockImplementationOnce(() => {
+        return mockReqEmitter as any;
+      });
+    
+      const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
+      
+      expect(result).toEqual({
+        running: false,
+        status: "down",
+        details: expect.stringContaining("not running")
+      });
+    });
+    
+    it("should handle 'exact match' timeout string in error", async () => {
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          if (event === 'error') {
+            setTimeout(() => {
+              if (this.listeners["error"]) this.listeners["error"](new Error("Request timed out"));
+            }, 0);
+          }
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get to return our emitter
+      jest.spyOn(http, 'get').mockImplementationOnce(() => {
+        return mockReqEmitter as any;
+      });
+    
+      const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
+      
+      expect(result).toEqual({
+        running: false,
+        status: "timeout",
+        details: expect.stringContaining("not responding")
+      });
+    });
+    
+    it("should handle lowercase timeout string in error", async () => {
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          if (event === 'error') {
+            setTimeout(() => {
+              if (this.listeners["error"]) this.listeners["error"](new Error("request timed out"));
+            }, 0);
+          }
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get to return our emitter
+      jest.spyOn(http, 'get').mockImplementationOnce(() => {
+        return mockReqEmitter as any;
+      });
+    
+      const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
+      
+      expect(result).toEqual({
+        running: false,
+        status: "timeout",
+        details: expect.stringContaining("not responding")
+      });
+    });
+    
+    it("should handle regex timeout match in error", async () => {
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          if (event === 'error') {
+            setTimeout(() => {
+              if (this.listeners["error"]) this.listeners["error"](new Error("Connection timeout after 5000ms"));
+            }, 0);
+          }
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get to return our emitter
+      jest.spyOn(http, 'get').mockImplementationOnce(() => {
+        return mockReqEmitter as any;
+      });
+    
+      const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
+      
+      expect(result).toEqual({
+        running: false,
+        status: "timeout",
+        details: expect.stringContaining("not responding")
+      });
+    });
+    
+    it("should handle 503 service unavailable response", async () => {
+      const mockResEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          return this; 
+        }),
+        emit: jest.fn(),
+        statusCode: 503
+      };
+      
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get to return our emitter
+      jest.spyOn(http, 'get').mockImplementationOnce((options, callback) => {
+        // Execute the callback with a mock response
+        if (callback) {
+          setTimeout(() => {
+            typeof callback === "function" && (callback as Function)(mockResEmitter);
+            
+            // Simulate data coming in
+            if (mockResEmitter.listeners["data"]) mockResEmitter.listeners["data"]("Service Unavailable");
+            
+            // Simulate end event
+            if (mockResEmitter.listeners["end"]) mockResEmitter.listeners["end"]();
+          }, 0);
+        }
+        return mockReqEmitter as any;
+      });
+    
+      const result = await isSonarQubeRunning({ detailed: true });
+      
+      expect(result).toEqual({
+        running: false,
+        status: "starting",
+        details: expect.stringContaining("starting up")
+      });
+    });
+    
+    it("should handle successful response with invalid JSON", async () => {
+      const mockResEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          return this; 
+        }),
+        emit: jest.fn(),
+        statusCode: 200
+      };
+      
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get to return our emitter
+      jest.spyOn(http, 'get').mockImplementationOnce((options, callback) => {
+        // Execute the callback with a mock response
+        if (callback) {
+          setTimeout(() => {
+            if (typeof callback === 'function') {
+              typeof callback === "function" && (callback as Function)(mockResEmitter);
+            }
+            
+            // Simulate data coming in - invalid JSON
+            if (mockResEmitter.listeners["data"]) mockResEmitter.listeners["data"]("This is not valid JSON");
+            
+            // Simulate end event
+            if (mockResEmitter.listeners["end"]) mockResEmitter.listeners["end"]();
+          }, 0);
+        }
+        return mockReqEmitter as any;
+      });
+    
+      const result = await isSonarQubeRunning({ detailed: true });
+      
+      expect(result).toEqual({
+        running: true,
+        status: "running",
+        details: expect.stringContaining("SonarQube is running")
+      });
+    });
+    
+    it("should handle unexpected status code", async () => {
+      const mockResEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          return this; 
+        }),
+        emit: jest.fn(),
+        statusCode: 404
+      };
+      
+      const mockReqEmitter = {
+        listeners: {} as Record<string, jest.Mock>,
+        on: jest.fn(function(this: any, event: string, cb: (...args: any[]) => void) { 
+          this.listeners[event] = jest.fn(cb); 
+          return this; 
+        }),
+        emit: jest.fn(),
+        destroy: jest.fn(),
+      };
+    
+      // Mock http.get and handle the error case from unexpected status
+      jest.spyOn(http, 'get').mockImplementationOnce((options: any, callback: any) => {
+        if (callback) {
+          setTimeout(() => {
+            callback(mockResEmitter);
+            
+            // Simulate data coming in
+            if (mockResEmitter.listeners["data"]) mockResEmitter.listeners["data"]("Not Found");
+            
+            // Simulate end event
+            if (mockResEmitter.listeners["end"]) mockResEmitter.listeners["end"]();
+          }, 0);
+        }
+        return mockReqEmitter as any;
+      });
+      
+      // Unexpected status code should result in error state
+      const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
+      
+      expect(result).toEqual({
+        running: false,
+        status: "error",
+        details: expect.stringContaining("Error checking SonarQube")
+      });
+    });
   });
 
   describe("Project Management", () => {

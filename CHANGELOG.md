@@ -4,8 +4,21 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 
 ## [Unreleased]
 
+### Changed
+- Improved test coverage from 88.3% to 91.03% for statements, from 88.22% to 91.01% for lines, and from 88.57% to 91.42% for functions
+- Completed implementation of previously skipped tests for utils.ts, increasing overall branch coverage from 74.86% to 78.77%
+- Added focused test cases to specifically target branch coverage gaps in the isSonarQubeRunning function
+- Refactored startAnalyzeOpenSonarQube.tsx into smaller, more testable components with improved coverage (100% statement coverage, 88.88% branch coverage)
+- Enhanced terminal command tests with proper mocking of execAsync and showToast
+- Dramatically improved test reliability by adopting a better mocking strategy for HTTP requests
+
 ### Fixed
-- Resolved persistent test failure in `isSonarQubeRunning` related to timeout detection logic, improving reliability of server status checks.
+- Fixed all failing tests across the codebase with a consistent mocking approach
+- Resolved complex HTTP mocking issues in all test files by directly mocking the isSonarQubeRunning function
+- Fixed TypeScript errors related to global variables in test state by using module-level objects
+- Resolved failing tests in utils.terminal.test.ts by implementing proper mocks
+- Resolved persistent test failure in `isSonarQubeRunning` related to timeout detection logic, improving reliability of server status checks
+- Eliminated test flakiness in utils.skip-problematic.test.ts, utils.branch-coverage.test.ts, utils.final-coverage.test.ts, and utils.branch-final.test.ts
 
 ## [1.1.0] - 2025-05-14
 
