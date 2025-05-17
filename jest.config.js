@@ -5,7 +5,7 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/testUtils/jest.setup.ts'],
   moduleNameMapper: {
     "^@raycast/api": "<rootDir>/node_modules/@raycast/api",
     "^@/(.*)$": "<rootDir>/src/$1"

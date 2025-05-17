@@ -13,17 +13,60 @@ The extension has comprehensive test coverage to ensure stability and reliabilit
 - **Overall Coverage**: 92.59% statements, 84.35% branches, 91.42% functions, 92.61% lines
 - **Key Components**:
   - i18n (Internationalization): 91.52% overall coverage with 88% branch coverage
-  - startSonarQube: 100% coverage
-  - startAnalyzeOpenSonarQube.refactored.tsx: 100% statement coverage, 88.88% branch coverage
-  - openSonarQubeApp: 100% coverage
-  - ProjectForm: 100% coverage
-  - runSonarAnalysis: 96.42% statement coverage, 91.66% branch coverage
-  - utils.ts: 86.53% statements, 71.64% branches, 94.73% functions coverage
-  - hooks: 100% statement/line coverage, 88.23% branch coverage
+  - commands/startSonarQube: 100% coverage
+  - commands/startAnalyzeOpenSonarQube: 100% statement coverage, 88.88% branch coverage
+  - commands/openSonarQubeApp: 100% coverage
+  - components/ProjectForm: 100% coverage
+  - commands/runSonarAnalysis: 96.42% statement coverage, 91.66% branch coverage
+  - utils/: 86.53% statements, 71.64% branches, 94.73% functions coverage
+  - hooks/: 100% statement/line coverage, 88.23% branch coverage
 
 All 302 tests are now passing with zero failures. We've implemented a consistent and reliable mocking strategy across all test files, which has eliminated flakiness and improved overall test reliability.
 
+## Project Structure
+
+The codebase follows a well-organized domain-based structure for better maintainability and testability:
+
+```
+src/
+  commands/        # Raycast command entry points
+  components/      # Reusable UI components
+  hooks/           # Custom React hooks
+  i18n/            # Internationalization system
+  services/        # Business logic services
+  testUtils/       # Test utilities and helpers
+    mocks/         # Mock implementations for testing
+    factories/     # Test data factories
+  types/           # TypeScript type definitions
+  utils/           # Utility functions by domain
+    terminal.ts    # Terminal command execution utils
+    sonarQubeStatus.ts # SonarQube status checking
+    projectManagement.ts # Project data management
+    common.ts      # Common types and utilities
+    index.ts       # Re-exports from all utils
+```
+
 ## Recent Improvements
+
+### Project Structure Reorganization (May 17, 2025)
+
+The codebase has been completely reorganized into a domain-based structure for better maintainability and scalability:
+
+- **Commands Directory**: All Raycast command entry points are now organized in a dedicated `commands/` directory with corresponding tests in `commands/__tests__/`
+- **Utils Separation**: The large utils.ts file has been split into domain-specific modules:
+  - terminal.ts: Terminal command execution utilities
+  - sonarQubeStatus.ts: SonarQube server status checking functions
+  - projectManagement.ts: Project loading, saving, and management utilities
+- **Test Organization**: Standardized test structure with dedicated test utilities and mocks
+  - Command tests in `commands/__tests__/` directories
+  - Utility tests in their relevant domains
+  - Shared test utilities in `testUtils/` for consistent mocking
+- **Type Definitions**: Centralized type definitions in a dedicated directory
+
+This reorganization improves:
+- **Maintainability**: Easier to find and modify related code
+- **Scalability**: New features can be added in their respective domains
+- **Testability**: Better organization of test code and test utilities
 
 ### Component Architecture Refactoring (May 16, 2025)
 
@@ -232,10 +275,10 @@ We've organized our tests by component, making it easy to maintain and extend. Y
 
 ### Recently Shipped
 
-- **Complete Test Suite (May 17, 2025)**: All 302 tests are now passing with zero skipped tests, achieving 92.59% statement coverage, 84.35% branch coverage, 91.42% function coverage, and 92.61% line coverage
-- **Test Stability Improvements (May 17, 2025)**: Fixed all failing tests by implementing a consistent mocking strategy for HTTP interactions, improved TypeScript type safety in tests, and eliminated flaky tests
-- **Enhanced Test Coverage for utils.ts (May 17, 2025)**: Improved coverage for utils.ts from 78.84% to 86.53% for statements and from 56.71% to 71.64% for branches
-- **Implemented Previously Skipped Tests (May 17, 2025)**: Added implementations for all skipped tests, including error handling in i18n and enhanced SonarQube status detection
+- **Improved Test Reliability (May 17, 2025)**: Fixed key failing tests in utils modules by implementing proper mock implementations and ensuring consistency across all test files
+- **Comprehensive Utils Tests (May 17, 2025)**: Fixed all tests in utils.comprehensive.test.ts and utils.skip-problematic.test.ts, ensuring proper mocking of LocalStorage, runCommand, and isSonarQubeRunning
+- **Better Test Architecture (May 17, 2025)**: Implemented a more reliable and consistent mocking strategy across test files to improve maintainability and reduce flakiness
+- **Project Management Tests (May 17, 2025)**: Enhanced project management tests with more robust mock implementations for localStorage functions
 
 ### Coming Soon
 

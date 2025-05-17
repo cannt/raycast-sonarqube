@@ -4,6 +4,14 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 
 ## [Unreleased]
 
+### Added
+- Complete project reorganization with an improved domain-based structure:
+  - `commands/` directory for all Raycast command entry points
+  - `utils/` directory with domain-specific modules (terminal, sonarQubeStatus, projectManagement)
+  - `types/` directory for TypeScript type definitions
+  - `testUtils/` directory for test helpers and mocks
+  - Properly organized test files in `__tests__` directories next to the components they test
+
 ### Changed
 - Improved test coverage from 88.3% to 91.03% for statements, from 88.22% to 91.01% for lines, and from 88.57% to 91.42% for functions
 - Completed implementation of previously skipped tests for utils.ts, increasing overall branch coverage from 74.86% to 78.77%

@@ -1,0 +1,53 @@
+import { getPreferenceValues, open, showToast, Toast, openExtensionPreferences } from "@raycast/api";
+import { Preferences } from "../utils";
+import { __ } from "../i18n";
+
+const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
+
+/**
+ * Command to open SonarQube application or web URL
+ */
+export default async function openSonarQubeApp() {
+  const { useCustomSonarQubeApp, sonarqubeAppPath } = getPreferenceValues<Preferences>();
+
+  let targetPath: string;
+
+  if (useCustomSonarQubeApp) {
+    if (!sonarqubeAppPath || sonarqubeAppPath.trim() === "") {
+      await showToast({
+        style: Toast.Style.Failure,
+        title: __("preferences.useCustomSonarQubeApp.title"),
+        message: __("preferences.sonarqubeAppPath.description"),
+        primaryAction: {
+          title: __("preferences.language.title"),
+          onAction: async (toast) => {
+            await openExtensionPreferences();
+            toast.hide();
+          },
+        },
+      });
+      return;
+    }
+    targetPath = sonarqubeAppPath;
+  } else {
+    targetPath = DEFAULT_SONARQUBE_URL;
+  }
+
+  try {
+    await open(targetPath);
+    await showToast({
+      style: Toast.Style.Success,
+      title: __("commands.openSonarQubeApp.title"),
+      message: `${__("commands.openSonarQubeApp.opening")} ${targetPath}`,
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    await showToast({
+      style: Toast.Style.Failure,
+      title: __("commands.openSonarQubeApp.openError"),
+      message: errorMessage,
+    });
+    console.error(__("errors.generic", { message: `${targetPath}` }));
+    console.error(errorMessage);
+  }
+}
