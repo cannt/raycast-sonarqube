@@ -21,7 +21,7 @@ import useTranslation from "../i18n/useTranslation";
 
 const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
 
-import ProjectForm from "../ProjectForm";
+import ProjectForm from "../components/ProjectForm";
 
 
 // === Main Command Component ===
@@ -171,7 +171,7 @@ export default function Command() {
                   icon={Icon.Pencil}
                   shortcut={Keyboard.Shortcut.Common.Edit}
                   onAction={() =>
-                    push(<ProjectForm project={project} onSubmit={(values) => handleEditProject(project.id, values)} />)
+                    push(<ProjectForm project={project} onSubmit={(values: { name: string; path: string }) => handleEditProject(project.id, values)} />)
                   }
                 />
                 <Action
