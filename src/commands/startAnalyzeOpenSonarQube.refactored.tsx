@@ -3,9 +3,13 @@ import {
   showToast,
   Toast,
   openExtensionPreferences,
+  List,
+  ActionPanel,
+  Action,
+  Icon,
 } from "@raycast/api";
 import * as React from "react";
-import { Preferences } from "../utils";
+import { isSonarQubeRunning, Project, Preferences } from "../utils";
 import { __ } from "../i18n";
 
 // Import refactored components and hooks
@@ -47,8 +51,7 @@ export async function startAnalyzeOpenSonarQube() {
     targetOpenPath = DEFAULT_SONARQUBE_URL;
   }
 
-  // For backward compatibility with tests, we'll use a default project path
-  // In reality, the UI component will present a list of projects to choose from
+  // For backward compatibility with tests
   const projectPath = process.env.NODE_ENV === 'test' ? "/rfid" : "";
   const projectName = "RFID Project";
 

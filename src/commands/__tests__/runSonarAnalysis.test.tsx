@@ -263,7 +263,7 @@ const { loadProjects, saveProjects, runInNewTerminal } = require("../../utils");
 
 // Import components after mocks are defined
 // @ts-ignore
-import ProjectForm from "../../ProjectForm";
+import ProjectForm from "../../components/ProjectForm";
 import Command from "../../commands/runSonarAnalysis";
 // DEBUG: Log what is actually imported
 console.log("DEBUG ProjectForm default:", ProjectForm);

@@ -1,4 +1,4 @@
-import { useSonarQubePath } from "../../hooks/useSonarQubePath";
+import { useSonarQubePath } from "../../useSonarQubePath";
 import { getPreferenceValues, showToast, openExtensionPreferences, Toast } from "@raycast/api";
 
 // Mock Raycast API

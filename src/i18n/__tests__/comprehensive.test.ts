@@ -1,7 +1,7 @@
 /// <reference types="jest" />
 
 // Mock the i18n module
-jest.mock('./index');
+jest.mock('../index');
 
 // Create our mock functions with proper implementation
 const mockGetLanguage = jest.fn().mockImplementation(() => {
@@ -63,15 +63,15 @@ const mockT = jest.fn().mockImplementation((key, params) => {
 const mock__ = mockT; // Same implementation
 
 // Set up mock implementation for the test
-const i18n = require('./index');
+const i18n = require('../index');
 i18n.t = mockT;
 i18n.__ = mock__;
 i18n.getLanguage = mockGetLanguage;
 
 import { getPreferenceValues } from "@raycast/api";
-import * as translations from "./translations";
-import en from "./translations/en";
-import es from "./translations/es";
+import * as translations from "../translations";
+import en from "../translations/en";
+import es from "../translations/es";
 
 // Define type for nested translation objects for type safety
 interface NestedTranslation {

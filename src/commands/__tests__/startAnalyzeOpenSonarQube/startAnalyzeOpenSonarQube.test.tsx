@@ -1,26 +1,26 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import Command from "../startAnalyzeOpenSonarQube.refactored";
-import { useProjectLoader } from "../hooks/useProjectLoader";
-import { useSonarQubePath } from "../hooks/useSonarQubePath";
-import { useCommandSequencer } from "../hooks/useCommandSequencer";
-import { __ } from "../i18n";
+import Command from "../../startAnalyzeOpenSonarQube.refactored";
+import { useProjectLoader } from "../../../hooks/useProjectLoader";
+import { useSonarQubePath } from "../../../hooks/useSonarQubePath";
+import { useCommandSequencer } from "../../../hooks/useCommandSequencer";
+import { __ } from "../../../i18n";
 
 // Mock the hooks
-jest.mock("../hooks/useProjectLoader", () => ({
+jest.mock("../../../hooks/useProjectLoader", () => ({
   useProjectLoader: jest.fn(),
 }));
 
-jest.mock("../hooks/useSonarQubePath", () => ({
+jest.mock("../../../hooks/useSonarQubePath", () => ({
   useSonarQubePath: jest.fn(),
 }));
 
-jest.mock("../hooks/useCommandSequencer", () => ({
+jest.mock("../../../hooks/useCommandSequencer", () => ({
   useCommandSequencer: jest.fn(),
 }));
 
 // Mock the i18n function
-jest.mock("../i18n", () => ({
+jest.mock("../../../i18n", () => ({
   __: (key: string, params?: any) => {
     if (params) {
       return `translated:${key}:${JSON.stringify(params)}`;
@@ -30,7 +30,7 @@ jest.mock("../i18n", () => ({
 }));
 
 // Mock the ProjectsList component
-jest.mock("../components/ProjectsList", () => {
+jest.mock("../../../components/ProjectsList", () => {
   return {
     ProjectsList: jest.fn(({ projects, isLoading, onStartAnalyze }) => {
       // Simulate the component by returning a valid React element
@@ -139,7 +139,7 @@ describe("Command component", () => {
     render(<Command />);
     
     // Check that ProjectsList was called with loading=true
-    const { ProjectsList } = require("../components/ProjectsList");
+    const { ProjectsList } = require("../../../components/ProjectsList");
     expect(ProjectsList).toHaveBeenCalled();
     
     // Check the first argument of the first call

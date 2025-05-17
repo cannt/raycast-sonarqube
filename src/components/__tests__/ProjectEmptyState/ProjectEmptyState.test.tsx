@@ -1,10 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { ProjectEmptyState } from "../../components/ProjectEmptyState";
-import { __ } from "../../i18n";
+import { ProjectEmptyState } from "../../ProjectEmptyState";
+import { __ } from "../../../i18n";
 
 // Mock the translation function
-jest.mock("../../i18n", () => ({
+jest.mock("../../../i18n", () => ({
   __: (key: string) => `translated:${key}`,
 }));
 

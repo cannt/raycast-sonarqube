@@ -1,10 +1,10 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import { ProjectListItem } from "../../components/ProjectListItem";
-import { __ } from "../../i18n";
+import { ProjectListItem } from "../../ProjectListItem";
+import { __ } from "../../../i18n";
 
 // Mock the translation function
-jest.mock("../../i18n", () => ({
+jest.mock("../../../i18n", () => ({
   __: (key: string) => `translated:${key}`,
 }));
 

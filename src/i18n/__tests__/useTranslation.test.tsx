@@ -16,7 +16,7 @@ jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(() => ({ language: "en" })),
 }));
 
-jest.mock("./index", () => ({
+jest.mock("../index", () => ({
   __esModule: true,
   default: {
     t: mockTranslate,
@@ -29,7 +29,7 @@ jest.mock("./index", () => ({
 }));
 
 // Import useTranslation AFTER mocking dependencies
-import useTranslation from "./useTranslation";
+import useTranslation from "../useTranslation";
 
 // Simple test component to test the hook
 function TestComponent() {

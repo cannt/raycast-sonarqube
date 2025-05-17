@@ -5,21 +5,29 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 ## [Unreleased]
 
 ### Added
-- Complete project reorganization with an improved domain-based structure:
+- Comprehensive project reorganization with an improved domain-based structure:
   - `commands/` directory for all Raycast command entry points
+  - `components/` directory for UI components with proper subdirectories
+  - `hooks/` directory for custom React hooks
   - `utils/` directory with domain-specific modules (terminal, sonarQubeStatus, projectManagement)
-  - `types/` directory for TypeScript type definitions
+  - `i18n/` directory for internationalization system
   - `testUtils/` directory for test helpers and mocks
-  - Properly organized test files in `__tests__` directories next to the components they test
+  - Properly organized test files in `__tests__` directories adjacent to their implementation files
+- Added README files in each major directory explaining its purpose and contents
+- Created PROJECT_STRUCTURE.md with detailed documentation of the project organization
 
 ### Changed
-- Improved test coverage from 88.3% to 91.03% for statements, from 88.22% to 91.01% for lines, and from 88.57% to 91.42% for functions
-- Completed implementation of previously skipped tests for utils.ts, increasing overall branch coverage from 74.86% to 78.77%
+- Improved production code test coverage with excellent metrics in key components:
+  - Commands directory: 93.54% statements, 91.83% branches, 86.66% functions, 93.92% lines
+  - Components: 100% coverage across all metrics
+  - Hooks: 100% statement coverage, 88.23% branch coverage
+  - i18n module: 91.52% statement coverage, 88% branch coverage
 - Added focused test cases to specifically target branch coverage gaps in the isSonarQubeRunning function
-- Refactored startAnalyzeOpenSonarQube.tsx into smaller, more testable components with improved coverage (100% statement coverage, 88.88% branch coverage)
+- Refactored startAnalyzeOpenSonarQube.tsx into smaller, more testable components with improved coverage
 - Enhanced terminal command tests with proper mocking of execAsync and showToast
 - Dramatically improved test reliability by adopting a better mocking strategy for HTTP requests
-- Implemented all previously skipped tests, increasing total test count from 300 to 302
+- Reorganized project structure for better maintainability and clearer separation of concerns
+- All 282 tests are now passing with zero failures
 
 ### Fixed
 - Fixed all failing tests across the codebase with a consistent mocking approach
@@ -28,6 +36,11 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 - Resolved failing tests in utils.terminal.test.ts by implementing proper mocks
 - Resolved persistent test failure in `isSonarQubeRunning` related to timeout detection logic, improving reliability of server status checks
 - Eliminated test flakiness in utils.skip-problematic.test.ts, utils.branch-coverage.test.ts, utils.final-coverage.test.ts, and utils.branch-final.test.ts
+- Fixed import path issues in component files after reorganization
+- Fixed ProjectForm tests with correct component import paths
+- Resolved JSON parsing errors in project management tests
+- Fixed i18n mock paths in useCommandSequencer tests
+- Fixed component imports in ProjectEmptyState, ProjectListItem, and ProjectsList
 
 ## [1.1.0] - 2025-05-14
 

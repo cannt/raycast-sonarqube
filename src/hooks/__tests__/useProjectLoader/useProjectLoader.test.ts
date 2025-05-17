@@ -1,8 +1,8 @@
-import { useProjectLoader } from '../../hooks/useProjectLoader';
-import { loadProjects } from '../../utils';
+import { useProjectLoader } from '../../useProjectLoader';
+import { loadProjects } from '../../../utils';
 
 // Mock the loadProjects function
-jest.mock('../../utils', () => ({
+jest.mock('../../../utils', () => ({
   loadProjects: jest.fn(),
 }));
 

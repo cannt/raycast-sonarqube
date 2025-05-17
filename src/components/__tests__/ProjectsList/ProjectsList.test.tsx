@@ -1,21 +1,21 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { ProjectsList } from "../../components/ProjectsList";
-import { __ } from "../../i18n";
-import { ProjectEmptyState } from "../../components/ProjectEmptyState";
-import { ProjectListItem } from "../../components/ProjectListItem";
+import { ProjectsList } from "../../ProjectsList";
+import { __ } from "../../../i18n";
+import { ProjectEmptyState } from "../../ProjectEmptyState";
+import { ProjectListItem } from "../../ProjectListItem";
 
 // Mock the translation function
-jest.mock("../../i18n", () => ({
+jest.mock("../../../i18n", () => ({
   __: (key: string) => `translated:${key}`,
 }));
 
 // Mock the child components
-jest.mock("../../components/ProjectEmptyState", () => ({
+jest.mock("../../ProjectEmptyState", () => ({
   ProjectEmptyState: () => <div data-testid="empty-state">Empty State</div>,
 }));
 
-jest.mock("../../components/ProjectListItem", () => ({
+jest.mock("../../ProjectListItem", () => ({
   ProjectListItem: ({ project, onStartAnalyze }: any) => (
     <div 
       data-testid="project-item" 

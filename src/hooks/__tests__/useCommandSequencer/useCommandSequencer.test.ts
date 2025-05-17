@@ -1,9 +1,9 @@
-import { useCommandSequencer } from "../../hooks/useCommandSequencer";
-import { isSonarQubeRunning, runInNewTerminal } from "../../utils";
+import { useCommandSequencer } from "../../useCommandSequencer";
+import { isSonarQubeRunning, runInNewTerminal } from "../../../utils";
 import { showToast, Toast, getPreferenceValues } from "@raycast/api";
 
 // Mock dependencies
-jest.mock("../../utils", () => ({
+jest.mock("../../../utils", () => ({
   isSonarQubeRunning: jest.fn(),
   runInNewTerminal: jest.fn(),
 }));
@@ -22,7 +22,7 @@ jest.mock("@raycast/api", () => ({
   }
 }));
 
-jest.mock("../../i18n", () => ({
+jest.mock("../../../i18n", () => ({
   __: (key: string, params?: any) => {
     if (params) {
       return `translated:${key}:${JSON.stringify(params)}`;

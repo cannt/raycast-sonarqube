@@ -7,12 +7,12 @@ jest.mock("@raycast/api", () => ({
 }));
 
 // Import translations for test validation
-import en from './translations/en';
-import es from './translations/es';
+import en from '../translations/en';
+import es from '../translations/es';
 
 // Don't mock the i18n module, we want to test the real implementation
-jest.unmock('./index');
-import i18n from './index';
+jest.unmock('../index');
+import i18n from '../index';
 
 // Mock console.error to avoid noise in test output
 jest.spyOn(console, "error").mockImplementation(() => {});
