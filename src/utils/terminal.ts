@@ -8,6 +8,14 @@ import { promisify } from "util";
 
 export const execAsync = promisify(exec);
 
+// Mock toast object for testing purposes
+// This is only used in tests and won't affect production code
+export const __mockToast = {
+  style: null,
+  title: null,
+  message: null
+};
+
 const PODMAN_PATH_BIN = "/opt/podman/bin";
 const HOMEBREW_PATH_BIN = "/opt/homebrew/bin";
 

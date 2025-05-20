@@ -1,15 +1,21 @@
 /**
  * Test file for terminal utilities
  */
-import { getUserFriendlyErrorMessage } from '../terminal';
 
-// Create a mock for the Toast module
+// Create a mock for the Toast module first
 const mockToast = {
   style: null,
   title: null,
   message: null,
 };
 
+// Mock execution result
+const mockExecResult = { stdout: 'mocked output', stderr: '' };
+
+// Define mockExecFn before any imports
+const mockExecFn = jest.fn().mockResolvedValue(mockExecResult);
+
+// Setup ALL mocks before imports
 jest.mock('@raycast/api', () => ({
   showToast: jest.fn().mockReturnValue(mockToast),
   Toast: {
@@ -21,13 +27,12 @@ jest.mock('@raycast/api', () => ({
   }
 }));
 
-// Mock the child_process.exec and util.promisify to avoid actual execution
-const mockExecResult = { stdout: 'mocked output', stderr: '' };
-const mockExecFn = jest.fn().mockResolvedValue(mockExecResult);
-
 jest.mock('util', () => ({
   promisify: jest.fn().mockReturnValue(mockExecFn)
 }));
+
+// Import after ALL mock setup is complete
+import { getUserFriendlyErrorMessage } from '../terminal';
 
 // Focus on testing individual utility functions
 describe('Terminal utility functions', () => {
@@ -47,8 +52,9 @@ describe('Terminal utility functions', () => {
       const errorMessage = 'bash: sonar-scanner: command not found';
       const result = getUserFriendlyErrorMessage(errorMessage);
       
-      // Based on observed behavior, the function prepends 'Friendly: '
-      expect(result).toContain('Friendly:');
+      // Verify it returns a friendly message based on patterns
+      expect(result).toContain('Command not found');
+      expect(result).toContain('Details:');
       expect(result).toContain(errorMessage);
     });
     
@@ -61,26 +67,24 @@ describe('Terminal utility functions', () => {
       const result2 = getUserFriendlyErrorMessage(errorMessage2);
       const result3 = getUserFriendlyErrorMessage(errorMessage3);
       
-      // Verify each result contains the key part of the error
-      expect(result1).toContain('Friendly:');
-      expect(result1).toContain('permission denied');
+      // Verify each result contains the appropriate friendly message
+      expect(result1).toContain('Permission denied');
+      expect(result1).toContain('Details:');
       
-      expect(result2).toContain('Friendly:');
-      expect(result2).toContain('SonarQube');
+      expect(result2).toContain('SonarQube error');
+      expect(result2).toContain('Details:');
       
-      expect(result3).toContain('Friendly:');
-      expect(result3).toContain('podman');
+      expect(result3).toContain('Podman error');
+      expect(result3).toContain('Details:');
     });
     
     test('should handle long error messages', () => {
       const longError = 'X'.repeat(200); // A very long error
       const result = getUserFriendlyErrorMessage(longError);
       
-      // Since the test result seems to be prefixing with 'Friendly: ', we need to account for that
-      // The actual length will be 'Friendly: ' (10 chars) + up to 200 chars
-      expect(result.length).toBeGreaterThan(10);
-      expect(result.length).toBeLessThanOrEqual(210); // 'Friendly: ' + 200
-      expect(result).toContain('Friendly:');
+      // The implementation should truncate long messages
+      expect(result.length).toBeLessThan(longError.length + 50); // Allow some room for prefix text
+      expect(result).toContain('...');
     });
   });
   

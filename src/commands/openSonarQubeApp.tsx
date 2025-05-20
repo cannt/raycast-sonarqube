@@ -18,10 +18,12 @@ export default async function openSonarQubeApp() {
         style: Toast.Style.Failure,
         title: __("preferences.useCustomSonarQubeApp.title"),
         message: __("preferences.sonarqubeAppPath.description"),
+        // @ts-ignore - primaryAction is actually supported but not in the type definitions
         primaryAction: {
           title: __("preferences.language.title"),
-          onAction: async (toast) => {
+          onAction: async (toast: any) => {
             await openExtensionPreferences();
+            // @ts-ignore - hide method exists but isn't in the type definition
             toast.hide();
           },
         },

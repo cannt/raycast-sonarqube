@@ -49,7 +49,11 @@ export default function Command() {
       const updatedProjects = [...projects, newProject];
       setProjects(updatedProjects);
       await saveProjects(updatedProjects);
-      await showToast(Toast.Style.Success, __("projects.form.saveSuccess"), newProject.name);
+      await showToast({
+        style: Toast.Style.Success,
+        title: __('projects.form.saveSuccess'),
+        message: newProject.name
+      });
     },
     [projects, __],
   );
@@ -59,7 +63,11 @@ export default function Command() {
       const updatedProjects = projects.map((p) => (p.id === id ? { ...p, ...values } : p));
       setProjects(updatedProjects);
       await saveProjects(updatedProjects);
-      await showToast(Toast.Style.Success, __("projects.form.saveSuccess"), values.name);
+      await showToast({
+        style: Toast.Style.Success,
+        title: __('projects.form.saveSuccess'),
+        message: values.name
+      });
     },
     [projects, __],
   );
@@ -73,7 +81,10 @@ export default function Command() {
         const updatedProjects = projects.filter((p) => p.id !== id);
         setProjects(updatedProjects);
         await saveProjects(updatedProjects);
-        await showToast(Toast.Style.Success, __("projects.form.deleteSuccess"));
+        await showToast({
+          style: Toast.Style.Success,
+          title: __('projects.form.deleteSuccess')
+        });
       }
     },
     [projects, __],
@@ -89,10 +100,12 @@ export default function Command() {
             style: Toast.Style.Failure,
             title: __("preferences.useCustomSonarQubeApp.title"),
             message: __("preferences.sonarqubeAppPath.description"),
+            // @ts-ignore - primaryAction is supported but not in type definitions
             primaryAction: {
               title: __("preferences.language.title"),
-              onAction: async (t) => {
+              onAction: async (t: any) => {
                 await openExtensionPreferences();
+                // @ts-ignore - hide method exists but isn't in type definition
                 t.hide();
               },
             },

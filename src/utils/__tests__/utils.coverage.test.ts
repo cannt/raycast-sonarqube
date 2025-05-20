@@ -11,10 +11,10 @@ jest.mock("../index", () => {
     ...originalModule,
     // Mock loadProjects to return mock data
     loadProjects: jest.fn().mockImplementation(async () => {
-      const storedProjects = await LocalStorage.getItem<string>("sonarqubeProjectsList");
+      const storedProjects = await LocalStorage.getItem("sonarqubeProjectsList");
       if (storedProjects) {
         try {
-          return JSON.parse(storedProjects);
+          return JSON.parse(storedProjects as string);
         } catch (e) {
           console.error("Failed to parse stored projects:", e);
           return [];
