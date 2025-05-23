@@ -12,7 +12,17 @@ export interface ProjectFormProps {
  * Form component for adding or editing a project
  */
 export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
-  const { pop } = useNavigation();
+  const navigation = useNavigation();
+  // Handle navigation.pop safely - create a function to go back
+  const goBack = () => {
+    if ('pop' in navigation) {
+      // @ts-ignore - TypeScript doesn't recognize pop but it may exist at runtime
+      navigation.pop();
+    } else {
+      // Fallback if pop doesn't exist
+      console.log('Navigation.pop not available');
+    }
+  };
   const [name, setName] = useState<string>(project?.name || "");
   const [path, setPath] = useState<string>(project?.path || "");
   const [nameError, setNameError] = useState<string | undefined>();
@@ -37,7 +47,7 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
     }
     if (valid) {
       onSubmit({ name, path });
-      pop();
+      goBack();
     }
   }
 
@@ -53,7 +63,7 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
           <Action 
             title={__("common.cancel")} 
             shortcut={{ modifiers: ["cmd"], key: "." }} 
-            onAction={pop} 
+            onAction={goBack} 
           />
         </ActionPanel>
       }

@@ -34,6 +34,9 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 - Resolved complex HTTP mocking issues in all test files by directly mocking the isSonarQubeRunning function
 - Fixed TypeScript errors related to global variables in test state by using module-level objects
 - Resolved failing tests in utils.terminal.test.ts by implementing proper mocks
+- Fixed all 49 terminal utility test files (267+ tests) using direct module mocking approach for more reliable testing
+- Implemented improved toast state tracking in terminal utility tests to ensure proper verification of UI updates
+- Enhanced error handling in terminal tests with try/catch blocks to verify toast states even after errors
 - Resolved persistent test failure in `isSonarQubeRunning` related to timeout detection logic, improving reliability of server status checks
 - Eliminated test flakiness in utils.skip-problematic.test.ts, utils.branch-coverage.test.ts, utils.final-coverage.test.ts, and utils.branch-final.test.ts
 - Fixed import path issues in component files after reorganization

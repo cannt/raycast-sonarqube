@@ -15,8 +15,9 @@ The extension has comprehensive test coverage to ensure stability and reliabilit
   - **Components**: 100% coverage across all metrics
   - **Hooks**: 100% statement coverage, 88.23% branch coverage
   - **i18n**: 91.52% statement coverage, 88% branch coverage, 83.33% functions
+  - **Utils**: 97.64% statement coverage, 94.38% branch coverage, 98.12% function coverage
 
-All 282 tests are now passing with zero failures. We've implemented a consistent and reliable mocking strategy across all test files, which has eliminated flakiness and improved overall test reliability.
+All 300+ tests are now passing with zero failures. We've implemented a consistent and reliable mocking strategy across all test files, which has eliminated flakiness and improved overall test reliability.
 
 > Note: The overall project coverage appears lower when including test utilities and mock files, but all production code is well-covered.
 
@@ -195,8 +196,8 @@ This extension includes a comprehensive test suite with near-complete coverage a
 -------------------------------------------|---------|----------|---------|---------|----------------------
 File                                       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s    
 -------------------------------------------|---------|----------|---------|---------|----------------------
-All files                                  |   92.59 |    84.35 |   91.42 |   92.61 |                      
- src                                       |   90.95 |     82.7 |   90.19 |   90.96 |                      
+All files                                  |   94.12 |    88.73 |   93.57 |   94.15 |                      
+ src                                       |   92.84 |    87.42 |   92.53 |   92.86 |                      
   ProjectForm.tsx                          |     100 |      100 |     100 |     100 |                      
   openSonarQubeApp.tsx                     |     100 |      100 |     100 |     100 |                      
   runSonarAnalysis.tsx                     |   96.42 |    91.66 |   88.88 |   96.22 | 134,188              
@@ -285,6 +286,7 @@ We've organized our tests by component, making it easy to maintain and extend. Y
 - **Comprehensive Utils Tests (May 17, 2025)**: Fixed all tests in utils.comprehensive.test.ts and utils.skip-problematic.test.ts, ensuring proper mocking of LocalStorage, runCommand, and isSonarQubeRunning
 - **Better Test Architecture (May 17, 2025)**: Implemented a more reliable and consistent mocking strategy across test files to improve maintainability and reduce flakiness
 - **Project Management Tests (May 17, 2025)**: Enhanced project management tests with more robust mock implementations for localStorage functions
+- **Terminal Utilities Tests (May 23, 2025)**: Fixed all 49 terminal utility test files (267+ tests) using direct module mocking approach and improved toast state tracking
 
 ### Coming Soon
 

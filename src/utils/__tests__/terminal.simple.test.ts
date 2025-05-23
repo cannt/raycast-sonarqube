@@ -33,31 +33,34 @@ describe('Terminal utilities', () => {
     it('returns friendly message for command not found error', () => {
       const error = 'bash: sonar-scanner: command not found';
       const result = getUserFriendlyErrorMessage(error);
-      expect(result).toContain('Friendly:');
+      expect(result).toContain('Command not found');
+      expect(result).toContain('Make sure all required tools are installed');
       expect(result).toContain(error);
     });
 
     it('returns friendly message for permission denied error', () => {
       const error = 'permission denied: /usr/local/bin/sonar-scanner';
       const result = getUserFriendlyErrorMessage(error);
-      expect(result).toContain('Friendly:');
+      expect(result).toContain('Permission denied');
+      expect(result).toContain('higher privileges');
       expect(result).toContain(error);
     });
 
     it('returns friendly message for SonarQube error', () => {
       const error = 'Error connecting to SonarQube server';
       const result = getUserFriendlyErrorMessage(error);
-      expect(result).toContain('Friendly:');
-      expect(result).toContain('SonarQube');
+      expect(result).toContain('SonarQube error detected');
+      expect(result).toContain('Verify SonarQube server');
+      expect(result).toContain(error);
     });
 
     it('truncates long error messages', () => {
       const error = 'A'.repeat(200);
       const result = getUserFriendlyErrorMessage(error);
-      // The prefix 'Friendly: ' adds 10 characters, so we expect it to be longer
-      // but still truncated from the original length
-      expect(result.length).toBeGreaterThan(10); // 'Friendly: ' length
-      expect(result.length).toBeLessThanOrEqual(210); // 'Friendly: ' + max 200 chars
+      // Expect the error to be truncated according to implementation
+      expect(result.length).toBeLessThan(error.length);
+      // Allow for details prefix/suffix in the implementation
+      expect(result.length).toBeLessThanOrEqual(error.length); // Should be truncated but might include details text
     });
   });
   

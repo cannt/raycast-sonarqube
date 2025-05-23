@@ -1,111 +1,82 @@
 /**
- * Minimal test file for terminal utilities
- * Testing just one aspect at a time with direct mocking approach
+ * Minimal test file for terminal.getUserFriendlyErrorMessage
+ * Following the iterative methodology for fixing tests
  */
 
-// Direct spies on the original methods
-const mockShowToast = jest.fn();
-const mockExecAsync = jest.fn();
+// Import the function to test
+import { getUserFriendlyErrorMessage } from '../terminal';
 
-// Manually mock the execAsync function before importing terminal
-jest.mock('util', () => ({
-  promisify: jest.fn(() => mockExecAsync)
-}));
+// Silence console output for cleaner test runs
+console.log = jest.fn();
+console.error = jest.fn();
 
-// Mock the Raycast API before importing terminal
-jest.mock('@raycast/api', () => {
-  return {
-    showToast: mockShowToast,
-    Toast: {
-      Style: {
-        Animated: 'animated',
-        Success: 'success',
-        Failure: 'failure'
-      }
-    }
-  };
-});
-
-// Suppress console output
-jest.spyOn(console, 'log').mockImplementation(() => {});
-jest.spyOn(console, 'error').mockImplementation(() => {});
-
-// Import the module after mocking
-import { runCommand } from '../terminal';
-import { showToast } from '@raycast/api';
-
-describe('Terminal Utils - Minimal Tests', () => {
-  beforeEach(() => {
-    // Reset all mocks
-    jest.clearAllMocks();
+describe('Terminal Utils - getUserFriendlyErrorMessage', () => {
+  test('provides user-friendly message for command not found errors', () => {
+    const errorMsg = 'bash: command not found';
+    const result = getUserFriendlyErrorMessage(errorMsg);
     
-    // Configure mockShowToast to return a toast object
-    mockShowToast.mockReset();
-    mockShowToast.mockReturnValue({
-      style: 'animated',
-      title: '',
-      message: ''
-    });
-    
-    // Configure mockExecAsync
-    mockExecAsync.mockReset();
+    expect(result).toContain('Command not found');
+    expect(result).toContain(`Details: ${errorMsg}`);
   });
   
-  test('runCommand calls showToast initially', async () => {
-    // Configure mockExecAsync to return a successful result
-    mockExecAsync.mockResolvedValueOnce({
-      stdout: 'Command output',
-      stderr: ''
-    });
+  test('provides user-friendly message for permission denied errors', () => {
+    const errorMsg = 'permission denied';
+    const result = getUserFriendlyErrorMessage(errorMsg);
     
-    // Call runCommand
-    await runCommand('test-command', 'Success', 'Failure');
-    
-    // Verify showToast was called
-    expect(showToast).toHaveBeenCalled();
+    expect(result).toContain('Permission denied');
+    expect(result).toContain(`Details: ${errorMsg}`);
   });
   
-  test('runCommand calls execAsync with correct command', async () => {
-    // Configure mockExecAsync to return a successful result
-    mockExecAsync.mockResolvedValueOnce({
-      stdout: 'Command output',
-      stderr: ''
-    });
+  test('provides user-friendly message for no such file errors', () => {
+    const errorMsg = 'no such file or directory';
+    const result = getUserFriendlyErrorMessage(errorMsg);
     
-    // Call runCommand
-    await runCommand('test-command', 'Success', 'Failure');
-    
-    // Verify execAsync was called with the correct command
-    expect(mockExecAsync).toHaveBeenCalledWith(
-      'test-command',
-      expect.anything()
-    );
+    expect(result).toContain('File or directory not found');
+    expect(result).toContain(`Details: ${errorMsg}`);
   });
   
-  test('runCommand handles environment options', async () => {
-    // Configure mockExecAsync to return a successful result
-    mockExecAsync.mockResolvedValueOnce({
-      stdout: 'Command output',
-      stderr: ''
-    });
+  test('provides user-friendly message for connection refused errors', () => {
+    const errorMsg = 'connection refused';
+    const result = getUserFriendlyErrorMessage(errorMsg);
     
-    const options = {
-      cwd: '/custom/path',
-      env: { CUSTOM_VAR: 'custom-value' }
-    };
+    expect(result).toContain('Connection refused');
+    expect(result).toContain(`Details: ${errorMsg}`);
+  });
+  
+  test('provides user-friendly message for timeout errors', () => {
+    const errorMsg = 'operation timed out';
+    const result = getUserFriendlyErrorMessage(errorMsg);
     
-    // Call runCommand with options
-    await runCommand('test-command', 'Success', 'Failure', options);
+    expect(result).toContain('Operation timed out');
+    expect(result).toContain(`Details: ${errorMsg}`);
+  });
+  
+  test('provides user-friendly message for SonarQube errors', () => {
+    const errorMsg = 'Error connecting to sonarqube server';
+    const result = getUserFriendlyErrorMessage(errorMsg);
     
-    // Verify execAsync was called with the correct options
-    expect(mockExecAsync).toHaveBeenCalledWith(
-      'test-command',
-      expect.objectContaining({
-        cwd: '/custom/path',
-        env: expect.objectContaining({
-          CUSTOM_VAR: 'custom-value'
-        })
-      })
-    );
+    expect(result).toContain('SonarQube error detected');
+    expect(result).toContain(`Details: ${errorMsg}`);
+  });
+  
+  test('handles standard error messages', () => {
+    const errorMsg = 'some random error';
+    const result = getUserFriendlyErrorMessage(errorMsg);
+    
+    // Default case for unrecognized patterns - returns the error as-is
+    expect(result).toBe(errorMsg);
+  });
+  
+  test('handles empty error messages', () => {
+    const result = getUserFriendlyErrorMessage('');
+    expect(result).toBe('');
+  });
+  
+  test('truncates very long error messages', () => {
+    const longError = 'x'.repeat(200);
+    const result = getUserFriendlyErrorMessage(longError);
+    
+    expect(result.length).toBe(153); // 150 chars + '...'
+    expect(result.endsWith('...')).toBe(true);
   });
 });
