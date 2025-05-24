@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 
-import startSonarQube from "../../commands/startSonarQube";
+import { startSonarQubeLogic as startSonarQube } from "../../lib/sonarQubeStarter";
 import { isSonarQubeRunning, runCommand } from "../../utils";
 import { getPreferenceValues, showToast, Toast } from "@raycast/api";
 import { __ } from "../../i18n";

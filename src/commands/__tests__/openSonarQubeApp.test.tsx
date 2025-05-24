@@ -1,5 +1,5 @@
 /// <reference types="jest" />
-import openSonarQubeApp from "../../commands/openSonarQubeApp";
+import { openSonarQubeAppLogic as openSonarQubeApp } from "../../lib/sonarQubeOpener";
 
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(),

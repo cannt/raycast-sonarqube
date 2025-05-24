@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 
-import stopSonarQube from "../../commands/stopSonarQube";
+import { stopSonarQubeLogic as stopSonarQube } from "../../lib/sonarQubeStopper";
 
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(),

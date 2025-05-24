@@ -3,9 +3,9 @@ import { Preferences, runCommand, loadProjects } from "../utils";
 import { __ } from "../i18n";
 
 /**
- * Command to stop SonarQube instance and Podman, including any running Gradle tasks
+ * Logic to stop SonarQube instance and Podman, including any running Gradle tasks
  */
-export default async function stopSonarQube() {
+export async function stopSonarQubeLogic() {
   const { sonarqubePodmanDir } = getPreferenceValues<Preferences>();
 
   if (!sonarqubePodmanDir) {

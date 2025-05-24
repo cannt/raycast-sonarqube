@@ -59,7 +59,7 @@
   "commands": [
     {
       "name": "startSonarQube",
-      "source": { "file": "./src/commands/startSonarQube.tsx" },
+      "source": { "file": "./src/startSonarQube.tsx" },
       "title": "Start Sonarqube Locally (podman)",
       "description": "Starts the local SonarQube instance using Podman. Checks if SonarQube is already running and notifies the user if so. / Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.",
       "keywords": [
@@ -75,7 +75,7 @@
     },
     {
       "name": "stopSonarQube",
-      "source": { "file": "./src/commands/stopSonarQube.tsx" },
+      "source": { "file": "./src/stopSonarQube.tsx" },
       "title": "Stop Sonarqube Locally (podman)",
       "description": "Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in any running projects. / Para la instancia local de SonarQube y la máquina Podman. Intenta detener las tareas de Gradle en curso en cualquier proyecto en ejecución.",
       "keywords": [
@@ -91,7 +91,7 @@
     },
     {
       "name": "openSonarQubeApp",
-      "source": { "file": "./src/commands/openSonarQubeApp.tsx" },
+      "source": { "file": "./src/openSonarQubeApp.tsx" },
       "title": "Open Sonarqube App",
       "description": "Opens the SonarQube application. / Abre la aplicación SonarQube.",
       "keywords": [
@@ -109,7 +109,7 @@
     },
     {
       "name": "runSonarAnalysis",
-      "source": { "file": "./src/commands/runSonarAnalysis.tsx" },
+      "source": { "file": "./src/runSonarAnalysis.tsx" },
       "title": "Run Sonarqube Analysis",
       "description": "Select a project to run SonarQube analysis and open the app. Manage projects from this command. / Selecciona un proyecto para ejecutar el análisis de SonarQube y abrir la aplicación. Gestiona proyectos desde este comando.",
       "keywords": [
@@ -127,7 +127,7 @@
     },
     {
       "name": "startAnalyzeOpenSonarQube",
-      "source": { "file": "./src/commands/startAnalyzeOpenSonarQube.tsx" },
+      "source": { "file": "./src/startAnalyzeOpenSonarQube.tsx" },
       "title": "Start, Analyze Sonarqube & Open App",
       "description": "Starts SonarQube, then select a project to run analysis and open the app. Manage projects from this command. / Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis y abrir la aplicación. Gestiona proyectos desde este comando.",
       "keywords": [

@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import Command from "../../startAnalyzeOpenSonarQube.refactored";
+import Command from "../../../startAnalyzeOpenSonarQube";
 import { useProjectLoader } from "../../../hooks/useProjectLoader";
 import { useSonarQubePath } from "../../../hooks/useSonarQubePath";
 import { useCommandSequencer } from "../../../hooks/useCommandSequencer";

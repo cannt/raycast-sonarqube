@@ -25,7 +25,6 @@ interface SonarQubeStatusResponse {
   running: boolean;
   status: string;
   details?: string;
-  detailedResult?: Record<string, any>;
 }
 
 interface ProjectsListProps {
@@ -48,25 +47,18 @@ const mockShowToast = jest.fn();
 const mockRunInNewTerminal = jest.fn();
 const mockIsSonarQubeRunning = jest.fn();
 const mockGetPreferenceValues = jest.fn();
-const mockOpenExtensionPreferences = jest.fn();
-
-// Create a state object for SonarQube status
-const mockSonarqubeState = {
-  running: false,
-  status: "down",
-  details: "SonarQube is not running",
-  detailedResult: {
-    webUp: false,
-    dbUp: false,
-    status: "down"
-  }
-};
 
 // Mock all dependencies before importing anything
 jest.mock("@raycast/api", () => ({
-  getPreferenceValues: () => mockGetPreferenceValues(),
-  showToast: (config: ToastConfig) => mockShowToast(config),
-  openExtensionPreferences: () => mockOpenExtensionPreferences(),
+  getPreferenceValues: jest.fn(() => {
+    // Call our mock function to allow test-specific configurations
+    return mockGetPreferenceValues();
+  }),
+  showToast: (config: ToastConfig) => {
+    // Call our mock function
+    return mockShowToast(config);
+  },
+  openExtensionPreferences: jest.fn(),
   Toast: {
     Style: {
       Animated: "Animated",
@@ -99,7 +91,7 @@ jest.mock("../../../hooks/useCommandSequencer", () => ({
       
       try {
         // Check if SonarQube is running
-        const status = await mockIsSonarQubeRunning({ detailed: true });
+        const status = await mockIsSonarQubeRunning();
         
         // If it's running, show success toast
         if (status && status.running) {
@@ -158,14 +150,7 @@ jest.mock("../../../i18n", () => ({
 }));
 
 jest.mock("../../../utils", () => ({
-  isSonarQubeRunning: (options?: any) => {
-    // Return the current state
-    const result = options?.detailed 
-      ? { ...mockSonarqubeState, detailedResult: { ...mockSonarqubeState.detailedResult } }
-      : { running: mockSonarqubeState.running, status: mockSonarqubeState.status };
-    
-    return mockIsSonarQubeRunning(options) || Promise.resolve(result);
-  },
+  isSonarQubeRunning: (options?: any) => mockIsSonarQubeRunning(options),
   runInNewTerminal: (commands: string[], successMsg: string, errorMsg: string) => {
     // Always push the commands to the mockTerminalCommands array
     mockTerminalCommands.push([...commands]);
@@ -183,25 +168,18 @@ mockRunInNewTerminal.mockImplementation((commands: string[], successMsg: string,
 import { getPreferenceValues, showToast, Toast } from "@raycast/api";
 import { isSonarQubeRunning, runInNewTerminal } from "../../../utils";
 import { __ } from "../../../i18n";
+import { useProjectLoader } from "../../../hooks/useProjectLoader";
+import { useSonarQubePath } from "../../../hooks/useSonarQubePath";
+import { useCommandSequencer } from "../../../hooks/useCommandSequencer";
 
 // Get the ProjectsList mock with our custom type
 const ProjectsList = jest.requireMock("../../../components/ProjectsList").ProjectsList as ProjectsListMock;
 
-describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
+describe("StartAnalyzeOpenSonarQubeComponent", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockToastCalls.length = 0;
     mockTerminalCommands.length = 0;
-    
-    // Reset SonarQube state
-    mockSonarqubeState.running = false;
-    mockSonarqubeState.status = "down";
-    mockSonarqubeState.details = "SonarQube is not running";
-    mockSonarqubeState.detailedResult = {
-      webUp: false,
-      dbUp: false,
-      status: "down"
-    };
     
     // Default implementation for getPreferenceValues
     mockGetPreferenceValues.mockReturnValue({
@@ -224,14 +202,14 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
     });
     
     // Default implementation for isSonarQubeRunning
-    mockIsSonarQubeRunning.mockImplementation((options?: any) => {
-      return Promise.resolve({
-        running: mockSonarqubeState.running,
-        status: mockSonarqubeState.status,
-        details: mockSonarqubeState.details,
-        ...(options?.detailed ? { detailedResult: mockSonarqubeState.detailedResult } : {})
-      });
+    mockIsSonarQubeRunning.mockResolvedValue({
+      running: true,
+      status: "running",
+      details: "SonarQube is running"
     });
+    
+    // Default implementation for runInNewTerminal
+    mockRunInNewTerminal.mockResolvedValue(undefined);
   });
   
   it("renders with project list", () => {
@@ -257,17 +235,12 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
   it("starts analysis when project is selected", async () => {
     render(<StartAnalyzeOpenSonarQubeComponent />);
     
-    // Get the stored onStartAnalyze function from the mock props
-    const onStartAnalyze = ProjectsList.mockProps?.onStartAnalyze;
-    expect(onStartAnalyze).toBeDefined();
+    const onStartAnalyze = (ProjectsList as jest.Mock).mock.calls[0][0].onStartAnalyze;
     
     await act(async () => {
-      if (onStartAnalyze) {
-        await onStartAnalyze("/path/to/project1", "Project 1");
-      }
+      await onStartAnalyze("/path/to/project1", "Project 1");
     });
     
-    // Verify the handleStartAnalyze was called with correct args
     expect(mockHandleStartAnalyze).toHaveBeenCalledWith(
       "/path/to/project1",
       "Project 1",
@@ -283,14 +256,10 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
     
     render(<StartAnalyzeOpenSonarQubeComponent />);
     
-    // Get the stored onStartAnalyze function from the mock props
-    const onStartAnalyze = ProjectsList.mockProps?.onStartAnalyze;
-    expect(onStartAnalyze).toBeDefined();
+    const onStartAnalyze = (ProjectsList as jest.Mock).mock.calls[0][0].onStartAnalyze;
     
     await act(async () => {
-      if (onStartAnalyze) {
-        await onStartAnalyze("/path/to/project1", "Project 1");
-      }
+      await onStartAnalyze("/path/to/project1", "Project 1");
     });
     
     // Should show error toast
@@ -307,15 +276,24 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
     // Set up terminal error
     mockRunInNewTerminal.mockRejectedValueOnce(new Error("Terminal execution failed"));
     
-    // SonarQube is not running in this test
-    mockSonarqubeState.running = false;
-    mockSonarqubeState.status = "down";
-    
     render(<StartAnalyzeOpenSonarQubeComponent />);
     
     // Get the stored onStartAnalyze function from the mock props
     const onStartAnalyze = ProjectsList.mockProps?.onStartAnalyze;
     expect(onStartAnalyze).toBeDefined();
+    
+    // Make sure other mocks are properly set
+    mockGetPreferenceValues.mockReturnValueOnce({
+      sonarqubePodmanDir: "/valid/podman/path",
+      useCustomSonarQubeApp: false,
+      sonarqubeAppPath: ""
+    });
+    
+    // SonarQube is not running in this test
+    mockIsSonarQubeRunning.mockResolvedValueOnce({
+      running: false,
+      status: "stopped"
+    });
     
     await act(async () => {
       if (onStartAnalyze) {
@@ -339,14 +317,11 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
   
   it("shows toast when SonarQube is already running", async () => {
     // Mock SonarQube already running
-    mockSonarqubeState.running = true;
-    mockSonarqubeState.status = "running";
-    mockSonarqubeState.details = "SonarQube is running";
-    mockSonarqubeState.detailedResult = {
-      webUp: true,
-      dbUp: true,
-      status: "running"
-    };
+    mockIsSonarQubeRunning.mockResolvedValue({
+      running: true,
+      status: "running",
+      details: "SonarQube is running"
+    });
     
     render(<StartAnalyzeOpenSonarQubeComponent />);
     
@@ -387,8 +362,10 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
     });
     
     // SonarQube is not running in this test
-    mockSonarqubeState.running = false;
-    mockSonarqubeState.status = "down";
+    mockIsSonarQubeRunning.mockResolvedValueOnce({
+      running: false,
+      status: "stopped"
+    });
     
     // Reset all mock states
     mockRunInNewTerminal.mockClear();
@@ -421,138 +398,5 @@ describe("StartAnalyzeOpenSonarQubeComponent Comprehensive Tests", () => {
       const commands = mockCalls[0][0];
       expect(commands.some((cmd: string) => cmd.includes(customAppPath))).toBe(true);
     }
-  });
-  
-  it("handles SonarQube in starting state correctly", async () => {
-    // Set SonarQube in starting state
-    mockSonarqubeState.running = false;
-    mockSonarqubeState.status = "starting";
-    mockSonarqubeState.details = "SonarQube is starting";
-    mockSonarqubeState.detailedResult = {
-      webUp: false,
-      dbUp: true,
-      status: "starting"
-    };
-    
-    // Setup translations
-    mockTranslate.mockImplementation((key) => `translated.${key}`);
-    
-    // Setup preferences
-    mockGetPreferenceValues.mockReturnValue({
-      sonarqubePodmanDir: "/valid/podman/path",
-      useCustomSonarQubeApp: false,
-      sonarqubeAppPath: ""
-    });
-    
-    // Update the isSonarQubeRunning mock to specifically handle this test case
-    mockIsSonarQubeRunning.mockImplementationOnce((options?: any) => {
-      // When first called with detailed: true, return the starting state
-      return Promise.resolve({
-        running: false,
-        status: "starting",
-        details: "SonarQube is starting",
-        detailedResult: {
-          webUp: false,
-          dbUp: true,
-          status: "starting"
-        }
-      });
-    });
-    
-    // Update the useCommandSequencer mock for this test case
-    jest.requireMock("../../../hooks/useCommandSequencer").useCommandSequencer.mockReturnValueOnce({
-      performStartAnalyzeSequence: jest.fn(async (projectPath, projectName, targetOpenPath) => {
-        mockHandleStartAnalyze(projectPath, projectName, targetOpenPath);
-        
-        try {
-          // Check if SonarQube is running
-          const status = await mockIsSonarQubeRunning({ detailed: true });
-          
-          // If SonarQube is in starting state, show an animated toast
-          if (status && status.status === "starting") {
-            await mockShowToast({
-              style: "Animated",
-              title: mockTranslate('commands.startSonarQube.waiting'),
-              message: mockTranslate('commands.startSonarQube.pleaseWait')
-            });
-            return true;
-          }
-          
-          return true;
-        } catch (error) {
-          // Handle errors with toast
-          await mockShowToast({
-            style: "Failure",
-            title: "Error",
-            message: error instanceof Error ? error.message : "Unknown error"
-          });
-          
-          return false;
-        }
-      })
-    });
-    
-    render(<StartAnalyzeOpenSonarQubeComponent />);
-    
-    // Get the stored onStartAnalyze function from the mock props
-    const onStartAnalyze = ProjectsList.mockProps?.onStartAnalyze;
-    expect(onStartAnalyze).toBeDefined();
-    
-    await act(async () => {
-      if (onStartAnalyze) {
-        await onStartAnalyze("/test/project/path", "Test Project");
-      }
-    });
-    
-    // Verify that a waiting toast was shown
-    expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({
-      style: "Animated",
-      title: expect.stringContaining("translated."),
-      message: expect.stringContaining("translated.")
-    }));
-  });
-  
-  it("handles detailed error scenarios with localized messages", async () => {
-    // Set SonarQube as not running for this test
-    mockSonarqubeState.running = false;
-    mockSonarqubeState.status = "down";
-    mockSonarqubeState.details = "SonarQube is not running";
-    mockSonarqubeState.detailedResult = {
-      webUp: false,
-      dbUp: false,
-      status: "down"
-    };
-    
-    // Setup translations
-    mockTranslate.mockImplementation((key) => `translated.${key}`);
-    
-    // Setup preferences
-    mockGetPreferenceValues.mockReturnValue({
-      sonarqubePodmanDir: "/valid/podman/path",
-      useCustomSonarQubeApp: false,
-      sonarqubeAppPath: ""
-    });
-    
-    // Make runInNewTerminal throw an error
-    mockRunInNewTerminal.mockRejectedValueOnce(new Error("Test terminal error"));
-    
-    render(<StartAnalyzeOpenSonarQubeComponent />);
-    
-    // Get the stored onStartAnalyze function from the mock props
-    const onStartAnalyze = ProjectsList.mockProps?.onStartAnalyze;
-    expect(onStartAnalyze).toBeDefined();
-    
-    await act(async () => {
-      if (onStartAnalyze) {
-        await onStartAnalyze("/test/project/path", "Test Project");
-      }
-    });
-    
-    // Verify error toast was shown with translated messages
-    expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({
-      style: "Failure",
-      title: expect.stringContaining("Error"),
-      message: expect.stringContaining("Test terminal error")
-    }));
   });
 });

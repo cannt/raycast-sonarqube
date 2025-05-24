@@ -5,9 +5,9 @@ import { __ } from "../i18n";
 const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
 
 /**
- * Command to open SonarQube application or web URL
+ * Logic to open SonarQube application or web URL
  */
-export default async function openSonarQubeApp() {
+export async function openSonarQubeAppLogic() {
   const { useCustomSonarQubeApp, sonarqubeAppPath } = getPreferenceValues<Preferences>();
 
   let targetPath: string;

@@ -8,7 +8,6 @@ import {
   Action,
   Icon,
   useNavigation,
-  Form,
   confirmAlert,
   Keyboard,
 } from "@raycast/api";
@@ -19,13 +18,14 @@ import * as path from "path"; // For path.basename
 import { __ } from "../i18n";
 import useTranslation from "../i18n/useTranslation";
 
-const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
-
 import ProjectForm from "../components/ProjectForm";
 
+const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
 
-// === Main Command Component ===
-export default function Command() {
+/**
+ * React component for the SonarQube analysis command
+ */
+export function RunSonarAnalysisComponent() {
   const { push } = useNavigation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

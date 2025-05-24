@@ -3,9 +3,9 @@ import { Preferences, runCommand, isSonarQubeRunning } from "../utils";
 import { __ } from "../i18n";
 
 /**
- * Command to start the SonarQube instance using Podman
+ * Logic to start the SonarQube instance using Podman
  */
-export default async function startSonarQube() {
+export async function startSonarQubeLogic() {
   const preferences = getPreferenceValues<Preferences>();
   const sonarqubePodmanDir = preferences.sonarqubePodmanDir;
 

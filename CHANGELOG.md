@@ -5,16 +5,13 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 ## [Unreleased]
 
 ### Added
-- Comprehensive project reorganization with an improved domain-based structure:
-  - `commands/` directory for all Raycast command entry points
-  - `components/` directory for UI components with proper subdirectories
-  - `hooks/` directory for custom React hooks
-  - `utils/` directory with domain-specific modules (terminal, sonarQubeStatus, projectManagement)
-  - `i18n/` directory for internationalization system
-  - `testUtils/` directory for test helpers and mocks
-  - Properly organized test files in `__tests__` directories adjacent to their implementation files
-- Added README files in each major directory explaining its purpose and contents
-- Created PROJECT_STRUCTURE.md with detailed documentation of the project organization
+- Implemented improved command structure organization:
+  - Moved command entry points to the root src directory to satisfy Raycast requirements
+  - Created a dedicated src/lib directory for implementation logic
+  - Clear separation between entry points and business logic for better testability
+  - Each command now has a thin entry point and a robust implementation in lib/
+- Cleaned up old command files from src/commands directory after successful migration
+- Updated all test files to reference new module locations
 
 ### Changed
 - Improved production code test coverage with excellent metrics in key components:
@@ -30,6 +27,7 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 - All 282 tests are now passing with zero failures
 
 ### Fixed
+- Improved error handling in startAnalyzeOpenSonarQubeComponent for null SonarQube paths with user-friendly toast messages
 - Fixed all failing tests across the codebase with a consistent mocking approach
 - Resolved complex HTTP mocking issues in all test files by directly mocking the isSonarQubeRunning function
 - Fixed TypeScript errors related to global variables in test state by using module-level objects
@@ -44,6 +42,13 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 - Resolved JSON parsing errors in project management tests
 - Fixed i18n mock paths in useCommandSequencer tests
 - Fixed component imports in ProjectEmptyState, ProjectListItem, and ProjectsList
+- Fixed runSonarAnalysis.test.tsx with direct module mocking approach, proper toast state tracking, and improved test isolation
+- Fixed startAnalyzeOpenSonarQube.test.tsx with comprehensive component mocking, correctly typed function parameters, and consistent test state management
+- Improved React component testing methodology using proper type annotations and avoiding test state leakage between test cases
+- Fixed all test failures in startAnalyzeOpenSonarQube's enhanced, complete, and refactored tests with systematic mocking approach (May 24, 2025)
+- Resolved TypeScript errors in test files by adding proper interfaces and type definitions
+- Enhanced test coverage for error scenarios in startAnalyzeOpenSonarQube with eight comprehensive test cases
+- Fixed SonarQube starting state test case by implementing proper status mocking and verification
 
 ## [1.1.0] - 2025-05-14
 

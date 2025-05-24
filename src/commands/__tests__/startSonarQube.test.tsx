@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 
-import startSonarQube from "../../commands/startSonarQube";
+import { startSonarQubeLogic as startSonarQube } from "../../lib/sonarQubeStarter";
 
 // Mock i18n
 jest.mock("../../i18n", () => ({
