@@ -1,11 +1,9 @@
 import { getPreferenceValues, open, showToast, Toast, openExtensionPreferences } from "@raycast/api";
 import { Preferences } from "../utils";
 import { __ } from "../i18n";
+import { hasSonarQubePathPromptBeenShown, markSonarQubePathPromptAsShown } from "../utils/sessionState";
 
 const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
-
-// Store whether we've already shown the missing path toast
-let hasShownMissingPathToast = false;
 
 /**
  * Logic to open SonarQube application or web URL
@@ -18,8 +16,8 @@ export async function openSonarQubeAppLogic() {
   if (useCustomSonarQubeApp) {
     if (!sonarqubeAppPath || sonarqubeAppPath.trim() === "") {
       // Only show the toast once per session
-      if (!hasShownMissingPathToast) {
-        hasShownMissingPathToast = true;
+      if (!hasSonarQubePathPromptBeenShown()) {
+        markSonarQubePathPromptAsShown();
         await showToast({
           style: Toast.Style.Failure,
           title: __("preferences.useCustomSonarQubeApp.title"),

@@ -32,7 +32,7 @@
       "title": "Custom SonarQube App Path/URL",
       "description": "Path or URL for your SonarQube. Used only if 'Use Custom SonarQube Path/URL' is checked. Can be left blank if not using a custom path. For URLs, enter manually; for local apps, use the file picker. / Ruta o URL para SonarQube. Usado solo si 'Usar Ruta/URL Personalizada de SonarQube' está marcado. Puede dejarse en blanco si no usa una ruta personalizada. Para URLs, ingrese manualmente; para aplicaciones locales, use el selector de archivos.",
       "type": "file",
-      "required": true,
+      "required": false,
       "placeholder": "e.g., http://custom.sonar:9000 or select an app"
     },
     {

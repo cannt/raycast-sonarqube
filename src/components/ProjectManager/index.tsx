@@ -1,17 +1,65 @@
-import React from "react";
-import { ActionPanel, Action, List, Icon } from "@raycast/api";
+import React, { useState } from "react";
+import { ActionPanel, Action, List, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { useProjectLoader } from "../../hooks/useProjectLoader";
 import { __ } from "../../i18n";
-import { Project } from "../../utils/projectManagement";
+import { Project, saveProject, deleteProject } from "../../utils/projectManagement";
 
 /**
  * Component for managing projects
  */
 export function ProjectManager() {
-  const { projects, isLoading, addProject, removeProject } = useProjectLoader();
+  const { projects, isLoading, error } = useProjectLoader();
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  // Function to handle project save
+  const handleSaveProject = async (values: { name: string; path: string }, projectId?: string) => {
+    try {
+      await saveProject({
+        id: projectId || Math.random().toString(36).substring(2, 9),
+        name: values.name,
+        path: values.path
+      });
+      await showToast({
+        style: Toast.Style.Success,
+        title: __("projects.form.saveSuccess")
+      });
+      // Trigger refresh of project list
+      setRefreshTrigger(prev => prev + 1);
+    } catch (err) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: __("projects.form.saveError"),
+        message: String(err)
+      });
+    }
+  };
+
+  // Function to handle project deletion
+  const handleDeleteProject = async (projectId: string) => {
+    try {
+      await deleteProject(projectId);
+      await showToast({
+        style: Toast.Style.Success,
+        title: __("projects.form.deleteSuccess")
+      });
+      // Trigger refresh of project list
+      setRefreshTrigger(prev => prev + 1);
+    } catch (err) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: __("projects.form.deleteError"),
+        message: String(err)
+      });
+    }
+  };
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder={__("common.search")}>
+    <List 
+      isLoading={isLoading} 
+      searchBarPlaceholder={__("common.search")}
+      // Force refresh when the trigger changes
+      key={`project-list-${refreshTrigger}`}
+    >
       <List.Section title={__("projects.management.title")}>
         {projects.length > 0 ? (
           projects.map((project: Project) => (
@@ -21,7 +69,7 @@ export function ProjectManager() {
               subtitle={project.path}
               accessories={[
                 {
-                  icon: { source: "folder-16" },
+                  icon: { source: Icon.Folder },
                   text: project.path,
                 },
               ]}
@@ -33,10 +81,8 @@ export function ProjectManager() {
                       icon={Icon.Pencil}
                       target={
                         <ProjectForm
-                          projectToEdit={project}
-                          onSaveSuccess={() => {
-                            // This would refresh the projects list
-                          }}
+                          project={project}
+                          onSubmit={(values) => handleSaveProject(values, project.id)}
                         />
                       }
                     />
@@ -44,12 +90,7 @@ export function ProjectManager() {
                       title={__("projects.management.deleteProject")}
                       icon={Icon.Trash}
                       style={Action.Style.Destructive}
-                      onAction={() => {
-                        // Show confirmation before deleting
-                        if (removeProject) {
-                          removeProject(project.id);
-                        }
-                      }}
+                      onAction={() => handleDeleteProject(project.id)}
                     />
                   </ActionPanel.Section>
                 </ActionPanel>
@@ -67,9 +108,7 @@ export function ProjectManager() {
                   title={__("projects.management.addProject")}
                   target={
                     <ProjectForm
-                      onSaveSuccess={() => {
-                        // This would refresh the projects list
-                      }}
+                      onSubmit={(values) => handleSaveProject(values)}
                     />
                   }
                   icon={Icon.Plus}
@@ -85,16 +124,15 @@ export function ProjectManager() {
           icon={Icon.Plus}
           actions={
             <ActionPanel>
-              <Action.Push
+              <Action
                 title={__("projects.management.addProject")}
-                target={
-                  <ProjectForm
-                    onSaveSuccess={() => {
-                      // This would refresh the projects list
-                    }}
-                  />
-                }
                 icon={Icon.Plus}
+                onAction={() => {
+                  const FormComponent = () => (
+                    <ProjectForm onSubmit={(values) => handleSaveProject(values)} />
+                  );
+                  useNavigation().push(<FormComponent />);
+                }}
               />
             </ActionPanel>
           }

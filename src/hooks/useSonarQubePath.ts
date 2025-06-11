@@ -2,11 +2,9 @@ import { useState } from "react";
 import { getPreferenceValues, showToast, Toast, openExtensionPreferences } from "@raycast/api";
 import { Preferences } from "../utils";
 import { __ } from "../i18n";
+import { hasSonarQubePathPromptBeenShown, markSonarQubePathPromptAsShown } from "../utils/sessionState";
 
 const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
-
-// Track if we've shown the path prompt already during this session
-let hasPromptedForPath = false;
 
 /**
  * Custom hook to handle SonarQube path resolution
@@ -26,8 +24,8 @@ export function useSonarQubePath() {
     if (preferences.useCustomSonarQubeApp) {
       if (!preferences.sonarqubeAppPath || preferences.sonarqubeAppPath.trim() === "") {
         // Only show the toast once per session
-        if (!hasPromptedForPath) {
-          hasPromptedForPath = true;
+        if (!hasSonarQubePathPromptBeenShown()) {
+          markSonarQubePathPromptAsShown();
           const toast = await showToast({
             style: Toast.Style.Failure,
             title: __("preferences.useCustomSonarQubeApp.title"),

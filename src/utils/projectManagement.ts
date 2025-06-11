@@ -42,3 +42,36 @@ export async function loadProjects(): Promise<Project[]> {
 export async function saveProjects(projects: Project[]): Promise<void> {
   await LocalStorage.setItem(SONARQUBE_PROJECTS_STORAGE_KEY, JSON.stringify(projects));
 }
+
+/**
+ * Save a single project to LocalStorage
+ * If project with same ID exists, it will be updated, otherwise added
+ */
+export async function saveProject(project: Project): Promise<void> {
+  const projects = await loadProjects();
+  const existingIndex = projects.findIndex(p => p.id === project.id);
+  
+  if (existingIndex >= 0) {
+    // Update existing project
+    projects[existingIndex] = project;
+  } else {
+    // Add new project
+    projects.push(project);
+  }
+  
+  await saveProjects(projects);
+}
+
+/**
+ * Delete a project by ID
+ */
+export async function deleteProject(projectId: string): Promise<void> {
+  const projects = await loadProjects();
+  const filteredProjects = projects.filter(p => p.id !== projectId);
+  
+  if (filteredProjects.length === projects.length) {
+    throw new Error(`Project with ID ${projectId} not found`);
+  }
+  
+  await saveProjects(filteredProjects);
+}
