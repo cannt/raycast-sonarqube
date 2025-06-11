@@ -1,6 +1,7 @@
 import React from "react";
 import { List, ActionPanel, Action, Icon } from "@raycast/api";
 import { __ } from "../../i18n";
+import { ProjectManager } from "../ProjectManager";
 
 /**
  * Component for showing an empty state when no projects are available
@@ -17,7 +18,7 @@ export function ProjectEmptyState() {
         <ActionPanel>
           <Action.Push
             title={__("projects.management.goToManager")}
-            target={<List.Item title={__("projects.management.notImplemented")} />}
+            target={<ProjectManager />}
             icon={Icon.List}
           />
         </ActionPanel>

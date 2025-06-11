@@ -27,11 +27,12 @@ export const showToast = jest.fn().mockImplementation((props: any) => {
   
   // Return an object with updatable properties
   return {
-    style: props.style,
-    title: props.title,
-    message: props.message,
+    // Use getter functions instead of direct properties to avoid conflicts with setters
+    get styleValue() { return props.style; },
+    get titleValue() { return props.title; },
+    get messageValue() { return props.message; },
     
-    // Allow properties to be updated
+    // Allow properties to be updated with setters
     set style(value: string) { mockToast.style = value; },
     set title(value: string) { mockToast.title = value; },
     set message(value: string) { mockToast.message = value; }

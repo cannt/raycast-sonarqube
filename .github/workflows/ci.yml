@@ -20,6 +20,9 @@ jobs:
     
     - name: Install dependencies
       run: npm install
+      
+    - name: Lint
+      run: npx @raycast/api lint
     
     - name: Run tests
       run: npm test -- --coverage
@@ -40,3 +43,13 @@ jobs:
       with:
         name: code-coverage-report
         path: coverage/
+        
+    - name: Build Extension
+      run: npm run build
+    
+    # Preview, only on pull_request
+    - name: Preview Extension
+      if: github.event_name == 'pull_request'
+      env: 
+        RAYCAST_API_TOKEN: ${{ secrets.RAYCAST_API_TOKEN }}
+      run: npx @raycast/api publish --preview

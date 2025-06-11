@@ -4,6 +4,9 @@ import { __ } from "../i18n";
 
 const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
 
+// Store whether we've already shown the missing path toast
+let hasShownMissingPathToast = false;
+
 /**
  * Logic to open SonarQube application or web URL
  */
@@ -14,20 +17,24 @@ export async function openSonarQubeAppLogic() {
 
   if (useCustomSonarQubeApp) {
     if (!sonarqubeAppPath || sonarqubeAppPath.trim() === "") {
-      await showToast({
-        style: Toast.Style.Failure,
-        title: __("preferences.useCustomSonarQubeApp.title"),
-        message: __("preferences.sonarqubeAppPath.description"),
-        // @ts-ignore - primaryAction is actually supported but not in the type definitions
-        primaryAction: {
-          title: __("preferences.language.title"),
-          onAction: async (toast: any) => {
-            await openExtensionPreferences();
-            // @ts-ignore - hide method exists but isn't in the type definition
-            toast.hide();
+      // Only show the toast once per session
+      if (!hasShownMissingPathToast) {
+        hasShownMissingPathToast = true;
+        await showToast({
+          style: Toast.Style.Failure,
+          title: __("preferences.useCustomSonarQubeApp.title"),
+          message: __("preferences.sonarqubeAppPath.description"),
+          // @ts-ignore - primaryAction is actually supported but not in the type definitions
+          primaryAction: {
+            title: __("preferences.language.title"),
+            onAction: async (toast: any) => {
+              await openExtensionPreferences();
+              // @ts-ignore - hide method exists but isn't in the type definition
+              toast.hide();
+            },
           },
-        },
-      });
+        });
+      }
       return;
     }
     targetPath = sonarqubeAppPath;

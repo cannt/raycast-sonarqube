@@ -7,12 +7,14 @@
   "icon": "sonarqube-icon.png",
   "author": "Angel",
   "license": "MIT",
+  "categories": ["Developer Tools", "Productivity"],
+  "repository": "https://github.com/cannt/raycast-sonarqube",
   "preferences": [
     {
       "name": "sonarqubePodmanDir",
       "title": "SonarQube Podman Directory",
       "description": "Directory containing Podman setup for SonarQube. / Directorio con la configuración de Podman para SonarQube.",
-      "type": "textfield",
+      "type": "directory",
       "required": true,
       "placeholder": "/path/to/sonarqube_podman_dir"
     },
@@ -28,10 +30,10 @@
     {
       "name": "sonarqubeAppPath",
       "title": "Custom SonarQube App Path/URL",
-      "description": "Path or URL for your SonarQube. Used only if 'Use Custom SonarQube Path/URL' is checked (in extension settings). Can be left blank if not using a custom path. / Ruta o URL para SonarQube. Usado solo si 'Usar Ruta/URL Personalizada de SonarQube' está marcado (en ajustes de extensión). Puede dejarse en blanco si no usa una ruta personalizada.",
-      "type": "textfield",
+      "description": "Path or URL for your SonarQube. Used only if 'Use Custom SonarQube Path/URL' is checked. Can be left blank if not using a custom path. For URLs, enter manually; for local apps, use the file picker. / Ruta o URL para SonarQube. Usado solo si 'Usar Ruta/URL Personalizada de SonarQube' está marcado. Puede dejarse en blanco si no usa una ruta personalizada. Para URLs, ingrese manualmente; para aplicaciones locales, use el selector de archivos.",
+      "type": "file",
       "required": true,
-      "placeholder": "e.g., /App/Sonar.app or http://custom.sonar:9000 or leave blank"
+      "placeholder": "e.g., http://custom.sonar:9000 or select an app"
     },
     {
       "name": "language",

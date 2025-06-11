@@ -24,7 +24,7 @@ export const generateId = () => Math.random().toString(36).substring(2, 11);
  * Load projects from LocalStorage
  */
 export async function loadProjects(): Promise<Project[]> {
-  const storedProjects = await LocalStorage.getItem<string>(SONARQUBE_PROJECTS_STORAGE_KEY);
+  const storedProjects = await LocalStorage.getItem(SONARQUBE_PROJECTS_STORAGE_KEY);
   if (storedProjects) {
     try {
       return JSON.parse(storedProjects) as Project[];

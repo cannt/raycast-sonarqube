@@ -101,6 +101,7 @@ const translations = {
       confirmDelete: "¿Estás seguro de que quieres eliminar este proyecto?",
       goToManager: "Ir al Gestor de Proyectos",
       notImplemented: "Esto navegaría al gestor de proyectos (no implementado)",
+      actions: "Acciones",
     },
     form: {
       name: "Nombre del Proyecto",

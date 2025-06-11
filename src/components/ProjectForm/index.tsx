@@ -61,6 +61,26 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
             onSubmit={validateAndSubmit} 
           />
           <Action 
+            title={__("projects.form.chooseDirectory")}
+            icon="folder-icon.png"
+            shortcut={{ modifiers: ["cmd"], key: "o" }}
+            onAction={() => {
+              // Use the Raycast native API for dialog functionality
+              // The dialog will be provided by Raycast itself when the checkbox is clicked
+              // This is a placeholder action - in a production app, you would handle folder selection here
+              // We'll use Raycast's preference UI to handle this instead since Raycast will handle the folder picking dialog
+              
+              // Show a simulated dialog for folder selection (for development purposes)
+              // Normally this would be handled by the native preferences UI
+              const simulatedPath = "/Users/selected/project/path";
+              setPath(simulatedPath);
+              
+              // In actual Raycast extensions, this button would trigger the native file picker
+              // This is handled differently than how we're simulating it here
+              // The real file picker is handled through the "action" property in package.json
+            }}
+          />
+          <Action 
             title={__("common.cancel")} 
             shortcut={{ modifiers: ["cmd"], key: "." }} 
             onAction={goBack} 
@@ -76,14 +96,16 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
         value={name}
         onChange={setName}
       />
-      <Form.TextField
+      <Form.FilePicker
         id="path"
         title={__("projects.form.path")}
-        placeholder={__("projects.form.pathPlaceholder")}
-        info={__("projects.form.pathPlaceholder")}
+        allowMultipleSelection={false}
+        canChooseDirectories={true}
+        canChooseFiles={false}
         error={pathError}
-        value={path}
-        onChange={setPath}
+        value={path ? [path] : []}
+        onChange={(paths: string[]) => setPath(paths[0] || "")}
+        info={__("projects.form.filePicker")}
       />
     </Form>
   );
