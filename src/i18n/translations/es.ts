@@ -22,7 +22,7 @@ const translations = {
   
   commands: {
     startSonarQube: {
-      title: "Iniciar SonarQube Localmente (Podman)",
+      title: "Iniciar SonarQube",
       description: "Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.",
       starting: "Iniciando SonarQube...",
       alreadyRunning: "SonarQube ya está en ejecución",
@@ -40,10 +40,11 @@ const translations = {
       statusRunning: "SonarQube está en ejecución",
       statusNotRunning: "SonarQube no está en ejecución",
       statusUnknown: "El estado de SonarQube es desconocido",
+      initializingContinue: "SonarQube puede estar inicializándose todavía. Continuando de todos modos...",
     },
     
     stopSonarQube: {
-      title: "Detener SonarQube Localmente (Podman)",
+      title: "Detener SonarQube",
       description: "Para la instancia local de SonarQube y la máquina Podman. Intenta detener primero las tareas de Gradle en curso en todos los proyectos configurados.",
       stopping: "Deteniendo SonarQube...",
       stoppingGradle: "Deteniendo tareas de Gradle primero...",
@@ -52,14 +53,14 @@ const translations = {
     },
     
     openSonarQubeApp: {
-      title: "Abrir Aplicación SonarQube",
+      title: "Abrir SonarQube",
       description: "Abre la aplicación SonarQube o su URL web.",
       opening: "Abriendo SonarQube...",
       openError: "Error al abrir SonarQube",
     },
     
     runSonarAnalysis: {
-      title: "Ejecutar Análisis de SonarQube",
+      title: "Análisar proyecto con SonarQube",
       description: "Selecciona un proyecto para ejecutar el análisis de SonarQube y abrir la aplicación. Gestiona proyectos desde este comando.",
       noProjects: "No hay proyectos configurados",
       selectProject: "Seleccionar un proyecto",
@@ -73,28 +74,28 @@ const translations = {
     },
     
     allInOne: {
-      title: "Iniciar, Analizar SonarQube y Abrir Aplicación",
-      description: "Inicia SonarQube si es necesario, ejecuta análisis y abre la aplicación en un solo paso.",
-      actionTitle: "Iniciar SonarQube, Ejecutar Análisis y Abrir Aplicación",
+      title: "Iniciar SonarQube y Analizar Proyecto",
+      description: "Inicia SonarQube si es necesario y ejecuta análisis en un solo paso.",
+      actionTitle: "Iniciar SonarQube y Ejecutar Análisis",
       success: "Secuencia de SonarQube iniciada para {{projectName}}",
       error: "Error al iniciar la secuencia de SonarQube",
       configureFirst: "Por favor, configura los proyectos primero en el comando 'Ejecutar Análisis de SonarQube'.",
     },
     
     startAnalyzeOpenSonarQube: {
-      title: "Iniciar, Analizar SonarQube y Abrir Aplicación",
-      description: "Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis y abrir la aplicación. Gestiona proyectos desde este comando.",
+      title: "Iniciar SonarQube y Analizar Proyecto",
+      description: "Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis. Gestiona proyectos desde este comando.",
       initializing: "Inicializando entorno de SonarQube...",
       startingAnalysis: "Iniciando análisis de SonarQube...",
       openingResults: "Abriendo resultados de SonarQube...",
-      allInOneSuccess: "SonarQube iniciado, análisis completado y resultados abiertos",
+      allInOneSuccess: "SonarQube iniciado y análisis completado",
       allInOneError: "Error al completar el flujo de trabajo de SonarQube",
     },
   },
   
   projects: {
     management: {
-      title: "Gestión de Proyectos",
+      title: "Gestionar Proyectos",
       addProject: "Añadir Proyecto",
       editProject: "Editar Proyecto",
       deleteProject: "Eliminar Proyecto",
@@ -147,15 +148,15 @@ const translations = {
       description: "Directorio que contiene la configuración de Podman para SonarQube.",
       placeholder: "/ruta/al/directorio_podman_sonarqube",
     },
-    useCustomSonarQubeApp: {
-      title: "Usar Ruta/URL Personalizada de SonarQube",
-      label: "Especificar una aplicación o URL personalizada de SonarQube para abrir.",
-      description: "Si está marcado, especifica una ruta de aplicación o URL personalizada de SonarQube en el campo siguiente. De lo contrario, se usará http://localhost:9000.",
-    },
     sonarqubeAppPath: {
-      title: "Ruta/URL Personalizada de la Aplicación SonarQube",
-      description: "Ruta o URL para tu SonarQube. Se usa solo si 'Usar Ruta/URL Personalizada de SonarQube' está marcado (en ajustes de extensión). Puede dejarse en blanco si no se usa una ruta personalizada.",
-      placeholder: "p.ej., /Aplicaciones/Sonar.app o http://custom.sonar:9000 o dejar en blanco",
+      title: "Ruta de la Aplicación SonarQube",
+      description: "Ruta opcional a la aplicación SonarQube. Si se especifica, esta aplicación se abrirá directamente. Dejar en blanco para usar localhost con el puerto especificado a continuación.",
+      placeholder: "p.ej., /Aplicaciones/SonarQube.app o dejar en blanco para usar localhost",
+    },
+    sonarqubePort: {
+      title: "Puerto de SonarQube",
+      description: "Puerto para el servidor SonarQube cuando se accede a través de localhost. Solo se utiliza cuando no se especifica una ruta de aplicación arriba.",
+      placeholder: "9000",
     },
     language: {
       title: "Idioma",

@@ -2,7 +2,6 @@ import {
   getPreferenceValues,
   showToast,
   Toast,
-  openExtensionPreferences,
   List,
   ActionPanel,
   Action,
@@ -20,7 +19,7 @@ import useTranslation from "../i18n/useTranslation";
 
 import ProjectForm from "../components/ProjectForm";
 
-const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
+const DEFAULT_SONARQUBE_PORT = "9000";
 
 /**
  * React component for the SonarQube analysis command
@@ -93,28 +92,16 @@ export function RunSonarAnalysisComponent() {
   // --- Analysis Action ---
   const performAnalysis = useCallback(
     async (projectPath: string, projectName: string) => {
+      // Determine the SonarQube target path using the simplified preference structure
       let targetOpenPath: string;
-      if (preferences.useCustomSonarQubeApp) {
-        if (!preferences.sonarqubeAppPath || preferences.sonarqubeAppPath.trim() === "") {
-          await showToast({
-            style: Toast.Style.Failure,
-            title: __("preferences.useCustomSonarQubeApp.title"),
-            message: __("preferences.sonarqubeAppPath.description"),
-            // @ts-ignore - primaryAction is supported but not in type definitions
-            primaryAction: {
-              title: __("preferences.language.title"),
-              onAction: async (t: any) => {
-                await openExtensionPreferences();
-                // @ts-ignore - hide method exists but isn't in type definition
-                t.hide();
-              },
-            },
-          });
-          return;
-        }
+      
+      // If app path is specified, use that directly
+      if (preferences.sonarqubeAppPath && preferences.sonarqubeAppPath.trim() !== "") {
         targetOpenPath = preferences.sonarqubeAppPath;
       } else {
-        targetOpenPath = DEFAULT_SONARQUBE_URL;
+        // Otherwise use localhost with custom port or default port
+        const port = preferences.sonarqubePort?.trim() || DEFAULT_SONARQUBE_PORT;
+        targetOpenPath = `http://localhost:${port}`;
       }
       const analysisCommands = [
         `cd "${projectPath}"`,

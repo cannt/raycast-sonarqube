@@ -37,8 +37,8 @@ jest.mock('@raycast/api', () => {
   const openExtensionPreferencesMock = jest.fn().mockResolvedValue(undefined);
   const getPreferenceValuesMock = jest.fn().mockReturnValue({
     sonarqubePodmanDir: '/mock/sonarqube/dir',
-    useCustomSonarQubeApp: false,
     sonarqubeAppPath: '',
+    sonarqubePort: '9000',
     language: 'en',
   });
   

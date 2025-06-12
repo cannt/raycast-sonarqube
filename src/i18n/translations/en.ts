@@ -33,7 +33,7 @@ const translations = {
   
   commands: {
     startSonarQube: {
-      title: "Start SonarQube Locally (Podman)",
+      title: "Start SonarQube",
       description: "Starts local SonarQube instance using Podman. Checks if SonarQube is already running and notifies the user in that case.",
       starting: "Starting SonarQube...",
       alreadyRunning: "SonarQube is already running",
@@ -50,11 +50,12 @@ const translations = {
       statusInitializing: "SonarQube might be initializing. Checking again with longer timeout...",
       statusRunning: "SonarQube is running",
       statusNotRunning: "SonarQube is not running",
-      statusUnknown: "SonarQube status is unknown",
+      statusUnknown: "SonarQube status unknown",
+      initializingContinue: "SonarQube may still be initializing. Continuing anyway...",
     },
     
     stopSonarQube: {
-      title: "Stop SonarQube Locally (Podman)",
+      title: "Stop SonarQube",
       description: "Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in all configured projects first.",
       stopping: "Stopping SonarQube...",
       stoppingGradle: "Stopping Gradle tasks first...",
@@ -63,7 +64,7 @@ const translations = {
     },
     
     openSonarQubeApp: {
-      title: "Open SonarQube App",
+      title: "Open SonarQube",
       description: "Opens the SonarQube application or its web URL.",
       opening: "Opening SonarQube...",
       openError: "Failed to open SonarQube",
@@ -84,21 +85,21 @@ const translations = {
     },
     
     allInOne: {
-      title: "Start, Analyze SonarQube & Open App",
-      description: "Starts SonarQube if needed, runs analysis, and opens the app in one step.",
-      actionTitle: "Start SonarQube, Run Analysis & Open App",
+      title: "Start Sonarqube & Analyze Project",
+      description: "Starts SonarQube if needed and runs analysis in one step.",
+      actionTitle: "Start SonarQube & Run Analysis",
       success: "SonarQube Sequence Initiated for {{projectName}}",
       error: "Failed to Initiate SonarQube Sequence",
       configureFirst: "Please configure projects in the 'Run SonarQube Analysis' command first.",
     },
     
     startAnalyzeOpenSonarQube: {
-      title: "Start, Analyze SonarQube & Open App",
-      description: "Starts SonarQube, then select a project to run analysis and open the app. Manage projects from this command.",
+      title: "Start Sonarqube & Analyze Project",
+      description: "Starts SonarQube, then select a project to run analysis. Manage projects from this command.",
       initializing: "Initializing SonarQube environment...",
       startingAnalysis: "Starting SonarQube analysis...",
       openingResults: "Opening SonarQube results...",
-      allInOneSuccess: "SonarQube started, analysis completed, and results opened",
+      allInOneSuccess: "SonarQube started and analysis completed",
       allInOneError: "Failed to complete SonarQube workflow",
     },
   },
@@ -150,15 +151,15 @@ const translations = {
       description: "Directory containing Podman setup for SonarQube.",
       placeholder: "/path/to/sonarqube_podman_dir",
     },
-    useCustomSonarQubeApp: {
-      title: "Use Custom SonarQube Path/URL",
-      label: "Specify a custom SonarQube application or URL to open.",
-      description: "If checked, specify a custom SonarQube application path or URL in the field below. Otherwise, http://localhost:9000 will be used.",
-    },
     sonarqubeAppPath: {
-      title: "Custom SonarQube App Path/URL",
-      description: "Path or URL for your SonarQube. Used only if 'Use Custom SonarQube Path/URL' is checked (in extension settings). Can be left blank if not using a custom path.",
-      placeholder: "e.g., /App/Sonar.app or http://custom.sonar:9000 or leave blank",
+      title: "SonarQube App Path",
+      description: "Optional path to SonarQube application. If specified, this app will be opened directly. Leave blank to use localhost with the port specified below.",
+      placeholder: "e.g., /Applications/SonarQube.app or leave blank to use localhost",
+    },
+    sonarqubePort: {
+      title: "SonarQube Port",
+      description: "Port for SonarQube server when accessing via localhost. Only used when no app path is specified above.",
+      placeholder: "9000",
     },
     language: {
       title: "Language",

@@ -78,9 +78,9 @@ All notable changes to the SonarQube Tools extension will be documented in this 
 ### Added
 - Initial release with multi-project support
 - Core commands for SonarQube management:
-  - Start SonarQube Locally (Podman)
+  - Start SonarQube
   - Stop SonarQube Locally (Podman)
-  - Open SonarQube App
+  - Open SonarQube
   - Start SonarQube, Analyze & Open Project
   - Run Sonar Analysis
 - Project management interface for adding, editing, and removing projects

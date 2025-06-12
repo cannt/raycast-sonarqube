@@ -10,10 +10,10 @@
 type ExtensionPreferences = {
   /** SonarQube Podman Directory - Directory containing Podman setup for SonarQube. / Directorio con la configuración de Podman para SonarQube. */
   "sonarqubePodmanDir": string,
-  /** Use Custom SonarQube Path/URL - If checked, specify a custom SonarQube application path or URL in the field below. Otherwise, http://localhost:9000 will be used. */
-  "useCustomSonarQubeApp": boolean,
-  /** Custom SonarQube App Path/URL - Path or URL for your SonarQube. Used only if 'Use Custom SonarQube Path/URL' is checked. Can be left blank if not using a custom path. For URLs, enter manually; for local apps, use the file picker. / Ruta o URL para SonarQube. Usado solo si 'Usar Ruta/URL Personalizada de SonarQube' está marcado. Puede dejarse en blanco si no usa una ruta personalizada. Para URLs, ingrese manualmente; para aplicaciones locales, use el selector de archivos. */
+  /** SonarQube App Path (Optional) - Optional path to a SonarQube application. If specified, this app will be opened instead of the URL. Leave blank to use the URL. / Ruta opcional a la aplicación de SonarQube. Si se especifica, esta aplicación se abrirá en lugar de la URL. Dejar en blanco para usar la URL. */
   "sonarqubeAppPath"?: string,
+  /** SonarQube Port (Optional) - Custom port for SonarQube. Default is 9000. Only used when no app path is specified. / Puerto personalizado para SonarQube. El valor predeterminado es 9000. Solo se usa cuando no se especifica una ruta de aplicación. */
+  "sonarqubePort": string,
   /** Language / Idioma - Interface language for the extension. If set to 'Auto-detect', will try to use your system language. / Idioma de la interfaz para la extensión. Si se establece en 'Detección automática', se intentará usar el idioma del sistema. */
   "language": "auto" | "en" | "es"
 }
@@ -32,6 +32,8 @@ declare namespace Preferences {
   export type RunSonarAnalysis = ExtensionPreferences & {}
   /** Preferences accessible in the `startAnalyzeOpenSonarQube` command */
   export type StartAnalyzeOpenSonarQube = ExtensionPreferences & {}
+  /** Preferences accessible in the `projectManager` command */
+  export type ProjectManager = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -45,5 +47,7 @@ declare namespace Arguments {
   export type RunSonarAnalysis = {}
   /** Arguments passed to the `startAnalyzeOpenSonarQube` command */
   export type StartAnalyzeOpenSonarQube = {}
+  /** Arguments passed to the `projectManager` command */
+  export type ProjectManager = {}
 }
 

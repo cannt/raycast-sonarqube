@@ -1,43 +1,25 @@
-import { getPreferenceValues, open, showToast, Toast, openExtensionPreferences } from "@raycast/api";
+import { getPreferenceValues, open, showToast, Toast } from "@raycast/api";
 import { Preferences } from "../utils";
 import { __ } from "../i18n";
-import { hasSonarQubePathPromptBeenShown, markSonarQubePathPromptAsShown } from "../utils/sessionState";
 
-const DEFAULT_SONARQUBE_URL = "http://localhost:9000";
+const DEFAULT_SONARQUBE_PORT = "9000";
 
 /**
- * Logic to open SonarQube application or web URL
+ * Logic to Open SonarQubelication or web URL
  */
 export async function openSonarQubeAppLogic() {
-  const { useCustomSonarQubeApp, sonarqubeAppPath } = getPreferenceValues<Preferences>();
-
+  const preferences = getPreferenceValues<Preferences>();
+  
+  // Determine the target path based on preferences
   let targetPath: string;
-
-  if (useCustomSonarQubeApp) {
-    if (!sonarqubeAppPath || sonarqubeAppPath.trim() === "") {
-      // Only show the toast once per session
-      if (!hasSonarQubePathPromptBeenShown()) {
-        markSonarQubePathPromptAsShown();
-        await showToast({
-          style: Toast.Style.Failure,
-          title: __("preferences.useCustomSonarQubeApp.title"),
-          message: __("preferences.sonarqubeAppPath.description"),
-          // @ts-ignore - primaryAction is actually supported but not in the type definitions
-          primaryAction: {
-            title: __("preferences.language.title"),
-            onAction: async (toast: any) => {
-              await openExtensionPreferences();
-              // @ts-ignore - hide method exists but isn't in the type definition
-              toast.hide();
-            },
-          },
-        });
-      }
-      return;
-    }
-    targetPath = sonarqubeAppPath;
+  
+  // If an app path is specified, use that directly
+  if (preferences.sonarqubeAppPath && preferences.sonarqubeAppPath.trim() !== "") {
+    targetPath = preferences.sonarqubeAppPath;
   } else {
-    targetPath = DEFAULT_SONARQUBE_URL;
+    // Otherwise use localhost with the custom port or default port
+    const port = preferences.sonarqubePort?.trim() || DEFAULT_SONARQUBE_PORT;
+    targetPath = `http://localhost:${port}`;
   }
 
   try {

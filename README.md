@@ -109,15 +109,15 @@ This refactoring improves:
 
 Currently, the extension offers the following commands, discoverable in Raycast via English or Spanish terms:
 
-1.  **Start SonarQube Locally (Podman)**
+1.  **Start SonarQube**
     *   **Description:** Starts the local SonarQube instance using Podman. Checks if SonarQube is already running and notifies the user if so. / Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.
     *   **Action:** Executes `podman machine start && podman-compose start` in the configured SonarQube Podman directory, only if SonarQube is not already detected via its API.
 
-2.  **Stop SonarQube Locally (Podman)**
+2.  **Stop SonarQube**
     *   **Description:** Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in all configured projects first. / Para la instancia local de SonarQube y la máquina Podman. Intenta detener primero las tareas de Gradle en curso en todos los proyectos configurados.
     *   **Action:** Executes `./gradlew --stop` in each configured project directory, then `podman-compose stop && podman machine stop` in the configured SonarQube Podman directory.
 
-3.  **Open SonarQube App**
+3.  **Open SonarQube**
     *   **Description:** Opens the SonarQube application or its web URL. / Abre la aplicación SonarQube o su URL web.
     *   **Action:** Opens `http://localhost:9000` in the default browser if SonarQube is running, or the configured SonarQube application if not.
 

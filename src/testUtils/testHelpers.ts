@@ -10,8 +10,8 @@ import { Preferences } from "../utils/common";
 export function mockPreferences(overrides?: Partial<Preferences>): Preferences {
   return {
     sonarqubePodmanDir: "/mock/sonarqube/dir",
-    useCustomSonarQubeApp: false,
     sonarqubeAppPath: "",
+    sonarqubePort: "9000",
     ...overrides,
   };
 }

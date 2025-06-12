@@ -38,7 +38,6 @@ describe("useCommandSequencer", () => {
 
   const projectPath = "/path/to/project";
   const projectName = "Test Project";
-  const targetOpenPath = "http://localhost:9000";
   let hook: ReturnType<typeof useCommandSequencer>;
 
   beforeEach(() => {
@@ -58,7 +57,7 @@ describe("useCommandSequencer", () => {
       details: "SonarQube is running",
     });
 
-    await hook.performStartAnalyzeSequence(projectPath, projectName, targetOpenPath);
+    await hook.performStartAnalyzeSequence(projectPath, projectName);
 
     // Should show success toast
     expect(mockShowToast).toHaveBeenCalledWith(
@@ -86,7 +85,7 @@ describe("useCommandSequencer", () => {
       status: "stopped",
     });
 
-    await hook.performStartAnalyzeSequence(projectPath, projectName, targetOpenPath);
+    await hook.performStartAnalyzeSequence(projectPath, projectName);
 
     // Should show starting toast
     expect(mockShowToast).toHaveBeenCalledWith(
@@ -120,7 +119,7 @@ describe("useCommandSequencer", () => {
         status: "running",
       });
 
-    await hook.performStartAnalyzeSequence(projectPath, projectName, targetOpenPath);
+    await hook.performStartAnalyzeSequence(projectPath, projectName);
 
     // Should check status twice (initial + retry)
     expect(mockIsSonarQubeRunning).toHaveBeenCalledTimes(2);
@@ -144,7 +143,7 @@ describe("useCommandSequencer", () => {
         status: "stopped",
       });
 
-    await hook.performStartAnalyzeSequence(projectPath, projectName, targetOpenPath);
+    await hook.performStartAnalyzeSequence(projectPath, projectName);
 
     // Should check status twice (initial + retry)
     expect(mockIsSonarQubeRunning).toHaveBeenCalledTimes(2);

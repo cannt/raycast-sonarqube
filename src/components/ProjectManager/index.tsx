@@ -5,11 +5,12 @@ import { __ } from "../../i18n";
 import { Project, saveProject, deleteProject } from "../../utils/projectManagement";
 
 /**
- * Component for managing projects
+ * ProjectManager - Component for managing SonarQube projects
  */
 export function ProjectManager() {
   const { projects, isLoading, error } = useProjectLoader();
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+  const navigation = useNavigation();
 
   // Function to handle project save
   const handleSaveProject = async (values: { name: string; path: string }, projectId?: string) => {
@@ -53,13 +54,70 @@ export function ProjectManager() {
     }
   };
 
+  // Show an error screen if there was an error loading projects
+  if (error) {
+    return (
+      <List
+        isLoading={false}
+        searchBarPlaceholder={__("commands.runSonarAnalysis.searchPlaceholder")}
+      >
+        <List.EmptyView
+          title={__("common.error")}
+          description={String(error)}
+          icon={Icon.Warning}
+          actions={
+            <ActionPanel>
+              <Action 
+                title={__("common.retry")} 
+                onAction={() => setRefreshTrigger(prev => prev + 1)}
+                icon={Icon.RotateClockwise}
+              />
+            </ActionPanel>
+          }
+        />
+      </List>
+    );
+  }
+
+  // Add project handler - wraps project form in a function to avoid direct component passing
+  const addProject = () => {
+    const FormWrapper = () => {
+      const handleSubmit = (values: { name: string; path: string }) => {
+        handleSaveProject(values);
+        // Refresh trigger will cause component to reload with new data
+        setRefreshTrigger(prev => prev + 1);
+      };
+
+      return <ProjectForm onSubmit={handleSubmit} />;
+    };
+
+    // Navigate to the form wrapper
+    navigation.push(<FormWrapper />);
+  };
+
+  // Edit project handler
+  const editProject = (project: Project) => {
+    const FormWrapper = () => {
+      const handleSubmit = (values: { name: string; path: string }) => {
+        handleSaveProject(values, project.id);
+        // Refresh trigger will cause component to reload with new data
+        setRefreshTrigger(prev => prev + 1);
+      };
+      
+      return <ProjectForm project={project} onSubmit={handleSubmit} />;
+    };
+    
+    navigation.push(<FormWrapper />);
+  };
+  
   return (
     <List 
       isLoading={isLoading} 
-      searchBarPlaceholder={__("common.search")}
+      searchBarPlaceholder={__("commands.runSonarAnalysis.searchPlaceholder")}
       // Force refresh when the trigger changes
       key={`project-list-${refreshTrigger}`}
     >
+      {/* Projects section */}
       <List.Section title={__("projects.management.title")}>
         {projects.length > 0 ? (
           projects.map((project: Project) => (
@@ -68,31 +126,21 @@ export function ProjectManager() {
               title={project.name}
               subtitle={project.path}
               accessories={[
-                {
-                  icon: { source: Icon.Folder },
-                  text: project.path,
-                },
+                { icon: { source: Icon.Folder }, text: project.path },
               ]}
               actions={
                 <ActionPanel>
-                  <ActionPanel.Section>
-                    <Action.Push
-                      title={__("projects.management.editProject")}
-                      icon={Icon.Pencil}
-                      target={
-                        <ProjectForm
-                          project={project}
-                          onSubmit={(values) => handleSaveProject(values, project.id)}
-                        />
-                      }
-                    />
-                    <Action
-                      title={__("projects.management.deleteProject")}
-                      icon={Icon.Trash}
-                      style={Action.Style.Destructive}
-                      onAction={() => handleDeleteProject(project.id)}
-                    />
-                  </ActionPanel.Section>
+                  <Action
+                    title={__("projects.management.editProject")}
+                    icon={Icon.Pencil}
+                    onAction={() => editProject(project)}
+                  />
+                  <Action
+                    title={__("projects.management.deleteProject")}
+                    icon={Icon.Trash}
+                    style={Action.Style.Destructive}
+                    onAction={() => handleDeleteProject(project.id)}
+                  />
                 </ActionPanel>
               }
             />
@@ -104,20 +152,18 @@ export function ProjectManager() {
             icon={Icon.Info}
             actions={
               <ActionPanel>
-                <Action.Push
+                <Action
                   title={__("projects.management.addProject")}
-                  target={
-                    <ProjectForm
-                      onSubmit={(values) => handleSaveProject(values)}
-                    />
-                  }
                   icon={Icon.Plus}
+                  onAction={addProject}
                 />
               </ActionPanel>
             }
           />
         )}
       </List.Section>
+
+      {/* Actions section */}
       <List.Section title={__("projects.management.actions")}>
         <List.Item
           title={__("projects.management.addProject")}
@@ -127,12 +173,7 @@ export function ProjectManager() {
               <Action
                 title={__("projects.management.addProject")}
                 icon={Icon.Plus}
-                onAction={() => {
-                  const FormComponent = () => (
-                    <ProjectForm onSubmit={(values) => handleSaveProject(values)} />
-                  );
-                  useNavigation().push(<FormComponent />);
-                }}
+                onAction={addProject}
               />
             </ActionPanel>
           }
@@ -142,5 +183,5 @@ export function ProjectManager() {
   );
 }
 
-// Import at the end to avoid circular dependencies
+// Import ProjectForm component
 import { ProjectForm } from "../ProjectForm";

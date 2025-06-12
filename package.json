@@ -19,21 +19,21 @@
       "placeholder": "/path/to/sonarqube_podman_dir"
     },
     {
-      "name": "useCustomSonarQubeApp",
-      "title": "Use Custom SonarQube Path/URL",
-      "label": "Specify a custom SonarQube application or URL to open.",
-      "description": "If checked, specify a custom SonarQube application path or URL in the field below. Otherwise, http://localhost:9000 will be used.",
-      "type": "checkbox",
-      "required": false,
-      "default": false
-    },
-    {
       "name": "sonarqubeAppPath",
-      "title": "Custom SonarQube App Path/URL",
-      "description": "Path or URL for your SonarQube. Used only if 'Use Custom SonarQube Path/URL' is checked. Can be left blank if not using a custom path. For URLs, enter manually; for local apps, use the file picker. / Ruta o URL para SonarQube. Usado solo si 'Usar Ruta/URL Personalizada de SonarQube' está marcado. Puede dejarse en blanco si no usa una ruta personalizada. Para URLs, ingrese manualmente; para aplicaciones locales, use el selector de archivos.",
+      "title": "SonarQube App Path (Optional)",
+      "description": "Optional path to a SonarQube application. If specified, this app will be opened instead of the URL. Leave blank to use the URL. / Ruta opcional a la aplicación de SonarQube. Si se especifica, esta aplicación se abrirá en lugar de la URL. Dejar en blanco para usar la URL.",
       "type": "file",
       "required": false,
-      "placeholder": "e.g., http://custom.sonar:9000 or select an app"
+      "placeholder": "Select a SonarQube application (if available)"
+    },
+    {
+      "name": "sonarqubePort",
+      "title": "SonarQube Port (Optional)",
+      "description": "Custom port for SonarQube. Default is 9000. Only used when no app path is specified. / Puerto personalizado para SonarQube. El valor predeterminado es 9000. Solo se usa cuando no se especifica una ruta de aplicación.",
+      "type": "textfield",
+      "required": false,
+      "placeholder": "9000",
+      "default": "9000"
     },
     {
       "name": "language",
@@ -62,7 +62,7 @@
     {
       "name": "startSonarQube",
       "source": { "file": "./src/startSonarQube.tsx" },
-      "title": "Start Sonarqube Locally (podman)",
+      "title": "Start SonarQube",
       "description": "Starts the local SonarQube instance using Podman. Checks if SonarQube is already running and notifies the user if so. / Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.",
       "keywords": [
         "iniciar",
@@ -78,7 +78,7 @@
     {
       "name": "stopSonarQube",
       "source": { "file": "./src/stopSonarQube.tsx" },
-      "title": "Stop Sonarqube Locally (podman)",
+      "title": "Stop Sonarqube",
       "description": "Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in any running projects. / Para la instancia local de SonarQube y la máquina Podman. Intenta detener las tareas de Gradle en curso en cualquier proyecto en ejecución.",
       "keywords": [
         "parar",
@@ -94,7 +94,7 @@
     {
       "name": "openSonarQubeApp",
       "source": { "file": "./src/openSonarQubeApp.tsx" },
-      "title": "Open Sonarqube App",
+      "title": "Open SonarQube",
       "description": "Opens the SonarQube application. / Abre la aplicación SonarQube.",
       "keywords": [
         "abrir",
@@ -130,8 +130,8 @@
     {
       "name": "startAnalyzeOpenSonarQube",
       "source": { "file": "./src/startAnalyzeOpenSonarQube.tsx" },
-      "title": "Start, Analyze Sonarqube & Open App",
-      "description": "Starts SonarQube, then select a project to run analysis and open the app. Manage projects from this command. / Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis y abrir la aplicación. Gestiona proyectos desde este comando.",
+      "title": "Start Sonarqube & Analyze Project",
+      "description": "Starts SonarQube, then select a project to run analysis. Manage projects from this command. / Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis. Gestiona proyectos desde este comando.",
       "keywords": [
         "todo",
         "iniciar",
@@ -145,6 +145,25 @@
         "select",
         "manage",
         "sonarqube"
+      ],
+      "mode": "view"
+    },
+    {
+      "name": "projectManager",
+      "source": { "file": "./src/projectManager.tsx" },
+      "title": "Manage SonarQube Projects",
+      "description": "Add, edit, or delete projects for SonarQube analysis. / Añadir, editar o eliminar proyectos para análisis de SonarQube.",
+      "keywords": [
+        "projects",
+        "manage",
+        "edit",
+        "add",
+        "delete",
+        "proyectos",
+        "gestionar",
+        "editar",
+        "añadir",
+        "eliminar"
       ],
       "mode": "view"
     }
