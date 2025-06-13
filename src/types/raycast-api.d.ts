@@ -1,5 +1,6 @@
 /**
  * Type definitions to fix TypeScript errors with @raycast/api
+ * Consolidated from multiple definition files
  */
 
 import "@raycast/api";
@@ -18,6 +19,15 @@ declare module "@raycast/api" {
       onAction: (toast: Toast) => void | Promise<void>;
     };
   }
+
+  // Support both function signatures for showToast
+  interface ShowToastFunction {
+    (options: ToastOptions): Toast;
+    (title: string): Toast;
+  }
+
+  // Redefine showToast with both supported signatures
+  const showToast: ShowToastFunction;
 
   // Support both function signatures for showToast
   interface ShowToastFunction {
