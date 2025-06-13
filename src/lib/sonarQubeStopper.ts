@@ -19,21 +19,21 @@ export async function stopSonarQubeLogic() {
 
   // Load all projects and attempt to stop Gradle in each
   const projects = await loadProjects();
-  
+
   if (projects.length > 0) {
     await showToast({
       style: Toast.Style.Animated,
       title: __("commands.stopSonarQube.stoppingGradle"),
       message: __("terminal.progressTracking", { status: `${projects.length} projects` }),
     });
-    
+
     for (const project of projects) {
       try {
         await runCommand(
           "./gradlew --stop",
           __("terminal.commandSuccess"),
           __("terminal.commandError", { error: project.name }),
-          { cwd: project.path }
+          { cwd: project.path },
         );
       } catch (error) {
         console.error(__("errors.generic", { message: `${project.name}: ${error}` }));
@@ -50,9 +50,9 @@ export async function stopSonarQubeLogic() {
   const podmanStopCommand = "podman-compose stop && podman machine stop";
 
   await runCommand(
-    podmanStopCommand, 
-    __("commands.stopSonarQube.stopSuccess"), 
-    __("commands.stopSonarQube.stopError"), 
-    { cwd: sonarqubePodmanDir }
+    podmanStopCommand,
+    __("commands.stopSonarQube.stopSuccess"),
+    __("commands.stopSonarQube.stopError"),
+    { cwd: sonarqubePodmanDir },
   );
 }

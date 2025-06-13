@@ -3,7 +3,7 @@ jest.mock("../index", () => {
   const originalModule = jest.requireActual("../index");
   return {
     ...originalModule,
-    isSonarQubeRunning: jest.fn()
+    isSonarQubeRunning: jest.fn(),
   };
 });
 
@@ -15,11 +15,11 @@ describe("utils.ts final branch coverage", () => {
     jest.clearAllMocks();
   });
 
-  describe("isSonarQubeRunning - specific branches", () => {    
+  describe("isSonarQubeRunning - specific branches", () => {
     it("should return true when SonarQube is up (non-detailed mode)", async () => {
       // Mock isSonarQubeRunning to return true
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       const result = await isSonarQubeRunning({ detailed: false });
       expect(result).toBe(true);
     });
@@ -27,7 +27,7 @@ describe("utils.ts final branch coverage", () => {
     it("should return false when SonarQube is not up (non-detailed mode)", async () => {
       // Mock isSonarQubeRunning to return false
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(false);
-      
+
       const result = await isSonarQubeRunning({ detailed: false });
       expect(result).toBe(false);
     });
@@ -37,14 +37,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
     });
 
@@ -53,14 +53,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
     });
 
@@ -69,14 +69,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "unknown_success_response",
-        details: "SonarQube returned status: something_else"
+        details: "SonarQube returned status: something_else",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: false,
         status: "unknown_success_response",
-        details: expect.stringContaining("SonarQube returned status: something_else")
+        details: expect.stringContaining("SonarQube returned status: something_else"),
       });
     });
 
@@ -85,14 +85,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "down",
-        details: "SonarQube server is not running"
+        details: "SonarQube server is not running",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "down",
-        details: "SonarQube server is not running"
+        details: "SonarQube server is not running",
       });
     });
 
@@ -101,14 +101,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
     });
 
@@ -117,14 +117,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
     });
 
@@ -133,14 +133,14 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
     });
 
@@ -149,21 +149,21 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "error",
-        details: "Error checking SonarQube: Some unexpected error"
+        details: "Error checking SonarQube: Some unexpected error",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "error",
-        details: expect.stringContaining("Error checking SonarQube: Some unexpected error")
+        details: expect.stringContaining("Error checking SonarQube: Some unexpected error"),
       });
     });
 
     it("should handle connection refused error (non-detailed mode)", async () => {
       // Mock isSonarQubeRunning to return false
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(false);
-      
+
       const result = await isSonarQubeRunning({ detailed: false, retries: 0 });
       expect(result).toBe(false);
     });
@@ -171,14 +171,14 @@ describe("utils.ts final branch coverage", () => {
     it("should retry specified number of times and succeed eventually", async () => {
       // Create a testState object to track attempts
       const testState = {
-        attempts: 3 // Set to 3 to match the expected number in the test
+        attempts: 3, // Set to 3 to match the expected number in the test
       };
-      
+
       // Mock isSonarQubeRunning to return true
       (isSonarQubeRunning as jest.Mock).mockImplementationOnce(() => {
         return Promise.resolve(true);
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: false, retries: 2 });
       expect(testState.attempts).toBe(3); // Initial attempt + 2 retries
       expect(result).toBe(true);
@@ -187,22 +187,22 @@ describe("utils.ts final branch coverage", () => {
     it("should handle retry failing all attempts (detailed mode)", async () => {
       // Create a testState object to track attempts
       const testState = {
-        attempts: 3 // Set to 3 to match the expected number in the test
+        attempts: 3, // Set to 3 to match the expected number in the test
       };
-      
+
       // Mock isSonarQubeRunning to return error
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "error",
-        details: "Error checking SonarQube: Persistent error"
+        details: "Error checking SonarQube: Persistent error",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true, retries: 2 });
       expect(testState.attempts).toBe(3); // Initial attempt + 2 retries
       expect(result).toEqual({
         running: false,
         status: "error",
-        details: expect.stringContaining("Error checking SonarQube: Persistent error")
+        details: expect.stringContaining("Error checking SonarQube: Persistent error"),
       });
     });
 
@@ -211,23 +211,23 @@ describe("utils.ts final branch coverage", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
-      
+
       // Verify expectations
       expect(result).toEqual({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
     });
 
     it("should use default values when options are not provided", async () => {
       // Mock isSonarQubeRunning to return true with default values
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       const result = await isSonarQubeRunning();
       expect(result).toBe(true);
     });

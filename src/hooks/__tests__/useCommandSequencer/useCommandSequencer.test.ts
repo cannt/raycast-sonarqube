@@ -11,15 +11,15 @@ jest.mock("../../../utils", () => ({
 jest.mock("@raycast/api", () => ({
   showToast: jest.fn(),
   getPreferenceValues: jest.fn().mockReturnValue({
-    sonarqubePodmanDir: "/path/to/sonarqube-podman"
+    sonarqubePodmanDir: "/path/to/sonarqube-podman",
   }),
   Toast: {
     Style: {
       Success: "success",
       Failure: "failure",
-      Animated: "animated"
-    }
-  }
+      Animated: "animated",
+    },
+  },
 }));
 
 jest.mock("../../../i18n", () => ({
@@ -28,7 +28,7 @@ jest.mock("../../../i18n", () => ({
       return `translated:${key}:${JSON.stringify(params)}`;
     }
     return `translated:${key}`;
-  }
+  },
 }));
 
 describe("useCommandSequencer", () => {
@@ -44,7 +44,7 @@ describe("useCommandSequencer", () => {
     jest.clearAllMocks();
     mockRunInNewTerminal.mockResolvedValue(undefined);
     mockShowToast.mockResolvedValue(undefined);
-    
+
     // Initialize the hook
     hook = useCommandSequencer();
   });
@@ -63,7 +63,7 @@ describe("useCommandSequencer", () => {
     expect(mockShowToast).toHaveBeenCalledWith(
       expect.objectContaining({
         style: Toast.Style.Success,
-      })
+      }),
     );
 
     // Should run commands with analysis only (no startup)
@@ -74,7 +74,7 @@ describe("useCommandSequencer", () => {
       ]),
       expect.any(String),
       expect.any(String),
-      expect.any(Object)
+      expect.any(Object),
     );
   });
 
@@ -91,7 +91,7 @@ describe("useCommandSequencer", () => {
     expect(mockShowToast).toHaveBeenCalledWith(
       expect.objectContaining({
         style: Toast.Style.Animated,
-      })
+      }),
     );
 
     // Should run commands with startup and analysis
@@ -103,7 +103,7 @@ describe("useCommandSequencer", () => {
       ]),
       expect.any(String),
       expect.any(String),
-      expect.any(Object)
+      expect.any(Object),
     );
   });
 
@@ -127,7 +127,7 @@ describe("useCommandSequencer", () => {
     expect(mockShowToast).toHaveBeenCalledWith(
       expect.objectContaining({
         style: Toast.Style.Animated,
-      })
+      }),
     );
   });
 
@@ -152,7 +152,7 @@ describe("useCommandSequencer", () => {
       expect.objectContaining({
         style: Toast.Style.Animated,
         title: "translated:commands.startSonarQube.title",
-      })
+      }),
     );
   });
 });

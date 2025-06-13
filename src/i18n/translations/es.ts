@@ -19,11 +19,12 @@ const translations = {
     continue: "Continuar",
     back: "Atrás",
   },
-  
+
   commands: {
     startSonarQube: {
       title: "Iniciar SonarQube",
-      description: "Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.",
+      description:
+        "Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.",
       starting: "Iniciando SonarQube...",
       alreadyRunning: "SonarQube ya está en ejecución",
       startSuccess: "SonarQube se ha iniciado correctamente",
@@ -42,26 +43,28 @@ const translations = {
       statusUnknown: "El estado de SonarQube es desconocido",
       initializingContinue: "SonarQube puede estar inicializándose todavía. Continuando de todos modos...",
     },
-    
+
     stopSonarQube: {
       title: "Detener SonarQube",
-      description: "Para la instancia local de SonarQube y la máquina Podman. Intenta detener primero las tareas de Gradle en curso en todos los proyectos configurados.",
+      description:
+        "Para la instancia local de SonarQube y la máquina Podman. Intenta detener primero las tareas de Gradle en curso en todos los proyectos configurados.",
       stopping: "Deteniendo SonarQube...",
       stoppingGradle: "Deteniendo tareas de Gradle primero...",
       stopSuccess: "SonarQube se ha detenido correctamente",
       stopError: "Error al detener SonarQube",
     },
-    
+
     openSonarQubeApp: {
       title: "Abrir SonarQube",
       description: "Abre la aplicación SonarQube o su URL web.",
       opening: "Abriendo SonarQube...",
       openError: "Error al abrir SonarQube",
     },
-    
+
     runSonarAnalysis: {
       title: "Análisar proyecto con SonarQube",
-      description: "Selecciona un proyecto para ejecutar el análisis de SonarQube y abrir la aplicación. Gestiona proyectos desde este comando.",
+      description:
+        "Selecciona un proyecto para ejecutar el análisis de SonarQube y abrir la aplicación. Gestiona proyectos desde este comando.",
       noProjects: "No hay proyectos configurados",
       selectProject: "Seleccionar un proyecto",
       addNewProject: "Añadir nuevo proyecto",
@@ -72,7 +75,7 @@ const translations = {
       analysisError: "Error al ejecutar el análisis de SonarQube",
       searchPlaceholder: "Buscar proyectos...",
     },
-    
+
     allInOne: {
       title: "Iniciar SonarQube y Analizar Proyecto",
       description: "Inicia SonarQube si es necesario y ejecuta análisis en un solo paso.",
@@ -81,10 +84,11 @@ const translations = {
       error: "Error al iniciar la secuencia de SonarQube",
       configureFirst: "Por favor, configura los proyectos primero en el comando 'Ejecutar Análisis de SonarQube'.",
     },
-    
+
     startAnalyzeOpenSonarQube: {
       title: "Iniciar SonarQube y Analizar Proyecto",
-      description: "Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis. Gestiona proyectos desde este comando.",
+      description:
+        "Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis. Gestiona proyectos desde este comando.",
       initializing: "Inicializando entorno de SonarQube...",
       startingAnalysis: "Iniciando análisis de SonarQube...",
       openingResults: "Abriendo resultados de SonarQube...",
@@ -92,7 +96,7 @@ const translations = {
       allInOneError: "Error al completar el flujo de trabajo de SonarQube",
     },
   },
-  
+
   projects: {
     management: {
       title: "Gestionar Proyectos",
@@ -117,7 +121,7 @@ const translations = {
       deleteError: "Error al eliminar el proyecto",
     },
   },
-  
+
   terminal: {
     executing: "Ejecutando: {{command}}",
     preparation: "Preparando entorno...",
@@ -128,7 +132,7 @@ const translations = {
     progressTracking: "Progreso: {{status}}",
     completed: "Todas las operaciones completadas correctamente",
   },
-  
+
   errors: {
     commandNotFound: "Comando no encontrado. Asegúrate de que todas las herramientas requeridas estén instaladas.",
     permissionDenied: "Permiso denegado. Intenta ejecutar con los permisos adecuados.",
@@ -141,7 +145,7 @@ const translations = {
     terminalIssue: "Problema con Terminal. Asegúrate de que la aplicación Terminal esté disponible.",
     generic: "Se produjo un error: {{message}}",
   },
-  
+
   preferences: {
     sonarqubePodmanDir: {
       title: "Directorio de Podman para SonarQube",
@@ -150,17 +154,20 @@ const translations = {
     },
     sonarqubeAppPath: {
       title: "Ruta de la Aplicación SonarQube",
-      description: "Ruta opcional a la aplicación SonarQube. Si se especifica, esta aplicación se abrirá directamente. Dejar en blanco para usar localhost con el puerto especificado a continuación.",
+      description:
+        "Ruta opcional a la aplicación SonarQube. Si se especifica, esta aplicación se abrirá directamente. Dejar en blanco para usar localhost con el puerto especificado a continuación.",
       placeholder: "p.ej., /Aplicaciones/SonarQube.app o dejar en blanco para usar localhost",
     },
     sonarqubePort: {
       title: "Puerto de SonarQube",
-      description: "Puerto para el servidor SonarQube cuando se accede a través de localhost. Solo se utiliza cuando no se especifica una ruta de aplicación arriba.",
+      description:
+        "Puerto para el servidor SonarQube cuando se accede a través de localhost. Solo se utiliza cuando no se especifica una ruta de aplicación arriba.",
       placeholder: "9000",
     },
     language: {
       title: "Idioma",
-      description: "Idioma de la interfaz para la extensión. Si no se establece, se intentará usar el idioma del sistema.",
+      description:
+        "Idioma de la interfaz para la extensión. Si no se establece, se intentará usar el idioma del sistema.",
       options: {
         en: "Inglés (English)",
         es: "Español",

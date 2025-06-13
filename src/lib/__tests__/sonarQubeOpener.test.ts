@@ -21,12 +21,12 @@ jest.mock("../../i18n", () => ({
 }));
 
 // Console error spy
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
 
 describe("sonarQubeOpener", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock preferences
     (getPreferenceValues as jest.Mock).mockReturnValue({
       useCustomSonarQubeApp: false,
@@ -42,10 +42,10 @@ describe("sonarQubeOpener", () => {
     (getPreferenceValues as jest.Mock).mockReturnValue({
       useCustomSonarQubeApp: false,
     });
-    
+
     // Act
     await openSonarQubeAppLogic();
-    
+
     // Assert
     expect(open).toHaveBeenCalledWith("http://localhost:9000");
     expect(showToast).toHaveBeenCalledWith({
@@ -54,14 +54,14 @@ describe("sonarQubeOpener", () => {
       message: "commands.openSonarQubeApp.opening http://localhost:9000",
     });
   });
-  
+
   it("should show error when custom path is enabled but not provided", async () => {
     // Arrange
     (getPreferenceValues as jest.Mock).mockReturnValue({
       useCustomSonarQubeApp: true,
       sonarqubeAppPath: "",
     });
-    
+
     // Mock toast with primaryAction
     const mockToast = {
       hide: jest.fn(),
@@ -73,10 +73,10 @@ describe("sonarQubeOpener", () => {
       }
       return mockToast;
     });
-    
+
     // Act
     await openSonarQubeAppLogic();
-    
+
     // Assert
     expect(showToast).toHaveBeenCalledWith({
       style: Toast.Style.Failure,
@@ -88,7 +88,7 @@ describe("sonarQubeOpener", () => {
       },
     });
     expect(open).not.toHaveBeenCalled();
-    
+
     // Test primaryAction callback
     if (primaryActionCallback) {
       await primaryActionCallback(mockToast);
@@ -96,7 +96,7 @@ describe("sonarQubeOpener", () => {
       expect(mockToast.hide).toHaveBeenCalled();
     }
   });
-  
+
   it("should open custom SonarQube path when provided", async () => {
     // Arrange
     const customPath = "http://custom.sonarqube:9000";
@@ -104,10 +104,10 @@ describe("sonarQubeOpener", () => {
       useCustomSonarQubeApp: true,
       sonarqubeAppPath: customPath,
     });
-    
+
     // Act
     await openSonarQubeAppLogic();
-    
+
     // Assert
     expect(open).toHaveBeenCalledWith(customPath);
     expect(showToast).toHaveBeenCalledWith({
@@ -116,15 +116,15 @@ describe("sonarQubeOpener", () => {
       message: `commands.openSonarQubeApp.opening ${customPath}`,
     });
   });
-  
+
   it("should handle errors when opening SonarQube fails", async () => {
     // Arrange
     const error = new Error("Failed to open SonarQube");
     (open as jest.Mock).mockRejectedValue(error);
-    
+
     // Act
     await openSonarQubeAppLogic();
-    
+
     // Assert
     expect(showToast).toHaveBeenCalledWith({
       style: Toast.Style.Failure,

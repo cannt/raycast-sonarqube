@@ -1,11 +1,10 @@
 /**
- * Export all translations from a single entry point
+ * Export English translations only, as per Raycast guidelines
  */
 
 import en from "./en";
-import es from "./es";
 
-export { en, es };
+export { en };
 
 // Define the translation structure type
 export type TranslationDictionary = typeof en;

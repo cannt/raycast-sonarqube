@@ -17,10 +17,7 @@ jest.mock("../../ProjectEmptyState", () => ({
 
 jest.mock("../../ProjectListItem", () => ({
   ProjectListItem: ({ project, onStartAnalyze }: any) => (
-    <div 
-      data-testid="project-item" 
-      onClick={() => onStartAnalyze(project.path, project.name)}
-    >
+    <div data-testid="project-item" onClick={() => onStartAnalyze(project.path, project.name)}>
       {project.name}
     </div>
   ),
@@ -51,13 +48,7 @@ describe("ProjectsList", () => {
   });
 
   it("shows loading state", () => {
-    const { getByTestId } = render(
-      <ProjectsList 
-        projects={[]} 
-        isLoading={true} 
-        onStartAnalyze={mockOnStartAnalyze} 
-      />
-    );
+    const { getByTestId } = render(<ProjectsList projects={[]} isLoading={true} onStartAnalyze={mockOnStartAnalyze} />);
 
     expect(getByTestId("progress-bar")).toBeTruthy();
     expect(getByTestId("list").getAttribute("data-loading")).toBe("true");
@@ -65,11 +56,7 @@ describe("ProjectsList", () => {
 
   it("shows empty state when there are no projects", () => {
     const { getByTestId } = render(
-      <ProjectsList 
-        projects={[]} 
-        isLoading={false} 
-        onStartAnalyze={mockOnStartAnalyze} 
-      />
+      <ProjectsList projects={[]} isLoading={false} onStartAnalyze={mockOnStartAnalyze} />,
     );
 
     expect(getByTestId("empty-state")).toBeTruthy();
@@ -77,11 +64,7 @@ describe("ProjectsList", () => {
 
   it("renders project list when projects are available", () => {
     const { getAllByTestId } = render(
-      <ProjectsList 
-        projects={mockProjects} 
-        isLoading={false} 
-        onStartAnalyze={mockOnStartAnalyze} 
-      />
+      <ProjectsList projects={mockProjects} isLoading={false} onStartAnalyze={mockOnStartAnalyze} />,
     );
 
     const projectItems = getAllByTestId("project-item");

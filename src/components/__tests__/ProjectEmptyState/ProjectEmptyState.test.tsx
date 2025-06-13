@@ -40,7 +40,7 @@ describe("ProjectEmptyState", () => {
     // Check for translated text
     expect(getByText("translated:commands.runSonarAnalysis.noProjects")).toBeTruthy();
     expect(getByText("translated:commands.allInOne.configureFirst")).toBeTruthy();
-    
+
     // Check that the action button is rendered
     expect(getByText("translated:projects.management.goToManager")).toBeTruthy();
   });

@@ -3,7 +3,7 @@
  */
 
 // Declare the extended API for testing
-declare module '@raycast/api' {
+declare module "@raycast/api" {
   // Extend the @raycast/api module with test utility functions
   export function _getMockToast(): {
     style: string | null;

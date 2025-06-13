@@ -15,12 +15,12 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
   const navigation = useNavigation();
   // Handle navigation.pop safely - create a function to go back
   const goBack = () => {
-    if ('pop' in navigation) {
+    if ("pop" in navigation) {
       // @ts-ignore - TypeScript doesn't recognize pop but it may exist at runtime
       navigation.pop();
     } else {
       // Fallback if pop doesn't exist
-      console.log('Navigation.pop not available');
+      console.log("Navigation.pop not available");
     }
   };
   const [name, setName] = useState<string>(project?.name || "");
@@ -56,11 +56,8 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
       navigationTitle={project ? __("projects.form.editProject") : __("projects.form.addProject")}
       actions={
         <ActionPanel>
-          <Action.SubmitForm 
-            title={project ? __("common.save") : __("common.add")} 
-            onSubmit={validateAndSubmit} 
-          />
-          <Action 
+          <Action.SubmitForm title={project ? __("common.save") : __("common.add")} onSubmit={validateAndSubmit} />
+          <Action
             title={__("projects.form.chooseDirectory")}
             icon="folder-icon.png"
             shortcut={{ modifiers: ["cmd"], key: "o" }}
@@ -69,22 +66,18 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
               // The dialog will be provided by Raycast itself when the checkbox is clicked
               // This is a placeholder action - in a production app, you would handle folder selection here
               // We'll use Raycast's preference UI to handle this instead since Raycast will handle the folder picking dialog
-              
+
               // Show a simulated dialog for folder selection (for development purposes)
               // Normally this would be handled by the native preferences UI
               const simulatedPath = "/Users/selected/project/path";
               setPath(simulatedPath);
-              
+
               // In actual Raycast extensions, this button would trigger the native file picker
               // This is handled differently than how we're simulating it here
               // The real file picker is handled through the "action" property in package.json
             }}
           />
-          <Action 
-            title={__("common.cancel")} 
-            shortcut={{ modifiers: ["cmd"], key: "." }} 
-            onAction={goBack} 
-          />
+          <Action title={__("common.cancel")} shortcut={{ modifiers: ["cmd"], key: "." }} onAction={goBack} />
         </ActionPanel>
       }
     >

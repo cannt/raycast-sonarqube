@@ -49,24 +49,14 @@ describe("ProjectListItem", () => {
   });
 
   it("renders project information correctly", () => {
-    const { getByText } = render(
-      <ProjectListItem 
-        project={mockProject} 
-        onStartAnalyze={mockOnStartAnalyze} 
-      />
-    );
+    const { getByText } = render(<ProjectListItem project={mockProject} onStartAnalyze={mockOnStartAnalyze} />);
 
     expect(getByText(mockProject.name)).toBeTruthy();
     expect(getByText(mockProject.path)).toBeTruthy();
   });
 
   it("calls onStartAnalyze when the action is triggered", () => {
-    const { getByTestId } = render(
-      <ProjectListItem 
-        project={mockProject} 
-        onStartAnalyze={mockOnStartAnalyze} 
-      />
-    );
+    const { getByTestId } = render(<ProjectListItem project={mockProject} onStartAnalyze={mockOnStartAnalyze} />);
 
     // Click the action button
     const actionButton = getByTestId("action-button");

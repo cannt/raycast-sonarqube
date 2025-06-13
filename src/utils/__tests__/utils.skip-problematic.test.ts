@@ -6,12 +6,24 @@ const mockToast = {
   _style: "",
   _title: "",
   _message: "",
-  set style(value) { this._style = value; },
-  get style() { return this._style; },
-  set title(value) { this._title = value; },
-  get title() { return this._title; },
-  set message(value) { this._message = value; },
-  get message() { return this._message; }
+  set style(value) {
+    this._style = value;
+  },
+  get style() {
+    return this._style;
+  },
+  set title(value) {
+    this._title = value;
+  },
+  get title() {
+    return this._title;
+  },
+  set message(value) {
+    this._message = value;
+  },
+  get message() {
+    return this._message;
+  },
 };
 
 // Create functions to check if properties were set to specific values
@@ -39,7 +51,7 @@ jest.mock("@raycast/api", () => ({
 
 // Mock http module
 jest.mock("http", () => ({
-  get: jest.fn()
+  get: jest.fn(),
 }));
 
 // Mock child_process.exec
@@ -53,7 +65,7 @@ jest.mock("util", () => ({
 }));
 
 // Mock console.error to prevent pollution of test output
-jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
 
 // Set up mocks first before importing any modules
 const mockLocalStorage = {
@@ -65,18 +77,18 @@ const mockHttpGet = jest.fn();
 
 // Mock http module
 jest.mock("http", () => ({
-  get: mockHttpGet
+  get: mockHttpGet,
 }));
 
 // Mock @raycast/api
 jest.mock("@raycast/api", () => ({
   LocalStorage: mockLocalStorage,
   showToast: jest.fn().mockResolvedValue({
-    style: '', 
-    title: '', 
-    message: '',
+    style: "",
+    title: "",
+    message: "",
   }),
-  Toast: { Style: { Animated: 'animated', Success: 'success', Failure: 'failure' } },
+  Toast: { Style: { Animated: "animated", Success: "success", Failure: "failure" } },
 }));
 
 // Mock isSonarQubeRunning directly - key change!
@@ -100,7 +112,7 @@ jest.mock("../index", () => {
     }),
     saveProjects: jest.fn().mockImplementation(async (projects) => {
       await LocalStorage.setItem("sonarqubeProjectsList", JSON.stringify(projects));
-    })
+    }),
   };
 });
 
@@ -127,7 +139,7 @@ beforeEach(() => {
 describe("generateId", () => {
   it("should generate a string of length 9", () => {
     const id = generateId();
-    expect(typeof id).toBe('string');
+    expect(typeof id).toBe("string");
     expect(id).toHaveLength(9);
     expect(id).toMatch(/^[a-z0-9]+$/);
   });
@@ -138,28 +150,25 @@ describe("Utils module", () => {
   it("should be properly defined", () => {
     expect(utils).toBeDefined();
     // Since we're mocking everything, just check the module exists
-    expect(typeof utils).toBe('object');
+    expect(typeof utils).toBe("object");
   });
 });
 
 describe("Project storage", () => {
   it("should save and load projects", async () => {
     const testProjects: Project[] = [
-      { id: 'test-1', name: 'Test Project 1', path: '/path/to/project1' },
-      { id: 'test-2', name: 'Test Project 2', path: '/path/to/project2' }
+      { id: "test-1", name: "Test Project 1", path: "/path/to/project1" },
+      { id: "test-2", name: "Test Project 2", path: "/path/to/project2" },
     ];
-    
+
     // Setup mocks
     (localStorageMock.setItem as jest.Mock).mockResolvedValue(undefined);
     (localStorageMock.getItem as jest.Mock).mockResolvedValue(JSON.stringify(testProjects));
-    
+
     // Test save
     await saveProjects(testProjects);
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      "sonarqubeProjectsList",
-      JSON.stringify(testProjects)
-    );
-    
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("sonarqubeProjectsList", JSON.stringify(testProjects));
+
     // Test load
     const loadedProjects = await loadProjects();
     expect(loadedProjects).toEqual(testProjects);
@@ -169,7 +178,7 @@ describe("Project storage", () => {
   it("should return [] if no projects are stored", async () => {
     // Setup mocks
     (localStorageMock.getItem as jest.Mock).mockResolvedValue(null);
-    
+
     const projects = await loadProjects();
     expect(projects).toEqual([]);
   });
@@ -177,7 +186,7 @@ describe("Project storage", () => {
   it("should return [] if stored data is invalid JSON", async () => {
     // Setup mocks
     (localStorageMock.getItem as jest.Mock).mockResolvedValue("invalid json");
-    
+
     const projects = await loadProjects();
     expect(projects).toEqual([]);
     expect(console.error).toHaveBeenCalled();
@@ -188,7 +197,7 @@ describe("isSonarQubeRunning basic tests", () => {
   it("should handle standard cases", async () => {
     // Mock isSonarQubeRunning to return a simple boolean value
     (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-    
+
     const result = await isSonarQubeRunning();
     expect(result).toBe(true);
   });
@@ -198,13 +207,15 @@ describe("isSonarQubeRunning basic tests", () => {
     (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
       running: true,
       status: "running",
-      details: "SonarQube is running normally"
+      details: "SonarQube is running normally",
     });
-    
+
     const result = await isSonarQubeRunning({ retries: 1, detailed: true });
-    expect(result).toEqual(expect.objectContaining({
-      running: true,
-      status: expect.any(String)
-    }));
+    expect(result).toEqual(
+      expect.objectContaining({
+        running: true,
+        status: expect.any(String),
+      }),
+    );
   });
 });

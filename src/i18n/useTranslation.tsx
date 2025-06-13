@@ -1,25 +1,17 @@
 /**
  * React hook for using translations in components
+ * Simplified for English-only as per Raycast Store guidelines
  */
-import { useState, useEffect } from "react";
-import { getPreferenceValues } from "@raycast/api";
 import { t, getLanguage, __ } from "./index";
 
 /**
- * React hook to use internationalization in components
- * Returns the current language and translation functions
+ * React hook to use translation in components
+ * Returns the language (always "en") and translation functions
  */
 export function useTranslation() {
-  const [language, setLanguage] = useState(getLanguage());
-  
-  // Update language if preferences change
-  useEffect(() => {
-    const currentLang = getLanguage();
-    if (currentLang !== language) {
-      setLanguage(currentLang);
-    }
-  }, [language]);
-  
+  // Always English as per Raycast guidelines
+  const language = "en";
+
   return {
     language,
     t,

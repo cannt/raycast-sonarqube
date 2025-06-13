@@ -11,7 +11,7 @@ const DEFAULT_SONARQUBE_PORT = "9000";
 export function useSonarQubePath() {
   const [pathError, setPathError] = useState<Error | null>(null);
   const preferences = getPreferenceValues<Preferences>();
-  
+
   /**
    * Resolves the SonarQube path based on preferences
    * Returns the path or null if there was an error
@@ -21,7 +21,7 @@ export function useSonarQubePath() {
     if (preferences.sonarqubeAppPath && preferences.sonarqubeAppPath.trim() !== "") {
       return preferences.sonarqubeAppPath;
     }
-    
+
     // Otherwise build URL using custom port if specified, or default port
     const port = preferences.sonarqubePort?.trim() || DEFAULT_SONARQUBE_PORT;
     return `http://localhost:${port}`;

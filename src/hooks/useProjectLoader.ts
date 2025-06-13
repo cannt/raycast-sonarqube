@@ -26,10 +26,10 @@ export function useProjectLoader() {
       setIsLoading(false);
     }
   }, []);
-  
+
   // Function to manually trigger a refresh of projects
   const refreshProjects = useCallback(() => {
-    setRefreshCounter(prev => prev + 1);
+    setRefreshCounter((prev) => prev + 1);
   }, []);
 
   useEffect(() => {

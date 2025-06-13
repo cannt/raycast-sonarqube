@@ -50,8 +50,8 @@ export function RunSonarAnalysisComponent() {
       await saveProjects(updatedProjects);
       await showToast({
         style: Toast.Style.Success,
-        title: __('projects.form.saveSuccess'),
-        message: newProject.name
+        title: __("projects.form.saveSuccess"),
+        message: newProject.name,
       });
     },
     [projects, __],
@@ -64,8 +64,8 @@ export function RunSonarAnalysisComponent() {
       await saveProjects(updatedProjects);
       await showToast({
         style: Toast.Style.Success,
-        title: __('projects.form.saveSuccess'),
-        message: values.name
+        title: __("projects.form.saveSuccess"),
+        message: values.name,
       });
     },
     [projects, __],
@@ -73,16 +73,18 @@ export function RunSonarAnalysisComponent() {
 
   const handleDeleteProject = useCallback(
     async (id: string) => {
-      if (await confirmAlert({ 
-        title: __("projects.management.deleteProject"), 
-        message: __("projects.management.confirmDelete") 
-      })) {
+      if (
+        await confirmAlert({
+          title: __("projects.management.deleteProject"),
+          message: __("projects.management.confirmDelete"),
+        })
+      ) {
         const updatedProjects = projects.filter((p) => p.id !== id);
         setProjects(updatedProjects);
         await saveProjects(updatedProjects);
         await showToast({
           style: Toast.Style.Success,
-          title: __('projects.form.deleteSuccess')
+          title: __("projects.form.deleteSuccess"),
         });
       }
     },
@@ -94,7 +96,7 @@ export function RunSonarAnalysisComponent() {
     async (projectPath: string, projectName: string) => {
       // Determine the SonarQube target path using the simplified preference structure
       let targetOpenPath: string;
-      
+
       // If app path is specified, use that directly
       if (preferences.sonarqubeAppPath && preferences.sonarqubeAppPath.trim() !== "") {
         targetOpenPath = preferences.sonarqubeAppPath;
@@ -112,10 +114,10 @@ export function RunSonarAnalysisComponent() {
         `echo "--- ${__("terminal.completed")} ---"`,
       ];
       await runInNewTerminal(
-        analysisCommands, 
-        __("commands.runSonarAnalysis.analysisSuccess"), 
+        analysisCommands,
+        __("commands.runSonarAnalysis.analysisSuccess"),
         __("commands.runSonarAnalysis.analysisError"),
-        { trackProgress: true }
+        { trackProgress: true },
       );
     },
     [preferences, __],
@@ -171,7 +173,12 @@ export function RunSonarAnalysisComponent() {
                   icon={Icon.Pencil}
                   shortcut={Keyboard.Shortcut.Common.Edit}
                   onAction={() =>
-                    push(<ProjectForm project={project} onSubmit={(values: { name: string; path: string }) => handleEditProject(project.id, values)} />)
+                    push(
+                      <ProjectForm
+                        project={project}
+                        onSubmit={(values: { name: string; path: string }) => handleEditProject(project.id, values)}
+                      />,
+                    )
                   }
                 />
                 <Action

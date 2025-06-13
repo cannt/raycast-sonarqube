@@ -12,7 +12,7 @@ import { generateId } from "../../utils";
 export function ProjectEmptyState() {
   // Local state to control the form visibility
   const [showAddForm, setShowAddForm] = useState(false);
-  
+
   // Handle adding a new project directly
   const handleAddProject = async (values: { name: string; path: string }) => {
     try {
@@ -22,36 +22,35 @@ export function ProjectEmptyState() {
         name: values.name,
         path: values.path,
       };
-      
+
       await saveProject(newProject);
-      
+
       // Show success message
       await showToast({
         style: Toast.Style.Success,
         title: __("projects.form.saveSuccess"),
         message: newProject.name,
       });
-      
+
       // Force reload of the current page to reflect the new project
       // This is a safer approach than navigation
       setTimeout(() => {
         window.location.reload();
       }, 500);
-      
     } catch (error) {
       showToast({
         style: Toast.Style.Failure,
         title: __("projects.form.saveError"),
-        message: String(error)
+        message: String(error),
       });
     }
   };
-  
+
   // If form is being shown, render the form
   if (showAddForm) {
     return <ProjectForm onSubmit={handleAddProject} />;
   }
-  
+
   // Otherwise show the empty state with add project button
   return (
     <List.EmptyView
@@ -61,11 +60,7 @@ export function ProjectEmptyState() {
       icon={Icon.Info}
       actions={
         <ActionPanel>
-          <Action
-            title={__("projects.management.addProject")}
-            icon={Icon.Plus}
-            onAction={() => setShowAddForm(true)}
-          />
+          <Action title={__("projects.management.addProject")} icon={Icon.Plus} onAction={() => setShowAddForm(true)} />
         </ActionPanel>
       }
     />

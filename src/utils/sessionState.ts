@@ -1,6 +1,6 @@
 /**
  * Session state management utilities
- * 
+ *
  * This file contains utilities for managing session-level state
  * that should persist during a single Raycast command execution
  * but not between executions.

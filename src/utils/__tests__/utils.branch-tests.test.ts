@@ -9,7 +9,7 @@ jest.mock("../index", () => {
   const originalModule = jest.requireActual("../index");
   return {
     ...originalModule,
-    isSonarQubeRunning: jest.fn()
+    isSonarQubeRunning: jest.fn(),
   };
 });
 
@@ -23,7 +23,7 @@ describe("utils.ts - branch coverage improvements", () => {
     it("should return true when SonarQube is running (non-detailed mode)", async () => {
       // Mock the function to return successful response
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: false });
       expect(result).toBe(true);
     });
@@ -33,14 +33,14 @@ describe("utils.ts - branch coverage improvements", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
     });
 
@@ -49,14 +49,14 @@ describe("utils.ts - branch coverage improvements", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
     });
 
@@ -65,14 +65,14 @@ describe("utils.ts - branch coverage improvements", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "down",
-        details: "SonarQube server is not running"
+        details: "SonarQube server is not running",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "down",
-        details: "SonarQube server is not running"
+        details: "SonarQube server is not running",
       });
     });
 
@@ -81,14 +81,14 @@ describe("utils.ts - branch coverage improvements", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
     });
 
@@ -97,24 +97,24 @@ describe("utils.ts - branch coverage improvements", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
     });
 
     it("should handle retry mechanism with eventual success", async () => {
       // Mock implementation for retry test
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       // Create a mock counter to verify the result
-      let callCount = 3;
-      
+      const callCount = 3;
+
       // Just verify the expected retry behavior
       const result = await utils.isSonarQubeRunning({ detailed: false, retries: 2 });
       expect(result).toBe(true);

@@ -2,8 +2,8 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "sonarqube-tools",
   "version": "1.0.0",
-  "title": "Sonarqube Tools",
-  "description": "Manage SonarQube instance and run analysis. / Gestiona la instancia de SonarQube y ejecuta análisis.",
+  "title": "SonarQube Tools",
+  "description": "Manage SonarQube instance and run analysis.",
   "icon": "sonarqube-icon.png",
   "author": "juan_angel_trujillo_jimenez",
   "license": "MIT",
@@ -13,7 +13,7 @@
     {
       "name": "sonarqubePodmanDir",
       "title": "SonarQube Podman Directory",
-      "description": "Directory containing Podman setup for SonarQube. / Directorio con la configuración de Podman para SonarQube.",
+      "description": "Directory containing Podman setup for SonarQube.",
       "type": "directory",
       "required": true,
       "placeholder": "/path/to/sonarqube_podman_dir"
@@ -21,7 +21,7 @@
     {
       "name": "sonarqubeAppPath",
       "title": "SonarQube App Path (Optional)",
-      "description": "Optional path to a SonarQube application. If specified, this app will be opened instead of the URL. Leave blank to use the URL. / Ruta opcional a la aplicación de SonarQube. Si se especifica, esta aplicación se abrirá en lugar de la URL. Dejar en blanco para usar la URL.",
+      "description": "Optional path to a SonarQube application. If specified, this app will be opened instead of the URL. Leave blank to use the URL.",
       "type": "file",
       "required": false,
       "placeholder": "Select a SonarQube application (if available)"
@@ -29,7 +29,7 @@
     {
       "name": "sonarqubePort",
       "title": "SonarQube Port (Optional)",
-      "description": "Custom port for SonarQube. Default is 9000. Only used when no app path is specified. / Puerto personalizado para SonarQube. El valor predeterminado es 9000. Solo se usa cuando no se especifica una ruta de aplicación.",
+      "description": "Custom port for SonarQube. Default is 9000. Only used when no app path is specified.",
       "type": "textfield",
       "required": false,
       "placeholder": "9000",
@@ -37,23 +37,15 @@
     },
     {
       "name": "language",
-      "title": "Language / Idioma",
-      "description": "Interface language for the extension. If set to 'Auto-detect', will try to use your system language. / Idioma de la interfaz para la extensión. Si se establece en 'Detección automática', se intentará usar el idioma del sistema.",
+      "title": "Language",
+      "description": "Interface language for the extension (currently only English is fully supported).",
       "type": "dropdown",
       "required": false,
-      "default": "auto",
+      "default": "en",
       "data": [
-        {
-          "title": "Auto-detect (System language) / Detección automática (Idioma del sistema)",
-          "value": "auto"
-        },
         {
           "title": "English",
           "value": "en"
-        },
-        {
-          "title": "Español (Spanish)",
-          "value": "es"
         }
       ]
     }
@@ -78,8 +70,8 @@
     {
       "name": "stopSonarQube",
       "source": { "file": "./src/stopSonarQube.tsx" },
-      "title": "Stop Sonarqube",
-      "description": "Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in any running projects. / Para la instancia local de SonarQube y la máquina Podman. Intenta detener las tareas de Gradle en curso en cualquier proyecto en ejecución.",
+      "title": "Stop SonarQube",
+      "description": "Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in any running projects.",
       "keywords": [
         "parar",
         "detener",
@@ -95,7 +87,7 @@
       "name": "openSonarQubeApp",
       "source": { "file": "./src/openSonarQubeApp.tsx" },
       "title": "Open SonarQube",
-      "description": "Opens the SonarQube application. / Abre la aplicación SonarQube.",
+      "description": "Opens the SonarQube application.",
       "keywords": [
         "abrir",
         "open",
@@ -112,8 +104,8 @@
     {
       "name": "runSonarAnalysis",
       "source": { "file": "./src/runSonarAnalysis.tsx" },
-      "title": "Run Sonarqube Analysis",
-      "description": "Select a project to run SonarQube analysis and open the app. Manage projects from this command. / Selecciona un proyecto para ejecutar el análisis de SonarQube y abrir la aplicación. Gestiona proyectos desde este comando.",
+      "title": "Run SonarQube Analysis",
+      "description": "Select a project to run SonarQube analysis and open the app. Manage projects from this command.",
       "keywords": [
         "ejecutar",
         "analizar",
@@ -130,8 +122,8 @@
     {
       "name": "startAnalyzeOpenSonarQube",
       "source": { "file": "./src/startAnalyzeOpenSonarQube.tsx" },
-      "title": "Start Sonarqube & Analyze Project",
-      "description": "Starts SonarQube, then select a project to run analysis. Manage projects from this command. / Inicia SonarQube, luego selecciona un proyecto para ejecutar análisis. Gestiona proyectos desde este comando.",
+      "title": "Start SonarQube & Analyze Project",
+      "description": "Starts SonarQube, then select a project to run analysis. Manage projects from this command.",
       "keywords": [
         "todo",
         "iniciar",

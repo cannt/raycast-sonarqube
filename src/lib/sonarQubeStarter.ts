@@ -19,8 +19,12 @@ export async function startSonarQubeLogic() {
   }
 
   // Get detailed status information about SonarQube server
-  const status = await isSonarQubeRunning({ detailed: true, retries: 1 }) as { running: boolean; status: string; details?: string };
-  
+  const status = (await isSonarQubeRunning({ detailed: true, retries: 1 })) as {
+    running: boolean;
+    status: string;
+    details?: string;
+  };
+
   if (status.running) {
     await showToast({
       style: Toast.Style.Success,
@@ -29,7 +33,7 @@ export async function startSonarQubeLogic() {
     });
     return;
   }
-  
+
   // Check if SonarQube is in starting state, which means we should wait rather than try to start again
   if (status.status === "starting") {
     await showToast({
@@ -39,22 +43,28 @@ export async function startSonarQubeLogic() {
     });
     return;
   }
-  
+
   // If it's a timeout but not a clear "down" status, it could be still initializing
   if (status.status === "timeout") {
     await showToast({
-      style: Toast.Style.Animated, 
+      style: Toast.Style.Animated,
       title: __("commands.startSonarQube.starting"),
       message: __("commands.startSonarQube.checkingStatus"),
     });
-    
+
     // Do another check with longer timeout to be certain
-    const secondCheck = await isSonarQubeRunning({ detailed: true, timeout: 5000 }) as { running: boolean; status: string; details?: string };
-    
+    const secondCheck = (await isSonarQubeRunning({ detailed: true, timeout: 5000 })) as {
+      running: boolean;
+      status: string;
+      details?: string;
+    };
+
     if (secondCheck.running || secondCheck.status === "starting") {
       await showToast({
         style: Toast.Style.Success,
-        title: secondCheck.running ? __("commands.startSonarQube.alreadyRunning") : __("commands.startSonarQube.starting"),
+        title: secondCheck.running
+          ? __("commands.startSonarQube.alreadyRunning")
+          : __("commands.startSonarQube.starting"),
         message: secondCheck.details,
       });
       return;
@@ -63,10 +73,7 @@ export async function startSonarQubeLogic() {
 
   const command = "podman machine start && podman-compose start";
 
-  await runCommand(
-    command, 
-    __("commands.startSonarQube.startSuccess"), 
-    __("commands.startSonarQube.startError"), 
-    { cwd: sonarqubePodmanDir }
-  );
+  await runCommand(command, __("commands.startSonarQube.startSuccess"), __("commands.startSonarQube.startError"), {
+    cwd: sonarqubePodmanDir,
+  });
 }

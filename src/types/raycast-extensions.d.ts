@@ -10,7 +10,7 @@ declare module "@raycast/api" {
       onAction: (toast: Toast) => void | Promise<void>;
     };
   }
-  
+
   interface Toast {
     hide: () => void;
     show: () => void;

@@ -10,7 +10,7 @@ jest.mock("../index", () => {
   const originalModule = jest.requireActual("../index");
   return {
     ...originalModule,
-    isSonarQubeRunning: jest.fn()
+    isSonarQubeRunning: jest.fn(),
   };
 });
 
@@ -23,24 +23,24 @@ describe("utils.ts - better branch coverage", () => {
     it("should return true for UP status in non-detailed mode", async () => {
       // Mock the function to return successful response
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: false });
       expect(result).toBe(true);
     });
-    
+
     it("should return detailed info for UP status", async () => {
       // Mock the function to return successful detailed response
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
     });
 
@@ -49,14 +49,14 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
     });
 
@@ -65,14 +65,14 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "unknown_success_response",
-        details: "SonarQube returned status: unknown"
+        details: "SonarQube returned status: unknown",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: false,
         status: "unknown_success_response",
-        details: expect.stringContaining("SonarQube returned status: unknown")
+        details: expect.stringContaining("SonarQube returned status: unknown"),
       });
     });
 
@@ -81,14 +81,14 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
     });
 
@@ -97,14 +97,14 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "down",
-        details: "SonarQube server is not running"
+        details: "SonarQube server is not running",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "down",
-        details: "SonarQube server is not running"
+        details: "SonarQube server is not running",
       });
     });
 
@@ -113,14 +113,14 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
     });
 
@@ -129,24 +129,24 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "error",
-        details: "Error checking SonarQube: Unknown error"
+        details: "Error checking SonarQube: Unknown error",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true, retries: 0 });
       expect(result).toEqual({
         running: false,
         status: "error",
-        details: expect.stringContaining("Error checking SonarQube")
+        details: expect.stringContaining("Error checking SonarQube"),
       });
     });
 
     it("should retry on failure and eventually succeed", async () => {
       // Mock the function to return successful response after retry
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       // Create a mock counter
-      let attemptCount = 2;
-      
+      const attemptCount = 2;
+
       const result = await utils.isSonarQubeRunning({ detailed: false, retries: 1 });
       expect(result).toBe(true);
       expect(attemptCount).toBe(2);
@@ -157,21 +157,21 @@ describe("utils.ts - better branch coverage", () => {
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: true });
       expect(result).toEqual({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
     });
 
     it("should return false for non-detailed mode when server is down", async () => {
       // Mock the function to return false for server down
       (utils.isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(false);
-      
+
       const result = await utils.isSonarQubeRunning({ detailed: false, retries: 0 });
       expect(result).toBe(false);
     });

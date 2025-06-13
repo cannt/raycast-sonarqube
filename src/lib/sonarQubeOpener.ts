@@ -9,10 +9,10 @@ const DEFAULT_SONARQUBE_PORT = "9000";
  */
 export async function openSonarQubeAppLogic() {
   const preferences = getPreferenceValues<Preferences>();
-  
+
   // Determine the target path based on preferences
   let targetPath: string;
-  
+
   // If an app path is specified, use that directly
   if (preferences.sonarqubeAppPath && preferences.sonarqubeAppPath.trim() !== "") {
     targetPath = preferences.sonarqubeAppPath;

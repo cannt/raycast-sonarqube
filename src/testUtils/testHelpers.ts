@@ -27,27 +27,33 @@ export function mockShowToast() {
     primaryAction: undefined,
     secondaryAction: undefined,
   };
-  
+
   const showToastMock = jest.fn().mockImplementation(() => {
     // Create a toast object with setters that update the mockToast reference
     const toastObj = {};
-    
+
     // Define property setters that update mockToast
-    Object.defineProperty(toastObj, 'title', {
-      set: (value: string) => { mockToast.title = value; }
+    Object.defineProperty(toastObj, "title", {
+      set: (value: string) => {
+        mockToast.title = value;
+      },
     });
-    
-    Object.defineProperty(toastObj, 'message', {
-      set: (value: string) => { mockToast.message = value; }
+
+    Object.defineProperty(toastObj, "message", {
+      set: (value: string) => {
+        mockToast.message = value;
+      },
     });
-    
-    Object.defineProperty(toastObj, 'style', {
-      set: (value: string) => { mockToast.style = value; }
+
+    Object.defineProperty(toastObj, "style", {
+      set: (value: string) => {
+        mockToast.style = value;
+      },
     });
-    
+
     return toastObj;
   });
-  
+
   return {
     showToastMock,
     mockToast,
@@ -57,7 +63,7 @@ export function mockShowToast() {
 /**
  * Create a mock Project object for testing
  */
-export function createMockProject(overrides?: Partial<{id: string, name: string, path: string}>) {
+export function createMockProject(overrides?: Partial<{ id: string; name: string; path: string }>) {
   return {
     id: "mock-project-id",
     name: "Mock Project",

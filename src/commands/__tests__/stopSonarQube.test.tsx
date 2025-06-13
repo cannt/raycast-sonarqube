@@ -4,8 +4,8 @@ import { stopSonarQubeLogic as stopSonarQube } from "../../lib/sonarQubeStopper"
 
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(),
-  showToast: jest.fn().mockResolvedValue({ style: '', title: '', message: '' }),
-  Toast: { Style: { Animated: 'Animated', Success: 'Success', Failure: 'Failure' } },
+  showToast: jest.fn().mockResolvedValue({ style: "", title: "", message: "" }),
+  Toast: { Style: { Animated: "Animated", Success: "Success", Failure: "Failure" } },
 }));
 jest.mock("../../utils", () => ({
   runCommand: jest.fn(),
@@ -24,9 +24,7 @@ describe("stopSonarQube", () => {
     getPreferenceValues.mockReturnValue({ sonarqubePodmanDir: undefined });
     await stopSonarQube();
     // With i18n, only check for the correct toast style but not the exact text
-    expect(showToast).toHaveBeenCalledWith(
-      expect.objectContaining({ style: "Failure" })
-    );
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ style: "Failure" }));
     expect(runCommand).not.toHaveBeenCalled();
   });
 
@@ -35,16 +33,11 @@ describe("stopSonarQube", () => {
     loadProjects.mockResolvedValue([{ id: "test", name: "Test Project", path: "/test/project" }]);
     await stopSonarQube();
     // With i18n, only check for the correct toast style
-    expect(showToast).toHaveBeenCalledWith(
-      expect.objectContaining({ style: "Animated" })
-    );
+    expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ style: "Animated" }));
     // Instead of checking exact strings, just verify the call was made with the right command
-    expect(runCommand).toHaveBeenCalledWith(
-      "./gradlew --stop",
-      expect.any(String),
-      expect.any(String),
-      { cwd: "/test/project" }
-    );
+    expect(runCommand).toHaveBeenCalledWith("./gradlew --stop", expect.any(String), expect.any(String), {
+      cwd: "/test/project",
+    });
   });
 
   it("shows toast if no projects are configured", async () => {
@@ -63,7 +56,7 @@ describe("stopSonarQube", () => {
       "podman-compose stop && podman machine stop",
       expect.any(String),
       expect.any(String),
-      { cwd: "/foo/bar" }
+      { cwd: "/foo/bar" },
     );
   });
 });

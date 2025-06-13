@@ -33,12 +33,12 @@ jest.mock("../../i18n", () => ({
 }));
 
 // Console error spy
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
 
 describe("sonarQubeStopper", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock preferences
     (getPreferenceValues as jest.Mock).mockReturnValue({
       sonarqubePodmanDir: "/mock/path",
@@ -84,7 +84,7 @@ describe("sonarQubeStopper", () => {
       "podman-compose stop && podman machine stop",
       "commands.stopSonarQube.stopSuccess",
       "commands.stopSonarQube.stopError",
-      { cwd: "/mock/path" }
+      { cwd: "/mock/path" },
     );
   });
 
@@ -106,28 +106,31 @@ describe("sonarQubeStopper", () => {
       title: "commands.stopSonarQube.stoppingGradle",
       message: 'terminal.progressTracking {"status":"2 projects"}',
     });
-    
+
     // Verify Gradle stop for each project
     expect(runCommand).toHaveBeenCalledTimes(3); // 2 projects + 1 podman stop
-    expect(runCommand).toHaveBeenNthCalledWith(1, 
+    expect(runCommand).toHaveBeenNthCalledWith(
+      1,
       "./gradlew --stop",
       "terminal.commandSuccess",
       'terminal.commandError {"error":"Project1"}',
-      { cwd: "/path/to/project1" }
+      { cwd: "/path/to/project1" },
     );
-    expect(runCommand).toHaveBeenNthCalledWith(2, 
+    expect(runCommand).toHaveBeenNthCalledWith(
+      2,
       "./gradlew --stop",
       "terminal.commandSuccess",
       'terminal.commandError {"error":"Project2"}',
-      { cwd: "/path/to/project2" }
+      { cwd: "/path/to/project2" },
     );
-    
+
     // Verify final podman stop
-    expect(runCommand).toHaveBeenNthCalledWith(3,
+    expect(runCommand).toHaveBeenNthCalledWith(
+      3,
       "podman-compose stop && podman machine stop",
       "commands.stopSonarQube.stopSuccess",
       "commands.stopSonarQube.stopError",
-      { cwd: "/mock/path" }
+      { cwd: "/mock/path" },
     );
   });
 
@@ -138,7 +141,7 @@ describe("sonarQubeStopper", () => {
       { id: "2", name: "Project2", path: "/path/to/project2" },
     ];
     (loadProjects as jest.Mock).mockResolvedValue(mockProjects);
-    
+
     // First project fails, second succeeds
     (runCommand as jest.Mock)
       .mockRejectedValueOnce(new Error("Gradle failed"))
@@ -151,13 +154,14 @@ describe("sonarQubeStopper", () => {
     // Assert
     expect(runCommand).toHaveBeenCalledTimes(3); // Still tries all projects + podman stop
     expect(consoleErrorSpy).toHaveBeenCalled(); // Error logged for failed project
-    
+
     // Final podman stop should still be called
-    expect(runCommand).toHaveBeenNthCalledWith(3,
+    expect(runCommand).toHaveBeenNthCalledWith(
+      3,
       "podman-compose stop && podman machine stop",
       "commands.stopSonarQube.stopSuccess",
       "commands.stopSonarQube.stopError",
-      { cwd: "/mock/path" }
+      { cwd: "/mock/path" },
     );
   });
 });

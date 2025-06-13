@@ -22,8 +22,12 @@ export function useCommandSequencer() {
       style: Toast.Style.Animated,
       title: __("commands.startSonarQube.statusChecking"),
     });
-    
-    const status = await isSonarQubeRunning({ detailed: true, retries: 1 }) as { running: boolean; status: string; details?: string };
+
+    const status = (await isSonarQubeRunning({ detailed: true, retries: 1 })) as {
+      running: boolean;
+      status: string;
+      details?: string;
+    };
     let commandsToExecute: string[];
 
     if (status.running) {
@@ -60,14 +64,17 @@ export function useCommandSequencer() {
     } else if (status.status === "timeout") {
       // SonarQube might be initializing - do another check with longer timeout
       await showToast({
-        style: Toast.Style.Animated, 
+        style: Toast.Style.Animated,
         title: __("commands.startSonarQube.starting"),
         message: __("commands.startSonarQube.checkingStatus"),
       });
-      
+
       // Do another check with longer timeout to be certain
-      const extendedStatus = await isSonarQubeRunning({ detailed: true, retries: 2, timeout: 5000 }) as { running: boolean; status: string };
-      
+      const extendedStatus = (await isSonarQubeRunning({ detailed: true, retries: 2, timeout: 5000 })) as {
+        running: boolean;
+        status: string;
+      };
+
       if (extendedStatus.running) {
         // It is running, just took longer to detect
         await showToast({
@@ -92,26 +99,28 @@ export function useCommandSequencer() {
         // First start SonarQube and wait for it to be fully running before continuing
         try {
           // Start SonarQube using podman
-          await execAsync(`cd "${preferences.sonarqubePodmanDir}" && ${PODMAN_PATH} machine start && ${PODMAN_COMPOSE_PATH} start`);
-          
+          await execAsync(
+            `cd "${preferences.sonarqubePodmanDir}" && ${PODMAN_PATH} machine start && ${PODMAN_COMPOSE_PATH} start`,
+          );
+
           // Show progress toast
           await showToast({
             style: Toast.Style.Animated,
             title: __("commands.startSonarQube.waiting"),
             message: __("commands.startSonarQube.pleaseWait"),
           });
-          
+
           // Poll for SonarQube readiness - retry multiple times with increasing timeout
           let isReady = false;
           const maxRetries = 10;
           for (let retry = 0; retry < maxRetries && !isReady; retry++) {
             // Wait longer between each check (starts at 5s and increases)
-            const waitTime = 5000 + (retry * 2000);
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-            
-            const checkStatus = await isSonarQubeRunning({ detailed: true, retries: 2 }) as { running: boolean };
+            const waitTime = 5000 + retry * 2000;
+            await new Promise((resolve) => setTimeout(resolve, waitTime));
+
+            const checkStatus = (await isSonarQubeRunning({ detailed: true, retries: 2 })) as { running: boolean };
             isReady = checkStatus.running;
-            
+
             if (isReady) {
               await showToast({
                 style: Toast.Style.Success,
@@ -131,10 +140,10 @@ export function useCommandSequencer() {
           await showToast({
             style: Toast.Style.Failure,
             title: __("commands.startSonarQube.startError"),
-            message: String(error)
+            message: String(error),
           });
         }
-        
+
         // After SonarQube is started (or at least attempted), run the analysis
         const port = preferences.sonarqubePort?.trim() || DEFAULT_SONARQUBE_PORT;
         commandsToExecute = [
@@ -153,30 +162,32 @@ export function useCommandSequencer() {
         title: __("commands.startSonarQube.title"),
         message: __("commands.startSonarQube.starting"),
       });
-      
+
       // First start SonarQube and wait for it to be fully running before continuing
       try {
         // Start SonarQube using podman
-        await execAsync(`cd "${preferences.sonarqubePodmanDir}" && ${PODMAN_PATH} machine start && ${PODMAN_COMPOSE_PATH} start`);
-        
+        await execAsync(
+          `cd "${preferences.sonarqubePodmanDir}" && ${PODMAN_PATH} machine start && ${PODMAN_COMPOSE_PATH} start`,
+        );
+
         // Show progress toast
         await showToast({
           style: Toast.Style.Animated,
           title: __("commands.startSonarQube.waiting"),
           message: __("commands.startSonarQube.pleaseWait"),
         });
-        
+
         // Poll for SonarQube readiness - retry multiple times with increasing timeout
         let isReady = false;
         const maxRetries = 10;
         for (let retry = 0; retry < maxRetries && !isReady; retry++) {
           // Wait longer between each check (starts at 5s and increases)
-          const waitTime = 5000 + (retry * 2000);
-          await new Promise(resolve => setTimeout(resolve, waitTime));
-          
-          const checkStatus = await isSonarQubeRunning({ detailed: true, retries: 2 }) as { running: boolean };
+          const waitTime = 5000 + retry * 2000;
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
+
+          const checkStatus = (await isSonarQubeRunning({ detailed: true, retries: 2 })) as { running: boolean };
           isReady = checkStatus.running;
-          
+
           if (isReady) {
             await showToast({
               style: Toast.Style.Success,
@@ -196,10 +207,10 @@ export function useCommandSequencer() {
         await showToast({
           style: Toast.Style.Failure,
           title: __("commands.startSonarQube.startError"),
-          message: String(error)
+          message: String(error),
         });
       }
-      
+
       // After SonarQube is started (or at least attempted), run the analysis
       const port = preferences.sonarqubePort?.trim() || DEFAULT_SONARQUBE_PORT;
       commandsToExecute = [
@@ -214,9 +225,9 @@ export function useCommandSequencer() {
 
     await runInNewTerminal(
       commandsToExecute,
-      __("commands.allInOne.success", { projectName }), 
+      __("commands.allInOne.success", { projectName }),
       __("commands.allInOne.error"),
-      { trackProgress: true }
+      { trackProgress: true },
     );
   };
 

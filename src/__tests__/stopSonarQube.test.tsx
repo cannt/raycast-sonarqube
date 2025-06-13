@@ -3,8 +3,8 @@
 // Mock dependencies first, before any imports
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(),
-  showToast: jest.fn().mockResolvedValue({ style: '', title: '', message: '', hide: jest.fn() }),
-  Toast: { Style: { Animated: 'Animated', Success: 'Success', Failure: 'Failure' } },
+  showToast: jest.fn().mockResolvedValue({ style: "", title: "", message: "", hide: jest.fn() }),
+  Toast: { Style: { Animated: "Animated", Success: "Success", Failure: "Failure" } },
   openExtensionPreferences: jest.fn(),
 }));
 
@@ -39,57 +39,51 @@ describe("stopSonarQube", () => {
 
   it("shows error if Podman dir is missing", async () => {
     mockGetPreferenceValues.mockReturnValue({ sonarqubePodmanDir: "" });
-    
+
     await stopSonarQubeLogic();
-    
-    expect(mockShowToast).toHaveBeenCalledWith(
-      expect.objectContaining({ style: Toast.Style.Failure })
-    );
+
+    expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({ style: Toast.Style.Failure }));
   });
 
   it("runs podman stop commands when Podman dir is configured", async () => {
     mockGetPreferenceValues.mockReturnValue({ sonarqubePodmanDir: "/foo/bar" });
-    
+
     // Mock toast to return different objects for each call
     const mockToast1 = { style: Toast.Style.Animated, title: "commands.stopSonarQube.stoppingGradle", hide: jest.fn() };
     const mockToast2 = { style: Toast.Style.Success, title: "commands.stopSonarQube.success", hide: jest.fn() };
-    
-    mockShowToast
-      .mockResolvedValueOnce(mockToast1)
-      .mockResolvedValueOnce(mockToast2);
-    
+
+    mockShowToast.mockResolvedValueOnce(mockToast1).mockResolvedValueOnce(mockToast2);
+
     await stopSonarQubeLogic();
-    
+
     // Verify the podman command was called
     expect(mockRunCommand).toHaveBeenCalledWith(
       expect.stringContaining("podman"),
       expect.any(String),
       expect.any(String),
-      expect.any(Object)
+      expect.any(Object),
     );
-    
+
     // Verify a toast was shown (we'll just check the most recent call for simplicity)
     expect(mockShowToast).toHaveBeenCalled();
     // Check the toast parameters, not the specific call number
-    expect(mockShowToast).toHaveBeenCalledWith(
-      expect.objectContaining({ style: Toast.Style.Animated })
-    );
+    expect(mockShowToast).toHaveBeenCalledWith(expect.objectContaining({ style: Toast.Style.Animated }));
   });
 
   it("handles errors during podman command execution", async () => {
     mockGetPreferenceValues.mockReturnValue({ sonarqubePodmanDir: "/foo/bar" });
-    
+
     // Make runCommand throw an error
     mockRunCommand.mockRejectedValueOnce(new Error("Command failed"));
-    
+
     // Spy on console.error to verify it's called
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
     await stopSonarQubeLogic();
-    
+
     // Verify error was logged
     expect(consoleErrorSpy).toHaveBeenCalled();
-    
+
     // Clean up
     consoleErrorSpy.mockRestore();
   });

@@ -3,13 +3,13 @@
  */
 
 // Re-export everything from terminal utilities
-export * from './terminal';
+export * from "./terminal";
 
-// Re-export everything from SonarQube status utilities 
-export * from './sonarQubeStatus';
+// Re-export everything from SonarQube status utilities
+export * from "./sonarQubeStatus";
 
 // Re-export everything from project management utilities
-export * from './projectManagement';
+export * from "./projectManagement";
 
 // Re-export everything from common utilities
-export * from './common';
+export * from "./common";

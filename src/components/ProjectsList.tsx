@@ -26,11 +26,7 @@ export function ProjectsList({ projects, isLoading, onStartAnalyze }: ProjectsLi
         <ProjectEmptyState />
       ) : (
         projects.map((project) => (
-          <ProjectListItem 
-            key={project.id} 
-            project={project} 
-            onStartAnalyze={onStartAnalyze} 
-          />
+          <ProjectListItem key={project.id} project={project} onStartAnalyze={onStartAnalyze} />
         ))
       )}
     </List>

@@ -5,10 +5,10 @@
 
 // Create a mock toast object with tracking capabilities
 const mockToast = {
-  style: 'animated',
-  title: '',
-  message: '',
-  hide: jest.fn()
+  style: "animated",
+  title: "",
+  message: "",
+  hide: jest.fn(),
 };
 
 // Create mock functions with controlled behavior
@@ -20,13 +20,19 @@ const mockShowToast = jest.fn((props?: any) => {
     if (props.title) mockToast.title = props.title;
     if (props.message) mockToast.message = props.message;
   }
-  
+
   // Return object with property setters
   return {
-    set style(value: string) { mockToast.style = value; },
-    set title(value: string) { mockToast.title = value; },
-    set message(value: string) { mockToast.message = value; },
-    hide: mockToast.hide
+    set style(value: string) {
+      mockToast.style = value;
+    },
+    set title(value: string) {
+      mockToast.title = value;
+    },
+    set message(value: string) {
+      mockToast.message = value;
+    },
+    hide: mockToast.hide,
   };
 });
 
@@ -34,209 +40,214 @@ const mockShowToast = jest.fn((props?: any) => {
 const __getMockToast = () => mockToast;
 
 // DIRECT MODULE MOCKING - This is the key to reliable testing
-jest.mock('../terminal', () => {
+jest.mock("../terminal", () => {
   // Get the actual module
-  const originalModule = jest.requireActual('../terminal');
-  
+  const originalModule = jest.requireActual("../terminal");
+
   // Return a modified version with our mocks
   return {
     ...originalModule,
     execAsync: mockExecAsyncFn,
-    
+
     // Custom implementation of runCommand for testing
-    runCommand: async (command: string, successMessage: string, failureMessage: string, options?: { cwd?: string; env?: NodeJS.ProcessEnv }) => {
+    runCommand: async (
+      command: string,
+      successMessage: string,
+      failureMessage: string,
+      options?: { cwd?: string; env?: NodeJS.ProcessEnv },
+    ) => {
       // First update toast with initial state
       mockShowToast({
-        style: 'animated',
-        title: `Running: ${command.split(' ')[0]}...`,
-        message: 'Preparing environment...'
+        style: "animated",
+        title: `Running: ${command.split(" ")[0]}...`,
+        message: "Preparing environment...",
       });
-      
+
       try {
         // Prepare options with PATH additions
         const mergedOptions = options || {};
         if (!mergedOptions.env) mergedOptions.env = {};
-        
-        const currentPath = mergedOptions.env.PATH || '';
+
+        const currentPath = mergedOptions.env.PATH || "";
         mergedOptions.env.PATH = `/opt/podman/bin:/opt/homebrew/bin:${currentPath}`;
-        
+
         // Call our mock execAsync
         const result = await mockExecAsyncFn(command, mergedOptions);
-        
+
         // Update toast based on result
-        if (result.stderr && !result.stderr.toLowerCase().includes('warning')) {
-          mockToast.style = 'failure';
+        if (result.stderr && !result.stderr.toLowerCase().includes("warning")) {
+          mockToast.style = "failure";
           mockToast.title = failureMessage;
           mockToast.message = result.stderr;
         } else {
-          mockToast.style = 'success';
+          mockToast.style = "success";
           mockToast.title = successMessage;
-          mockToast.message = result.stdout || 'Command completed successfully';
+          mockToast.message = result.stdout || "Command completed successfully";
         }
-        
+
         return result;
       } catch (error: any) {
         // Handle errors
-        mockToast.style = 'failure';
+        mockToast.style = "failure";
         mockToast.title = failureMessage;
-        mockToast.message = error.message || 'Unknown error';
+        mockToast.message = error.message || "Unknown error";
         throw error;
       }
-    }
+    },
   };
 });
 
 // Mock Raycast API
-jest.mock('@raycast/api', () => ({
+jest.mock("@raycast/api", () => ({
   showToast: mockShowToast,
   Toast: {
     Style: {
-      Animated: 'animated',
-      Success: 'success',
-      Failure: 'failure'
-    }
-  }
+      Animated: "animated",
+      Success: "success",
+      Failure: "failure",
+    },
+  },
 }));
 
 // Suppress console output
-jest.spyOn(console, 'log').mockImplementation(() => {});
-jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
 
 // Import the modules after the mocks are set up
-import { runCommand } from '../terminal';
-import { Toast } from '@raycast/api';
+import { runCommand } from "../terminal";
+import { Toast } from "@raycast/api";
 
-describe('runCommand Function', () => {
+describe("runCommand Function", () => {
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();
     mockExecAsyncFn.mockReset();
     mockShowToast.mockClear();
-    
+
     // Reset toast state
-    mockToast.style = 'animated';
-    mockToast.title = '';
-    mockToast.message = '';
+    mockToast.style = "animated";
+    mockToast.title = "";
+    mockToast.message = "";
     mockToast.hide.mockClear();
   });
-  
-  test('shows animated toast initially', async () => {
+
+  test("shows animated toast initially", async () => {
     // Setup mock to return success
     mockExecAsyncFn.mockResolvedValueOnce({
-      stdout: 'Command output',
-      stderr: ''
+      stdout: "Command output",
+      stderr: "",
     });
-    
+
     // Call runCommand
-    await runCommand('test-command', 'Success', 'Failure');
-    
+    await runCommand("test-command", "Success", "Failure");
+
     // Verify showToast was called with correct initial params
     expect(mockShowToast).toHaveBeenCalledWith(
       expect.objectContaining({
-        style: 'animated',
-        title: expect.stringContaining('Running:')
-      })
+        style: "animated",
+        title: expect.stringContaining("Running:"),
+      }),
     );
   });
-  
-  test('updates toast to success on successful command', async () => {
+
+  test("updates toast to success on successful command", async () => {
     // Setup mock to return success
     mockExecAsyncFn.mockResolvedValueOnce({
-      stdout: 'Command output',
-      stderr: ''
+      stdout: "Command output",
+      stderr: "",
     });
-    
+
     // Call runCommand
-    await runCommand('test-command', 'Success', 'Failure');
-    
+    await runCommand("test-command", "Success", "Failure");
+
     // Verify toast state was updated to success
     const finalToastState = __getMockToast();
-    expect(finalToastState.style).toBe('success');
-    expect(finalToastState.title).toBe('Success');
-    expect(finalToastState.message).toContain('Command output');
+    expect(finalToastState.style).toBe("success");
+    expect(finalToastState.title).toBe("Success");
+    expect(finalToastState.message).toContain("Command output");
   });
-  
-  test('updates toast to failure when command has stderr', async () => {
+
+  test("updates toast to failure when command has stderr", async () => {
     // Setup mock to return error
     mockExecAsyncFn.mockResolvedValueOnce({
-      stdout: '',
-      stderr: 'Command error'
+      stdout: "",
+      stderr: "Command error",
     });
-    
+
     // Call runCommand
-    await runCommand('test-command', 'Success', 'Failure');
-    
+    await runCommand("test-command", "Success", "Failure");
+
     // Verify toast state was updated to failure
     const finalToastState = __getMockToast();
-    expect(finalToastState.style).toBe('failure');
-    expect(finalToastState.title).toBe('Failure');
-    expect(finalToastState.message).toContain('Command error');
+    expect(finalToastState.style).toBe("failure");
+    expect(finalToastState.title).toBe("Failure");
+    expect(finalToastState.message).toContain("Command error");
   });
-  
-  test('shows success when stderr only contains warnings', async () => {
+
+  test("shows success when stderr only contains warnings", async () => {
     // Setup mock to return warning
     mockExecAsyncFn.mockResolvedValueOnce({
-      stdout: 'Command output',
-      stderr: 'warning: This is just a warning'
+      stdout: "Command output",
+      stderr: "warning: This is just a warning",
     });
-    
+
     // Call runCommand
-    await runCommand('test-command', 'Success', 'Failure');
-    
+    await runCommand("test-command", "Success", "Failure");
+
     // Verify toast state was updated to success despite warning
     const finalToastState = __getMockToast();
-    expect(finalToastState.style).toBe('success');
-    expect(finalToastState.title).toBe('Success');
+    expect(finalToastState.style).toBe("success");
+    expect(finalToastState.title).toBe("Success");
   });
-  
-  test('shows failure toast when command throws exception', async () => {
+
+  test("shows failure toast when command throws exception", async () => {
     // Setup mock to throw an error
-    const errorMessage = 'Command execution failed';
+    const errorMessage = "Command execution failed";
     mockExecAsyncFn.mockImplementationOnce(() => Promise.reject(new Error(errorMessage)));
-    
+
     try {
       // Call runCommand - may throw an error which we'll catch
-      await runCommand('test-command', 'Success', 'Failure');
-      fail('Expected function to throw an error');
+      await runCommand("test-command", "Success", "Failure");
+      fail("Expected function to throw an error");
     } catch (error: any) {
       // It's expected for the error to propagate, but toast should be updated
-      console.log('Error propagated as expected');
+      console.log("Error propagated as expected");
     }
-    
+
     // Verify toast shows failure
     const finalToastState = __getMockToast();
-    expect(finalToastState.style).toBe('failure');
-    expect(finalToastState.title).toBe('Failure');
+    expect(finalToastState.style).toBe("failure");
+    expect(finalToastState.title).toBe("Failure");
     expect(finalToastState.message).toContain(errorMessage);
   });
-  
-  test('passes environment options correctly', async () => {
+
+  test("passes environment options correctly", async () => {
     // Reset mock for clean call data
     mockExecAsyncFn.mockReset();
     mockExecAsyncFn.mockResolvedValueOnce({
-      stdout: 'Success',
-      stderr: ''
+      stdout: "Success",
+      stderr: "",
     });
-    
+
     // Create custom options
     const options = {
-      cwd: '/custom/path',
-      env: { CUSTOM_VAR: 'custom-value' }
+      cwd: "/custom/path",
+      env: { CUSTOM_VAR: "custom-value" },
     };
-    
+
     // Call the function with options
-    await runCommand('test-command', 'Success', 'Failure', options);
-    
+    await runCommand("test-command", "Success", "Failure", options);
+
     // Verify execAsync was called with correct parameters
     expect(mockExecAsyncFn).toHaveBeenCalledWith(
-      'test-command',
+      "test-command",
       expect.objectContaining({
-        cwd: '/custom/path',
+        cwd: "/custom/path",
         env: expect.objectContaining({
-          CUSTOM_VAR: 'custom-value',
-          PATH: expect.stringContaining('/opt/homebrew/bin')
-        })
-      })
+          CUSTOM_VAR: "custom-value",
+          PATH: expect.stringContaining("/opt/homebrew/bin"),
+        }),
+      }),
     );
   });
 });

@@ -5,20 +5,20 @@ jest.mock("../index", () => {
   const originalModule = jest.requireActual("../index");
   return {
     ...originalModule,
-    isSonarQubeRunning: jest.fn()
+    isSonarQubeRunning: jest.fn(),
   };
 });
 
 // Mock @raycast/api
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(),
-  showToast: jest.fn().mockResolvedValue({ 
-    style: '', 
-    title: '', 
-    message: '',
-    primaryAction: { title: '', onAction: jest.fn() } 
+  showToast: jest.fn().mockResolvedValue({
+    style: "",
+    title: "",
+    message: "",
+    primaryAction: { title: "", onAction: jest.fn() },
   }),
-  Toast: { Style: { Animated: 'animated', Success: 'success', Failure: 'failure' } },
+  Toast: { Style: { Animated: "animated", Success: "success", Failure: "failure" } },
 }));
 
 // Import modules after mocks are set up
@@ -42,7 +42,7 @@ describe("Enhanced SonarQube Status Detection", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     // Mock console.error to prevent test output pollution
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   describe("isSonarQubeRunning with enhanced functionality", () => {
@@ -51,15 +51,15 @@ describe("Enhanced SonarQube Status Detection", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
-      
+
       expect(result).toEqual({
         running: true,
         status: "running",
-        details: "SonarQube is running normally"
+        details: "SonarQube is running normally",
       });
     });
 
@@ -68,15 +68,15 @@ describe("Enhanced SonarQube Status Detection", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
-      
+
       expect(result).toEqual({
         running: false,
         status: "starting",
-        details: "SonarQube is still starting up"
+        details: "SonarQube is still starting up",
       });
     });
 
@@ -85,53 +85,53 @@ describe("Enhanced SonarQube Status Detection", () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "error",
-        details: "Error checking SonarQube: Connection refused"
+        details: "Error checking SonarQube: Connection refused",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
-      
+
       expect(result).toEqual({
         running: false,
         status: "error",
-        details: "Error checking SonarQube: Connection refused"
+        details: "Error checking SonarQube: Connection refused",
       });
     });
-    
+
     it("should return simple boolean in non-detailed mode", async () => {
       // First test - running state
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(true);
-      
+
       let result = await isSonarQubeRunning({ detailed: false });
       expect(result).toBe(true);
-      
+
       // Second test - not running state
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce(false);
-      
+
       result = await isSonarQubeRunning({ detailed: false });
       expect(result).toBe(false);
     });
-    
+
     it("should handle timeout errors appropriately", async () => {
       (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
-      
+
       const result = await isSonarQubeRunning({ detailed: true });
-      
+
       expect(result).toEqual({
         running: false,
         status: "timeout",
-        details: "SonarQube server is not responding (may be starting)"
+        details: "SonarQube server is not responding (may be starting)",
       });
     });
   });
-  
+
   // Add a simple passing test for now
   describe("Basic SonarQube tests", () => {
     it("should have a properly exported isSonarQubeRunning function", () => {
-      expect(typeof isSonarQubeRunning).toBe('function');
+      expect(typeof isSonarQubeRunning).toBe("function");
     });
   });
 });

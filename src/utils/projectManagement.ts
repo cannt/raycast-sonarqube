@@ -49,8 +49,8 @@ export async function saveProjects(projects: Project[]): Promise<void> {
  */
 export async function saveProject(project: Project): Promise<void> {
   const projects = await loadProjects();
-  const existingIndex = projects.findIndex(p => p.id === project.id);
-  
+  const existingIndex = projects.findIndex((p) => p.id === project.id);
+
   if (existingIndex >= 0) {
     // Update existing project
     projects[existingIndex] = project;
@@ -58,7 +58,7 @@ export async function saveProject(project: Project): Promise<void> {
     // Add new project
     projects.push(project);
   }
-  
+
   await saveProjects(projects);
 }
 
@@ -67,11 +67,11 @@ export async function saveProject(project: Project): Promise<void> {
  */
 export async function deleteProject(projectId: string): Promise<void> {
   const projects = await loadProjects();
-  const filteredProjects = projects.filter(p => p.id !== projectId);
-  
+  const filteredProjects = projects.filter((p) => p.id !== projectId);
+
   if (filteredProjects.length === projects.length) {
     throw new Error(`Project with ID ${projectId} not found`);
   }
-  
+
   await saveProjects(filteredProjects);
 }

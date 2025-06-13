@@ -1,8 +1,8 @@
-import { useProjectLoader } from '../../useProjectLoader';
-import { loadProjects } from '../../../utils';
+import { useProjectLoader } from "../../useProjectLoader";
+import { loadProjects } from "../../../utils";
 
 // Mock the loadProjects function
-jest.mock('../../../utils', () => ({
+jest.mock("../../../utils", () => ({
   loadProjects: jest.fn(),
 }));
 
@@ -11,11 +11,11 @@ const mockSetProjects = jest.fn();
 const mockSetIsLoading = jest.fn();
 const mockSetError = jest.fn();
 
-jest.mock('react', () => ({
+jest.mock("react", () => ({
   useState: jest.fn((initialValue) => {
     if (Array.isArray(initialValue)) {
       return [initialValue, mockSetProjects];
-    } else if (typeof initialValue === 'boolean') {
+    } else if (typeof initialValue === "boolean") {
       return [initialValue, mockSetIsLoading];
     } else {
       return [initialValue, mockSetError];
@@ -24,17 +24,17 @@ jest.mock('react', () => ({
   useEffect: jest.fn((callback) => callback()),
 }));
 
-describe('useProjectLoader', () => {
+describe("useProjectLoader", () => {
   const mockProjects = [
-    { id: '1', name: 'Project 1', path: '/path/to/project1' },
-    { id: '2', name: 'Project 2', path: '/path/to/project2' },
+    { id: "1", name: "Project 1", path: "/path/to/project1" },
+    { id: "2", name: "Project 2", path: "/path/to/project2" },
   ];
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should load projects successfully', async () => {
+  it("should load projects successfully", async () => {
     // Mock successful project loading
     (loadProjects as jest.Mock).mockResolvedValue(mockProjects);
 
@@ -54,9 +54,9 @@ describe('useProjectLoader', () => {
     expect(loadProjects).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle errors when loading projects', async () => {
+  it("should handle errors when loading projects", async () => {
     // Mock error when loading projects
-    const error = new Error('Failed to load projects');
+    const error = new Error("Failed to load projects");
     (loadProjects as jest.Mock).mockRejectedValue(error);
 
     // Call the hook

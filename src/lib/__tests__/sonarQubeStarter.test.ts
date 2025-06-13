@@ -29,7 +29,7 @@ jest.mock("../../i18n", () => ({
 describe("sonarQubeStarter", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock preferences
     (getPreferenceValues as jest.Mock).mockReturnValue({
       sonarqubePodmanDir: "/mock/path",
@@ -97,14 +97,16 @@ describe("sonarQubeStarter", () => {
 
   it("should check again with longer timeout when timeout status is received", async () => {
     // Arrange: First check times out, second check shows starting
-    (isSonarQubeRunning as jest.Mock).mockResolvedValueOnce({
-      running: false,
-      status: "timeout",
-    }).mockResolvedValueOnce({
-      running: false, 
-      status: "starting",
-      details: "SonarQube is starting",
-    });
+    (isSonarQubeRunning as jest.Mock)
+      .mockResolvedValueOnce({
+        running: false,
+        status: "timeout",
+      })
+      .mockResolvedValueOnce({
+        running: false,
+        status: "starting",
+        details: "SonarQube is starting",
+      });
 
     // Act
     await startSonarQubeLogic();
@@ -142,7 +144,7 @@ describe("sonarQubeStarter", () => {
       "podman machine start && podman-compose start",
       "commands.startSonarQube.startSuccess",
       "commands.startSonarQube.startError",
-      { cwd: "/mock/path" }
+      { cwd: "/mock/path" },
     );
   });
 });

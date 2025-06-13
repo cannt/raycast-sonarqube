@@ -9,10 +9,10 @@ export const mockIsSonarQubeRunning = jest.fn();
 export function mockSonarQubeRunning() {
   mockIsSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
     if (options?.detailed) {
-      return { 
-        running: true, 
-        status: "running", 
-        details: "SonarQube is running normally" 
+      return {
+        running: true,
+        status: "running",
+        details: "SonarQube is running normally",
       };
     }
     return true;
@@ -23,10 +23,10 @@ export function mockSonarQubeRunning() {
 export function mockSonarQubeNotRunning() {
   mockIsSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
     if (options?.detailed) {
-      return { 
-        running: false, 
-        status: "down", 
-        details: "SonarQube server is not running" 
+      return {
+        running: false,
+        status: "down",
+        details: "SonarQube server is not running",
       };
     }
     return false;
@@ -37,10 +37,10 @@ export function mockSonarQubeNotRunning() {
 export function mockSonarQubeStarting() {
   mockIsSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
     if (options?.detailed) {
-      return { 
-        running: false, 
-        status: "starting", 
-        details: "SonarQube server is still starting up" 
+      return {
+        running: false,
+        status: "starting",
+        details: "SonarQube server is still starting up",
       };
     }
     return false;
@@ -51,10 +51,10 @@ export function mockSonarQubeStarting() {
 export function mockSonarQubeTimeout() {
   mockIsSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
     if (options?.detailed) {
-      return { 
-        running: false, 
-        status: "timeout", 
-        details: "SonarQube server is not responding (may be starting)" 
+      return {
+        running: false,
+        status: "timeout",
+        details: "SonarQube server is not responding (may be starting)",
       };
     }
     return false;
@@ -65,10 +65,10 @@ export function mockSonarQubeTimeout() {
 export function mockSonarQubeError(errorMessage: string = "Unknown error") {
   mockIsSonarQubeRunning.mockImplementation(async (options?: { detailed?: boolean }) => {
     if (options?.detailed) {
-      return { 
-        running: false, 
-        status: "error", 
-        details: `Error checking SonarQube: ${errorMessage}` 
+      return {
+        running: false,
+        status: "error",
+        details: `Error checking SonarQube: ${errorMessage}`,
       };
     }
     return false;

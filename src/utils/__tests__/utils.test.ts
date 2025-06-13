@@ -22,20 +22,12 @@ jest.mock("../index", () => {
     }),
     generateId: jest.fn().mockReturnValue("test-id-123"),
     saveProjects: jest.fn().mockResolvedValue(undefined),
-    loadProjects: jest.fn().mockResolvedValue([])
+    loadProjects: jest.fn().mockResolvedValue([]),
   };
 });
 
 // Get references to the mocked functions
-const { 
-  runCommand,
-  runInNewTerminal, 
-  isSonarQubeRunning, 
-  execAsync, 
-  generateId,
-  loadProjects,
-  saveProjects
-} = utils;
+const { runCommand, runInNewTerminal, isSonarQubeRunning, execAsync, generateId, loadProjects, saveProjects } = utils;
 
 // Mock modules and functions
 jest.mock("@raycast/api", () => ({
@@ -44,22 +36,22 @@ jest.mock("@raycast/api", () => ({
     message: "",
     show: jest.fn(),
     hide: jest.fn(),
-    style: ""
+    style: "",
   }),
   Toast: {
     Style: {
       Animated: "animated",
       Success: "success",
-      Failure: "failure"
-    }
+      Failure: "failure",
+    },
   },
   LocalStorage: {
     getItem: jest.fn(),
-    setItem: jest.fn()
+    setItem: jest.fn(),
   },
   environment: {
-    supportPath: "/test/support/path"
-  }
+    supportPath: "/test/support/path",
+  },
 }));
 
 // Mock the child_process.exec
@@ -67,13 +59,13 @@ jest.mock("child_process", () => ({
   exec: jest.fn((cmd, opts, callback) => {
     if (callback) callback(null, { stdout: "mock stdout", stderr: "" });
     return { stdout: "mock stdout", stderr: "" };
-  })
+  }),
 }));
 
 // Mock utilities to make testing easier
 jest.mock("http", () => {
   return {
-    get: jest.fn()
+    get: jest.fn(),
   };
 });
 
@@ -91,28 +83,28 @@ describe("runCommand", () => {
       message: "",
       style: Toast.Style.Animated,
       show: jest.fn(),
-      hide: jest.fn()
+      hide: jest.fn(),
     };
-    
+
     // Mock showToast to return our toast object
     (showToast as jest.Mock).mockResolvedValue(mockToast);
-    
+
     // Set up exec mock with success by default
     mockExec = jest.fn((cmd, opts, callback) => {
       if (callback) callback(null, { stdout: "success output", stderr: "" });
       return Promise.resolve({ stdout: "success output", stderr: "" });
     });
-    
+
     // Replace the exec implementation
     (child_process.exec as unknown as jest.Mock).mockImplementation(mockExec);
-    
+
     // Setup runCommand mock to update our mockToast
     (runCommand as jest.Mock).mockImplementation(async (command, successMessage, failureMessage, options) => {
       // Simulating what the actual implementation would do
       // First show animated toast
       mockToast.style = Toast.Style.Animated;
       mockToast.title = `Running: ${command.split(" ")[0]}...`;
-      
+
       try {
         const result = await mockExec(command, options, null);
         if (result.stderr && !result.stderr.toLowerCase().includes("warning")) {
@@ -133,7 +125,7 @@ describe("runCommand", () => {
 
   it("should show success message on successful command", async () => {
     await runCommand("test command", "Success", "Failure");
-    
+
     // Verify the toast was updated with success style
     expect(mockToast.style).toBe(Toast.Style.Success);
     expect(mockToast.title).toBe("Success");
@@ -145,9 +137,9 @@ describe("runCommand", () => {
       if (callback) callback(new Error("Command failed"), "", "Error output");
       return { stdout: "", stderr: "Error output" };
     });
-    
+
     await runCommand("test command", "Success", "Failure");
-    
+
     // Verify the toast was updated with failure style
     expect(mockToast.style).toBe(Toast.Style.Failure);
     expect(mockToast.title).toBe("Failure");
@@ -159,9 +151,9 @@ describe("runCommand", () => {
       if (callback) callback(null, { stdout: "", stderr: "Error in command" });
       return Promise.resolve({ stdout: "", stderr: "Error in command" });
     });
-    
+
     await runCommand("test command", "Success", "Failure");
-    
+
     // Verify the toast was updated with failure style
     expect(mockToast.style).toBe(Toast.Style.Failure);
     expect(mockToast.title).toBe("Failure");
@@ -173,9 +165,9 @@ describe("runCommand", () => {
       if (callback) callback(null, { stdout: "success output", stderr: "warning: some warning" });
       return Promise.resolve({ stdout: "success output", stderr: "warning: some warning" });
     });
-    
+
     await runCommand("test command", "Success", "Failure");
-    
+
     // Verify the toast shows success despite the warning
     expect(mockToast.style).toBe(Toast.Style.Success);
     expect(mockToast.title).toBe("Success");
@@ -185,17 +177,17 @@ describe("runCommand", () => {
     // Create an options object to pass to the mock
     const mockOptions = {
       env: {
-        PATH: "/opt/podman/bin:/opt/homebrew/bin:/usr/bin"
-      }
+        PATH: "/opt/podman/bin:/opt/homebrew/bin:/usr/bin",
+      },
     };
-    
+
     // Setup mockExec to capture the environment variables
     mockExec.mockImplementationOnce((cmd, opts, callback) => {
       // Store the options for later verification
       if (callback) callback(null, { stdout: "success", stderr: "" });
       return Promise.resolve({ stdout: "success", stderr: "" });
     });
-    
+
     // Override the runCommand implementation for this test to use our mockOptions
     (runCommand as jest.Mock).mockImplementationOnce(async () => {
       // Actually call mockExec with our options
@@ -205,15 +197,15 @@ describe("runCommand", () => {
       mockToast.title = "Success";
       return Promise.resolve();
     });
-    
+
     await runCommand("test command", "Success", "Failure");
-    
+
     // Verify the command was executed
     expect(mockExec).toHaveBeenCalled();
-    
+
     // Verify it was called with the right command string
     expect(mockExec.mock.calls[0][0]).toBe("test command");
-    
+
     // Verify options were passed
     expect(mockExec.mock.calls[0][1]).toBeDefined();
   });
@@ -227,26 +219,26 @@ describe("isSonarQubeRunning", () => {
     const mockResponse = {
       statusCode: 200,
       on: jest.fn().mockImplementation((event, callback) => {
-        if (event === 'data') {
+        if (event === "data") {
           callback(JSON.stringify({ status: "up" }));
-        } else if (event === 'end') {
+        } else if (event === "end") {
           callback();
         }
         return mockResponse;
-      })
+      }),
     };
-    
+
     const mockReq = {
       on: jest.fn().mockReturnThis(),
-      destroy: jest.fn()
+      destroy: jest.fn(),
     };
-    
+
     httpGetMock.mockImplementation((options, callback) => {
       callback(mockResponse);
       return mockReq;
     });
   }
-  
+
   // Mock for failed HTTP response
   function mockHttpError(errorType: string) {
     const mockReq = {
@@ -256,9 +248,9 @@ describe("isSonarQubeRunning", () => {
         }
         return mockReq;
       }),
-      destroy: jest.fn()
+      destroy: jest.fn(),
     };
-    
+
     httpGetMock.mockReturnValue(mockReq);
   }
 
@@ -268,56 +260,56 @@ describe("isSonarQubeRunning", () => {
 
   it("should return true for successful response", async () => {
     mockHttpSuccess();
-    
+
     // Override the isSonarQubeRunning implementation to call httpGetMock before returning
     (isSonarQubeRunning as jest.Mock).mockImplementationOnce(async () => {
       // Actually call the http.get mock so it registers as being called
-      httpGetMock({hostname: "localhost", port: 9000}, () => {});
+      httpGetMock({ hostname: "localhost", port: 9000 }, () => {});
       return true;
     });
-    
+
     const running = await isSonarQubeRunning();
-    
+
     expect(running).toBe(true);
     expect(httpGetMock).toHaveBeenCalled();
   });
 
   it("should return detailed status for successful response", async () => {
     mockHttpSuccess();
-    
+
     const detailedStatus = await isSonarQubeRunning({ detailed: true });
-    
+
     expect(detailedStatus).toMatchObject({
       running: true,
-      status: "running"
+      status: "running",
     });
   });
 
   it("should return false for error response", async () => {
     mockHttpError("error");
-    
+
     // Override the default implementation for this test
     (isSonarQubeRunning as jest.Mock).mockImplementationOnce(async () => false);
-    
+
     const running = await isSonarQubeRunning();
-    
+
     expect(running).toBe(false);
   });
 
   it("should return detailed status for error response", async () => {
     mockHttpError("error");
-    
+
     // Override the default implementation for this test
     (isSonarQubeRunning as jest.Mock).mockImplementationOnce(async () => ({
       running: false,
       status: "error",
-      details: "Error occurred"
+      details: "Error occurred",
     }));
-    
+
     const detailedStatus = await isSonarQubeRunning({ detailed: true });
     expect(detailedStatus).toMatchObject({
       running: false,
-      status: "error" // Updated to match our enhanced implementation
+      status: "error", // Updated to match our enhanced implementation
     });
   });
 
@@ -330,17 +322,17 @@ describe("isSonarQubeRunning", () => {
         }
         return mockReq;
       }),
-      destroy: jest.fn()
+      destroy: jest.fn(),
     };
-    
+
     httpGetMock.mockReturnValue(mockReq);
-    
+
     // Override the default implementation for this test to return false
     (isSonarQubeRunning as jest.Mock).mockImplementationOnce(async () => false);
-    
+
     // Call with short timeout and no retries
     const result = await isSonarQubeRunning({ timeout: 100, retries: 0 });
-    
+
     // Should return false on timeout
     expect(result).toBe(false);
   });
@@ -348,13 +340,13 @@ describe("isSonarQubeRunning", () => {
   it("should support retries when specified", async () => {
     // First call will trigger error, second call will succeed
     let callCount = 0;
-    
+
     // Setup a mock for callCount tracking
     const mockRetryFn = jest.fn().mockImplementation(() => {
       callCount++;
       return true; // Always return true for simplicity
     });
-    
+
     // Override isSonarQubeRunning implementation just for this test
     (isSonarQubeRunning as jest.Mock).mockImplementationOnce(async () => {
       // Call our tracking function
@@ -363,10 +355,10 @@ describe("isSonarQubeRunning", () => {
       mockRetryFn();
       return true;
     });
-    
+
     // Call with 1 retry parameter (our mock will simulate this behavior)
     const result = await isSonarQubeRunning({ retries: 1 });
-    
+
     // Should retry and eventually succeed
     expect(callCount).toBe(2);
     expect(result).toBe(true);

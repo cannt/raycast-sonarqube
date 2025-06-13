@@ -6,13 +6,13 @@ import * as http from "http";
 
 /**
  * Check if SonarQube server is running by making an HTTP request to its status endpoint.
- * 
+ *
  * This enhanced version provides sophisticated status detection with the following features:
  * 1. Configurable timeouts for different server states
  * 2. Automatic retry with exponential backoff
  * 3. Detailed status reporting option
  * 4. Intelligent error classification (down, starting, timeout, etc.)
- * 
+ *
  * @param options Configuration options
  * @param options.retries Number of retries if request fails (default: 2)
  * @param options.timeout Timeout in milliseconds (default: 3000)
@@ -28,38 +28,34 @@ export async function isSonarQubeRunning(options?: {
   const maxRetries = options?.retries ?? 2;
   const initialTimeout = options?.timeout ?? 3000;
   const detailed = options?.detailed ?? false;
-  
+
   let attemptCount = 0;
   let lastError = "";
-  
+
   // Try making the request, potentially multiple times
   while (attemptCount <= maxRetries) {
     attemptCount++;
-    
+
     // For retry attempts, increase timeout to give more time
     const timeoutForThisAttempt = initialTimeout * Math.min(attemptCount, 3);
-    
+
     try {
       const response = await checkSonarQubeStatus(timeoutForThisAttempt);
-      
+
       // Process the response
       if (response.status.toLowerCase() === "up") {
         // SonarQube is up and running normally
-        return detailed 
-          ? { running: true, status: "running", details: "SonarQube is running normally" }
-          : true;
+        return detailed ? { running: true, status: "running", details: "SonarQube is running normally" } : true;
       } else if (response.status.toLowerCase() === "starting") {
         // SonarQube is starting up
-        return detailed
-          ? { running: false, status: "starting", details: "SonarQube is still starting up" }
-          : false;
+        return detailed ? { running: false, status: "starting", details: "SonarQube is still starting up" } : false;
       } else {
         // Some other status we don't recognize
         return detailed
-          ? { 
-              running: false, 
-              status: "unknown_success_response", 
-              details: `SonarQube returned status: ${response.status}` 
+          ? {
+              running: false,
+              status: "unknown_success_response",
+              details: `SonarQube returned status: ${response.status}`,
             }
           : false;
       }
@@ -71,7 +67,7 @@ export async function isSonarQubeRunning(options?: {
       }
       // Exponential backoff before next retry
       const delay = Math.min(500 * Math.pow(2, attemptCount - 1), 5000);
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   } // End of while loop
 
@@ -80,13 +76,17 @@ export async function isSonarQubeRunning(options?: {
   if (detailed) {
     const originalLastErrorString = String(lastError);
     const lowerLastError = originalLastErrorString.toLowerCase();
-    const charCodes = originalLastErrorString.split('').map(c => c.charCodeAt(0)).join(',');
+    const charCodes = originalLastErrorString
+      .split("")
+      .map((c) => c.charCodeAt(0))
+      .join(",");
 
     // Direct check for the exact string, case-insensitive
-    const isExactTimeoutString = (originalLastErrorString === "Request timed out" || lowerLastError === "request timed out");
+    const isExactTimeoutString =
+      originalLastErrorString === "Request timed out" || lowerLastError === "request timed out";
     // Regex check (current method)
     const regexFindsTimeout = /timeout/i.test(originalLastErrorString);
-    
+
     // Combine checks: prefer exact match, fall back to regex
     const combinedIncludesTimeout = isExactTimeoutString || regexFindsTimeout;
 
@@ -96,13 +96,14 @@ export async function isSonarQubeRunning(options?: {
       return { running: false, status: "timeout", details: "SonarQube server is not responding (may be starting)" };
     } else {
       // This is the branch that's unexpectedly being hit for timeouts
-      return { 
-        running: false, 
-        status: "error", 
-        details: `Error checking SonarQube: ${lastError || "Unknown error"}` 
+      return {
+        running: false,
+        status: "error",
+        details: `Error checking SonarQube: ${lastError || "Unknown error"}`,
       };
     }
-  } else { // Not detailed, return simple boolean
+  } else {
+    // Not detailed, return simple boolean
     // All attempts failed, so SonarQube is not considered running.
     return false;
   }
@@ -124,11 +125,11 @@ export async function checkSonarQubeStatus(timeoutMs: number): Promise<{ status:
 
     const req = http.get(options, (res) => {
       let data = "";
-      
+
       res.on("data", (chunk) => {
         data += chunk;
       });
-      
+
       res.on("end", () => {
         if (res.statusCode && res.statusCode >= 200 && res.statusCode < 400) {
           try {

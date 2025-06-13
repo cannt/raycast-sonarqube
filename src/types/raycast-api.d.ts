@@ -2,15 +2,15 @@
  * Type definitions to fix TypeScript errors with @raycast/api
  */
 
-import '@raycast/api';
+import "@raycast/api";
 
-declare module '@raycast/api' {
+declare module "@raycast/api" {
   // Add missing properties to the Toast interface
   interface Toast {
     hide: () => void;
     show: () => void;
   }
-  
+
   // Add missing properties to ToastOptions
   interface ToastOptions {
     primaryAction?: {
@@ -18,13 +18,13 @@ declare module '@raycast/api' {
       onAction: (toast: Toast) => void | Promise<void>;
     };
   }
-  
+
   // Support both function signatures for showToast
   interface ShowToastFunction {
     (options: ToastOptions): Promise<Toast>;
     (style: Toast.Style, title: string, message?: string): Promise<Toast>;
   }
-  
+
   // Redefine showToast with both supported signatures
   const showToast: ShowToastFunction;
 }

@@ -13,18 +13,14 @@ type StorageData = {
 const mockStorage: StorageData = {};
 
 // Mock for LocalStorage.getItem
-export const mockGetItem = jest.fn().mockImplementation(
-  async (key: string): Promise<string | undefined> => {
-    return mockStorage[key];
-  }
-);
+export const mockGetItem = jest.fn().mockImplementation(async (key: string): Promise<string | undefined> => {
+  return mockStorage[key];
+});
 
 // Mock for LocalStorage.setItem
-export const mockSetItem = jest.fn().mockImplementation(
-  async (key: string, value: string): Promise<void> => {
-    mockStorage[key] = value;
-  }
-);
+export const mockSetItem = jest.fn().mockImplementation(async (key: string, value: string): Promise<void> => {
+  mockStorage[key] = value;
+});
 
 // Helper to pre-populate the mock storage with project data
 export function setupMockProjects(projects: Project[]): void {
@@ -33,5 +29,5 @@ export function setupMockProjects(projects: Project[]): void {
 
 // Helper to clear all mock storage data
 export function clearMockStorage(): void {
-  Object.keys(mockStorage).forEach(key => delete mockStorage[key]);
+  Object.keys(mockStorage).forEach((key) => delete mockStorage[key]);
 }

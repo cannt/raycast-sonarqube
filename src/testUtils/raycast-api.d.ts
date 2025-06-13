@@ -3,21 +3,17 @@
  * This makes TypeScript happy when tests import from @raycast/api
  */
 
-declare module '@raycast/api' {
+declare module "@raycast/api" {
   // Toast API
   export const Toast: {
     Style: {
       Success: string;
       Failure: string;
       Animated: string;
-    }
+    };
   };
-  
-  export function showToast(props: { 
-    style?: string; 
-    title?: string; 
-    message?: string;
-  }): {
+
+  export function showToast(props: { style?: string; title?: string; message?: string }): {
     style: string;
     title: string;
     message: string;
@@ -26,7 +22,7 @@ declare module '@raycast/api' {
   // Preferences API
   export function getPreferenceValues<T = any>(): T;
   export function openExtensionPreferences(): Promise<void>;
-  
+
   // Navigation API
   export function open(target: string): Promise<void>;
   export function useNavigation(): { push: (component: any) => void };
@@ -38,7 +34,7 @@ declare module '@raycast/api' {
   export const Icon: any;
   export const Form: any;
   export const Keyboard: any;
-  
+
   // Utilities
   export function confirmAlert(options: any): Promise<boolean>;
   export const LocalStorage: {
@@ -48,7 +44,7 @@ declare module '@raycast/api' {
     clear(): Promise<void>;
     allItems(): Promise<Record<string, string>>;
   };
-  
+
   // Test utilities (not in real Raycast API, but added for testing)
   export function _getMockToast(): {
     style: string | null;

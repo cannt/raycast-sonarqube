@@ -35,21 +35,20 @@ jest.mock("../../../components/ProjectsList", () => {
     ProjectsList: jest.fn(({ projects, isLoading, onStartAnalyze }) => {
       // Simulate the component by returning a valid React element
       setTimeout(() => {
-        if (onStartAnalyze && typeof onStartAnalyze === 'function') {
+        if (onStartAnalyze && typeof onStartAnalyze === "function") {
           onStartAnalyze("/test/path", "Test Project");
         }
       }, 0);
-      
-      return <div data-testid="projects-list">
-        <div data-testid="projects-list-props">{JSON.stringify({ projects, isLoading })}</div>
-        <button 
-          data-testid="test-click-button" 
-          onClick={() => onStartAnalyze("/test/path", "Test Project")}
-        >
-          Click
-        </button>
-      </div>;
-    })
+
+      return (
+        <div data-testid="projects-list">
+          <div data-testid="projects-list-props">{JSON.stringify({ projects, isLoading })}</div>
+          <button data-testid="test-click-button" onClick={() => onStartAnalyze("/test/path", "Test Project")}>
+            Click
+          </button>
+        </div>
+      );
+    }),
   };
 });
 
@@ -67,30 +66,30 @@ describe("Command component", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup default mocks
     mockUseProjectLoader.mockReturnValue({
       projects: mockProjects,
       isLoading: false,
       error: null,
     });
-    
+
     mockUseSonarQubePath.mockReturnValue({
       getSonarQubePath: mockGetSonarQubePath,
       pathError: null,
     });
-    
+
     mockUseCommandSequencer.mockReturnValue({
       performStartAnalyzeSequence: mockPerformStartAnalyzeSequence,
     });
-    
+
     mockGetSonarQubePath.mockResolvedValue("http://localhost:9000");
   });
 
   it("renders with correct props", () => {
     // Render the component
     render(<Command />);
-    
+
     // Check that the hooks were called
     expect(mockUseProjectLoader).toHaveBeenCalled();
     expect(mockUseSonarQubePath).toHaveBeenCalled();
@@ -100,28 +99,24 @@ describe("Command component", () => {
   it("calls performStartAnalyzeSequence when a project is selected", async () => {
     // Render the component
     render(<Command />);
-    
+
     // Wait for the async operation to complete
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
     // Should call getSonarQubePath and then performStartAnalyzeSequence
     expect(mockGetSonarQubePath).toHaveBeenCalled();
-    expect(mockPerformStartAnalyzeSequence).toHaveBeenCalledWith(
-      "/test/path",
-      "Test Project",
-      "http://localhost:9000"
-    );
+    expect(mockPerformStartAnalyzeSequence).toHaveBeenCalledWith("/test/path", "Test Project", "http://localhost:9000");
   });
 
   it("handles path resolution error", async () => {
     // Mock path resolution error
     mockGetSonarQubePath.mockResolvedValueOnce(null);
-    
+
     // Render the component
     render(<Command />);
-    
+
     // Wait for the async operation to complete
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
     // Should call getSonarQubePath but not performStartAnalyzeSequence
     expect(mockGetSonarQubePath).toHaveBeenCalled();
@@ -137,17 +132,19 @@ describe("Command component", () => {
 
     // Render the component
     render(<Command />);
-    
+
     // Check that ProjectsList was called with loading=true
     const { ProjectsList } = require("../../../components/ProjectsList");
     expect(ProjectsList).toHaveBeenCalled();
-    
+
     // Check the first argument of the first call
     const firstCallArgs = ProjectsList.mock.calls[0][0];
-    expect(firstCallArgs).toEqual(expect.objectContaining({
-      isLoading: true,
-      projects: [],
-      onStartAnalyze: expect.any(Function)
-    }));
+    expect(firstCallArgs).toEqual(
+      expect.objectContaining({
+        isLoading: true,
+        projects: [],
+        onStartAnalyze: expect.any(Function),
+      }),
+    );
   });
 });

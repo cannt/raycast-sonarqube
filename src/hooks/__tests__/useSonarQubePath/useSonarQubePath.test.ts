@@ -10,14 +10,14 @@ jest.mock("@raycast/api", () => ({
     Style: {
       Failure: "failure",
       Success: "success",
-      Animated: "animated"
-    }
-  }
+      Animated: "animated",
+    },
+  },
 }));
 
 // Mock React hooks
 const mockSetPathError = jest.fn();
-jest.mock('react', () => ({
+jest.mock("react", () => ({
   useState: jest.fn(() => [null, mockSetPathError]),
 }));
 
@@ -31,12 +31,12 @@ describe("useSonarQubePath", () => {
     mockShowToast.mockResolvedValue({
       hide: jest.fn(),
     });
-    
+
     // Set default preferences mock
     (getPreferenceValues as jest.Mock).mockReturnValue({
       useCustomSonarQubeApp: false,
     });
-    
+
     // Initialize the hook
     hook = useSonarQubePath();
   });
@@ -60,7 +60,7 @@ describe("useSonarQubePath", () => {
       useCustomSonarQubeApp: true,
       sonarqubeAppPath: customPath,
     });
-    
+
     // Re-initialize hook with new mock
     hook = useSonarQubePath();
 
@@ -76,7 +76,7 @@ describe("useSonarQubePath", () => {
       useCustomSonarQubeApp: true,
       sonarqubeAppPath: "",
     });
-    
+
     // Re-initialize hook with new mock
     hook = useSonarQubePath();
 
@@ -86,7 +86,7 @@ describe("useSonarQubePath", () => {
     expect(mockShowToast).toHaveBeenCalledWith(
       expect.objectContaining({
         style: Toast.Style.Failure,
-      })
+      }),
     );
     expect(mockSetPathError).toHaveBeenCalled();
   });
@@ -97,7 +97,7 @@ describe("useSonarQubePath", () => {
       useCustomSonarQubeApp: true,
       sonarqubeAppPath: "",
     });
-    
+
     // Re-initialize hook with new mock
     hook = useSonarQubePath();
 

@@ -3,10 +3,14 @@
  */
 
 // Mock Raycast API
-jest.mock('@raycast/api', () => {
-  return require('./mocks/raycast-api');
-}, { virtual: true });
+jest.mock(
+  "@raycast/api",
+  () => {
+    return require("./mocks/raycast-api");
+  },
+  { virtual: true },
+);
 
 // Suppress console pollution during tests
-jest.spyOn(console, 'log').mockImplementation(() => {});
-jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, "log").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
