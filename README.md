@@ -8,7 +8,7 @@ It simplifies common SonarQube workflows, allowing you to start/stop your SonarQ
 
 ## Project Structure
 
-The codebase follows a well-organized domain-based structure for better maintainability and testability:
+The codebase follows a well-organized domain-based structure for better maintainability:
 
 ```
 src/
@@ -217,128 +217,73 @@ For each code issue detected by SonarQube, you can:
 
 > Note: AI features require Raycast AI to be available on your Raycast installation. The extension respects your SonarQube server configuration and will use the same URL and authentication settings you've configured for analysis.
 
-### AI Features Screenshot Guide
-
-Here's what you can expect from the new AI-powered features:
-
-1. **Running Analysis with AI Integration**
-   ```
-   [Screenshot: The analysis running progress with "AI is analyzing your SonarQube results" message]
-   ```
-
-2. **AI Analysis Results View**
-   ```
-   [Screenshot: The AI analysis results screen showing summary, metrics, and issue list]
-   ```
-
-3. **Getting AI Fix Suggestions**
-   ```
-   [Screenshot: The action menu with "Get Fix Suggestion" option and resulting AI suggestion]
-   ```
-
-> Note: These placeholder screenshots should be replaced with actual screenshots once the feature is deployed and tested in production environments.
-
-## Continuous Integration
-
-We've set up GitHub Actions to handle our CI pipeline. Tests run automatically when we push changes to main or open a PR.
-
-### What Our CI Does
-
-- Uses macOS runners to match our dev environment
-- Runs the full test suite with coverage reports
-- Saves those reports where the team can access them
-- Gives instant feedback in GitHub's UI
 
 
+## Development Information
 
-### Getting Your Dev Environment CI-Ready
+This extension is maintained with quality and reliability in mind. We use automated processes to ensure the extension remains stable and functional.
 
-Cloned the repo? If you're just getting started:
+### Release Process
 
-```bash
-# Make sure everything's tracked in git
-git add .  
-
-# Commit your changes with a meaningful message
-git commit -m "Your helpful commit message here"
-
-# Push to GitHub to trigger the CI run
-git push
-```
-
-### On Our CI Roadmap
-
+We're working on:
 - Setting up auto-releases when version bumps happen
-- Implementing more code quality checks
+- Implementing additional code quality checks
 
-## What's Next on Our Roadmap
+## Features Roadmap
 
-### Recently Shipped
+### Recently Completed
 
-- **TypeScript Improvements (May 23, 2025)**: Fixed TypeScript errors by adding proper type annotations and interfaces for component props
-- **Error Handling Improvements (May 24, 2025)**: Enhanced error handling in startAnalyzeOpenSonarQubeComponent with proper error toasts for null SonarQube paths
+- **Enhanced SonarQube Status Detection (May 2025)**
+  - Intelligent status detection with detailed information about SonarQube state
+  - Improved handling for different states: running, starting, initializing, or stopped
+  - Automatic retry logic with configurable timeouts for more reliable detection
+  - Smart wait times based on detected server state
+  - Comprehensive error handling with user-friendly localized messages
 
+- **Enhanced Localization (May 2025)**
+  - Comprehensive i18n system with support for English and Spanish
+  - All user-facing messages, commands, forms, and notifications fully translated
+  - Dynamic language detection based on user preferences with system language fallback
+  - Flexible translation system with parameter support for complex messages
 
+- **Multi-Project Support**
+  - Implemented multi-project management beyond just a single project
+  - Added a project picker to work with multiple SonarQube targets
+  - Built a UI for adding, editing, and removing projects
+  - Enhanced terminal feedback with progress tracking
 
-### Coming Soon
-
-
-- **Auto-releases**: Setting up automatic releases when version changes are detected
-
-### New AI-Powered Features (June 2025)
-
-- **AI Analysis Interpretation**: Quickly understand SonarQube analysis results with AI-generated summaries
-- **AI Code Fix Suggestions**: Get intelligent fix suggestions for code issues detected by SonarQube
-- **Interactive AI Tools**: Request AI explanations and fixes directly from the analysis results view
-
-*   **Enhanced SonarQube Status Detection (May 2025):**
-    *   ✅ Intelligent status detection with detailed information about SonarQube state
-    *   ✅ Improved handling for different states: running, starting, initializing, or stopped
-    *   ✅ Automatic retry logic with configurable timeouts for more reliable detection
-    *   ✅ Smart wait times based on detected server state (longer waits when starting, shorter when already running)
-    *   ✅ Comprehensive error handling with user-friendly localized messages
-
-*   **Enhanced Localization (May 2025):**
-    *   ✅ Comprehensive i18n system with support for English and Spanish
-    *   ✅ All user-facing messages, commands, forms, and notifications fully translated
-    *   ✅ Dynamic language detection based on user preferences with system language fallback
-    *   ✅ Flexible translation system with parameter support for complex messages
-
-*   **System Improvements (April 2025):**
-    *   ✅ Improved code quality across the board
-    *   ✅ Added comprehensive support for Raycast API components
-    *   ✅ Better handling of edge cases
+- **System Improvements**
+  - Improved code quality across the board
+  - Added comprehensive support for Raycast API components
+  - Better handling of edge cases
+  - TypeScript improvements with proper type annotations
+  - Enhanced error handling with clear user feedback
 
 ### Currently Working On
 
-*   **Better Analysis Cancellation:**
-    *   The stop command now tries to shut down any running Gradle tasks
-    *   We're exploring better ways to handle process termination when analyses run in separate terminals
+- **Better Analysis Cancellation**
+  - The stop command now tries to shut down any running Gradle tasks
+  - Improved process termination when analyses run in separate terminals
+
+- **Terminal Command Refinements**
+  - Better error messages when things go sideways
+  - Progress tracking for long-running analyses
 
 ### Coming Soon
 
-*   **CI Pipeline: Mostly Done! ✅**
-    *   ✅ Automated builds run when code changes
-    *   ⬜ Next up: automating our release process
+- **Advanced UI/UX Improvements**
+  - More detailed analysis progress reporting
+  - Custom notification sounds for long-running operations
+  - Savable analysis profiles with different settings
 
-*   **Multi-Project Support: ✅**
-    *   ✅ Implemented multi-project management beyond just the RFID project
-    *   ✅ Added a project picker to work with multiple SonarQube targets
-    *   ✅ Built a UI for adding, editing, and removing projects
-    *   ✅ Enhanced terminal feedback with progress tracking
+- **Better Localization Support**
+  - Taking advantage of new Raycast API features for seamless language switching
+  - Automatic language detection based on system settings
 
-*   **Advanced UI/UX Improvements: Planned ⬜**
-    *   ⬜ More detailed analysis progress reporting
-    *   ⬜ Custom notification sounds for long-running operations
-    *   ⬜ Savable analysis profiles with different settings
-
-*   **Terminal Command Refinements:**
-    *   Better error messages when things go sideways
-    *   Progress tracking so you're not left wondering about long-running analyses
-
-*   **Better Localization Support:**
-    *   As the Raycast API evolves, we'll take advantage of new features to make the language switching more seamless
-    *   Potential implementation of automatic language detection based on system settings
+- **New AI-Powered Features (June 2025)**
+  - AI Analysis Interpretation: Quickly understand SonarQube results with AI-generated summaries
+  - AI Code Fix Suggestions: Get intelligent fix suggestions for code issues
+  - Interactive AI Tools: Request explanations and fixes directly from the results view
 
 ## Branding
 
