@@ -5,7 +5,7 @@
   "title": "Sonarqube Tools",
   "description": "Manage SonarQube instance and run analysis. / Gestiona la instancia de SonarQube y ejecuta análisis.",
   "icon": "sonarqube-icon.png",
-  "author": "Angel",
+  "author": "juan_angel_trujillo_jimenez",
   "license": "MIT",
   "categories": ["Developer Tools", "Productivity"],
   "repository": "https://github.com/cannt/raycast-sonarqube",
@@ -171,6 +171,9 @@
   "dependencies": {
     "@raycast/api": "^1.98.2",
     "child_process": "^1.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

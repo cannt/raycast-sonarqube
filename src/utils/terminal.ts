@@ -203,7 +203,7 @@ export async function runInNewTerminal(
   // Show an initial toast message
   const toast = await showToast({
     style: Toast.Style.Animated,
-    title: "Starting commands in new terminal...",
+    title: "Running in terminal...",
     message: "Terminal window will open shortly",
   });
   
