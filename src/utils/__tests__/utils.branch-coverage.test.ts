@@ -1,6 +1,6 @@
-import * as http from "http";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IncomingMessage, ClientRequest } from "http";
-import { EventEmitter } from "events";
 
 // Instead of using direct mocking of HTTP, we'll use direct mocking of the utils function
 // Mock the utils module to directly control isSonarQubeRunning behavior

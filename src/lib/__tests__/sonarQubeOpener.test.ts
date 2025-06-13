@@ -21,6 +21,8 @@ jest.mock("../../i18n", () => ({
 }));
 
 // Console error spy
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
 
 describe("sonarQubeOpener", () => {

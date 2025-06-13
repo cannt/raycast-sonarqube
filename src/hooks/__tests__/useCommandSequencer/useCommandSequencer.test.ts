@@ -1,8 +1,10 @@
 import { useCommandSequencer } from "../../useCommandSequencer";
 import { isSonarQubeRunning, runInNewTerminal } from "../../../utils";
-import { showToast, Toast, getPreferenceValues } from "@raycast/api";
+import { showToast, Toast } from "@raycast/api";
 
 // Mock dependencies
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("../../../utils", () => ({
   isSonarQubeRunning: jest.fn(),
   runInNewTerminal: jest.fn(),

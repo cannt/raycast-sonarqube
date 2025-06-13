@@ -1,5 +1,8 @@
 /// <reference types="jest" />
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 const mockExec = jest.fn(); // Moved to top
 
 // Remove unmocking since we've reorganized the structure
@@ -244,7 +247,7 @@ jest.mock("../projectManagement", () => {
 
 jest.mock("http", () => {
   const mockEventEmitter = () => {
-    const events: Record<string, Function[]> = {};
+    const events: Record<string, Array<(...args: unknown[]) => void>> = {};
     return {
       on: jest.fn((event, callback) => {
         events[event] = events[event] || [];
@@ -562,7 +565,7 @@ describe("Utils", () => {
         // Execute the callback with a mock response
         if (callback) {
           setTimeout(() => {
-            typeof callback === "function" && (callback as Function)(mockResEmitter);
+            typeof callback === "function" && (callback as (res: unknown) => void)(mockResEmitter);
 
             // Simulate data coming in
             if (mockResEmitter.listeners["data"]) mockResEmitter.listeners["data"]("Service Unavailable");
@@ -614,7 +617,7 @@ describe("Utils", () => {
         if (callback) {
           setTimeout(() => {
             if (typeof callback === "function") {
-              typeof callback === "function" && (callback as Function)(mockResEmitter);
+              typeof callback === "function" && (callback as (res: unknown) => void)(mockResEmitter);
             }
 
             // Simulate data coming in - invalid JSON

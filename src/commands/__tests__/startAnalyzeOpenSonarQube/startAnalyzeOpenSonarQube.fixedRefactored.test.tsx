@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
@@ -120,10 +119,6 @@ const startAnalyzeOpenSonarQube = jest.fn(async () => {
 });
 
 // Import after all mocks are set up
-import { getPreferenceValues, showToast, openExtensionPreferences } from "@raycast/api";
-import { useProjectLoader } from "../../../hooks/useProjectLoader";
-import { useSonarQubePath } from "../../../hooks/useSonarQubePath";
-import { useCommandSequencer } from "../../../hooks/useCommandSequencer";
 import Command from "../../../startAnalyzeOpenSonarQube";
 
 describe("startAnalyzeOpenSonarQube function", () => {

@@ -84,6 +84,8 @@ jest.mock("@raycast/api", () => ({
 }));
 
 // Mock console.error to prevent test output noise
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.spyOn(console, "error").mockImplementation(() => {});
 
 describe("i18n comprehensive tests", () => {

@@ -4,7 +4,7 @@
  * Provides English-only translation functionality as per Raycast Store guidelines
  */
 
-import { en, TranslationDictionary } from "./translations/index";
+import { en } from "./translations/index";
 
 // English only as per Raycast guidelines
 export type Language = "en";
@@ -36,13 +36,13 @@ export function t(key: string, params?: Record<string, string>): string {
     const keyParts = key.split(".");
 
     // Navigate the nested translation object
-    let current: any = translationObj;
+    let current: Record<string, unknown> = translationObj as Record<string, unknown>;
     for (const part of keyParts) {
       if (current && typeof current === "object" && part in current) {
-        current = current[part];
+        current = current[part] as Record<string, unknown>;
       } else {
         // Key not found in this language
-        current = null;
+        current = null as unknown as Record<string, unknown>;
         break;
       }
     }
@@ -52,6 +52,7 @@ export function t(key: string, params?: Record<string, string>): string {
 
       // Replace any parameters
       if (params) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         Object.entries(params).forEach(([key, value]) => {
           translated = translated.replace(new RegExp(`{{${key}}}`, "g"), value);
         });
@@ -59,13 +60,13 @@ export function t(key: string, params?: Record<string, string>): string {
     } else if (lang !== "en") {
       // Try English as fallback if not already using it
       const enTranslation = translations.en;
-      let fallback: any = enTranslation;
+      let fallback: Record<string, unknown> = enTranslation as Record<string, unknown>;
 
       for (const part of keyParts) {
         if (fallback && typeof fallback === "object" && part in fallback) {
-          fallback = fallback[part];
+          fallback = fallback[part] as Record<string, unknown>;
         } else {
-          fallback = null;
+          fallback = null as unknown as Record<string, unknown>;
           break;
         }
       }
@@ -75,6 +76,7 @@ export function t(key: string, params?: Record<string, string>): string {
 
         // Replace any parameters in the fallback
         if (params) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           Object.entries(params).forEach(([key, value]) => {
             translated = translated.replace(new RegExp(`{{${key}}}`, "g"), value);
           });

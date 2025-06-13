@@ -16,6 +16,8 @@ jest.mock("@raycast/api", () => ({
 }));
 
 // Mock React hooks
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const mockSetPathError = jest.fn();
 jest.mock("react", () => ({
   useState: jest.fn(() => [null, mockSetPathError]),

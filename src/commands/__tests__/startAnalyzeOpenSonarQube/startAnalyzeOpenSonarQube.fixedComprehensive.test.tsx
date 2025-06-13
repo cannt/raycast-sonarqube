@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
 import { render, act } from "@testing-library/react";
 import { StartAnalyzeOpenSonarQubeComponent } from "../../../lib/startAnalyzeOpenSonarQubeComponent";
 
@@ -25,7 +24,7 @@ interface SonarQubeStatusResponse {
   running: boolean;
   status: string;
   details?: string;
-  detailedResult?: Record<string, any>;
+  detailedResult?: Record<string, unknown>;
 }
 
 interface ProjectsListProps {
@@ -176,8 +175,6 @@ mockRunInNewTerminal.mockImplementation((commands: string[], successMsg: string,
 });
 
 // Import after all mocks are set up
-import { getPreferenceValues, showToast, Toast } from "@raycast/api";
-import { isSonarQubeRunning, runInNewTerminal } from "../../../utils";
 import { __ } from "../../../i18n";
 
 // Get the ProjectsList mock with our custom type

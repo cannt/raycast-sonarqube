@@ -3,6 +3,8 @@
  * Following the iterative test fixing workflow methodology
  * Fixed using direct module mocking approach
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // Create a trackable toast object to verify prop changes
 const toast = {

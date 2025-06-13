@@ -1,9 +1,6 @@
-import React from "react";
 import { render } from "@testing-library/react";
 import { ProjectsList } from "../../ProjectsList";
 import { __ } from "../../../i18n";
-import { ProjectEmptyState } from "../../ProjectEmptyState";
-import { ProjectListItem } from "../../ProjectListItem";
 
 // Mock the translation function
 jest.mock("../../../i18n", () => ({
@@ -24,6 +21,8 @@ jest.mock("../../ProjectListItem", () => ({
 }));
 
 // Mock the Raycast API components
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("@raycast/api", () => ({
   List: ({ isLoading, navigationTitle, searchBarPlaceholder, children }: any) => (
     <div data-testid="list" data-loading={isLoading}>

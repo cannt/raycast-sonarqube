@@ -5,6 +5,8 @@ import { isSonarQubeRunning, runCommand } from "../utils";
 import { getPreferenceValues, showToast, Toast } from "@raycast/api";
 
 // Mock dependencies
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn(),
   showToast: jest.fn().mockResolvedValue({ style: "", title: "", message: "" }),

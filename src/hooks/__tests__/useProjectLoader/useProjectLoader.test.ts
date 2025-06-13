@@ -7,6 +7,8 @@ jest.mock("../../../utils", () => ({
 }));
 
 // Mock the React hooks
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const mockSetProjects = jest.fn();
 const mockSetIsLoading = jest.fn();
 const mockSetError = jest.fn();

@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
 import { render, act } from "@testing-library/react";
 import { StartAnalyzeOpenSonarQubeComponent } from "../../../lib/startAnalyzeOpenSonarQubeComponent";
 
@@ -161,12 +160,7 @@ mockRunInNewTerminal.mockImplementation((commands: string[], successMsg: string,
 });
 
 // Import after all mocks are set up
-import { getPreferenceValues, showToast, Toast } from "@raycast/api";
-import { isSonarQubeRunning, runInNewTerminal } from "../../../utils";
 import { __ } from "../../../i18n";
-import { useProjectLoader } from "../../../hooks/useProjectLoader";
-import { useSonarQubePath } from "../../../hooks/useSonarQubePath";
-import { useCommandSequencer } from "../../../hooks/useCommandSequencer";
 
 // Get the ProjectsList mock with our custom type
 const ProjectsList = jest.requireMock("../../../components/ProjectsList").ProjectsList as ProjectsListMock;

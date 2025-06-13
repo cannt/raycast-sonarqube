@@ -2,6 +2,8 @@
  * Simplified working test for terminal utilities
  * Fixed with direct module mocking approach from the test-fixing-workflow
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // Create a toast object that will capture updates
 const mockToast = {
@@ -103,7 +105,9 @@ jest.spyOn(console, "error").mockImplementation(() => {});
 
 // Import after mocks are set up
 import { runCommand, getUserFriendlyErrorMessage } from "../terminal";
-import { Toast } from "@raycast/api";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { showToast, Toast } from "@raycast/api";
 
 describe("Terminal Utilities", () => {
   beforeEach(() => {

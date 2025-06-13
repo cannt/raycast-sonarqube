@@ -1,6 +1,10 @@
 // terminal.single-test.ts
 // A minimal test focusing on just the core functionality
 
+/// <reference types="jest" />
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // Mock the external modules BEFORE importing the module under test
 // These mock implementations need to be simple and direct
 jest.mock("@raycast/api", () => ({

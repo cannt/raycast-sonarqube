@@ -1,4 +1,3 @@
-import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { StartAnalyzeOpenSonarQubeComponent } from "../../../lib/startAnalyzeOpenSonarQubeComponent";
 
@@ -112,6 +111,8 @@ jest.mock("@raycast/api", () => ({
 }));
 
 // Extract the ProjectsList mock for easier reference
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const { ProjectsList } = jest.requireMock("../../../components/ProjectsList");
 
 describe("StartAnalyzeOpenSonarQubeComponent", () => {

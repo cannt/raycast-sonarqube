@@ -1,5 +1,3 @@
-import React from "react";
-
 export const getPreferenceValues: any;
 export const showToast: any;
 export const Toast: any;

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ProjectManager } from "./components/ProjectManager";
 
 /**

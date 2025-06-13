@@ -2,8 +2,6 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
-
 // Type definitions
 interface ToastConfig {
   style: string;

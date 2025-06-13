@@ -1,9 +1,11 @@
 /**
  * Working test for terminal utilities with improved mock technique
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // Import test utilities and mocks
-import { mockExecAsync, mockExecAsyncSuccess, mockExecAsyncFailure } from "../../testUtils/mocks/terminalMocks";
+import * as terminalMocks from "../../testUtils/mocks/terminalMocks";
 
 // Define interfaces
 interface ToastProps {
@@ -89,7 +91,7 @@ jest.mock("../terminal", () => {
 
       try {
         // Use our controlled mock to determine command outcome
-        const result = await mockExecAsync(command, options);
+        const result = await terminalMocks.mockExecAsync(command, options);
 
         if (result.stderr && !result.stderr.toLowerCase().includes("warning")) {
           toast.style = Toast.Style.Failure;
@@ -110,7 +112,7 @@ jest.mock("../terminal", () => {
       }
     },
     // Make execAsync available for tests that need it
-    execAsync: mockExecAsync,
+    execAsync: terminalMocks.mockExecAsync,
   };
 });
 
@@ -118,7 +120,7 @@ jest.mock("../terminal", () => {
 import { runCommand } from "../terminal";
 import { Toast, showToast } from "@raycast/api";
 
-describe("terminal utils", () => {
+describe("Terminal Utilities - Success Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -132,7 +134,7 @@ describe("terminal utils", () => {
   describe("runCommand", () => {
     test("shows initial animated toast", async () => {
       // Arrange
-      mockExecAsyncSuccess("Command output", "");
+      terminalMocks.mockExecAsyncSuccess("Command output", "");
 
       // Act
       await runCommand("test-command", "Success", "Failure");
@@ -148,7 +150,7 @@ describe("terminal utils", () => {
 
     test("updates toast to success when command succeeds", async () => {
       // Arrange
-      mockExecAsyncSuccess("Command output", "");
+      terminalMocks.mockExecAsyncSuccess("Command output", "");
 
       // Act
       await runCommand("test-command", "Success", "Failure");
@@ -161,7 +163,7 @@ describe("terminal utils", () => {
 
     test("updates toast to failure when command has error", async () => {
       // Arrange
-      mockExecAsyncSuccess("", "Command failed");
+      terminalMocks.mockExecAsyncSuccess("", "Command failed");
 
       // Act
       await runCommand("test-command", "Success", "Failure");
@@ -174,7 +176,7 @@ describe("terminal utils", () => {
 
     test("keeps success state when stderr only contains warnings", async () => {
       // Arrange
-      mockExecAsyncSuccess("Command output", "warning: This is just a warning");
+      terminalMocks.mockExecAsyncSuccess("Command output", "warning: This is just a warning");
 
       // Act
       await runCommand("test-command", "Success", "Failure");

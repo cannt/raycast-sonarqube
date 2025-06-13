@@ -58,6 +58,8 @@ jest.mock("@raycast/api", () => ({
 }));
 
 // Mock http.get
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("http", () => ({
   get: jest.fn(),
 }));
@@ -90,63 +92,27 @@ describe("Utils coverage improvements", () => {
   });
 
   describe("isSonarQubeRunning", () => {
-    // Type definitions for http mocks
-    type CallbackFn = (...args: any[]) => void;
-    interface MockResponse {
-      statusCode: number;
-      on: jest.Mock;
-    }
-    interface MockRequest {
-      on: jest.Mock;
-      destroy: jest.Mock;
-    }
+    // Mock the http.get function directly for our tests
+    (http.get as jest.Mock).mockImplementation((options: unknown, responseCallback: (res: unknown) => void) => {
+      // Mock response with status code 200
+      const mockResponse = {
+        statusCode: 200,
+        on: jest.fn().mockImplementation((event, callback) => {
+          if (event === "data") setTimeout(() => callback(JSON.stringify({ status: "UP" })), 10);
+          if (event === "end") setTimeout(callback, 20);
+          return mockResponse;
+        }),
+      };
 
-    // Create a simplified mock implementation for http.get
-    const mockHttpResponse = (statusCode: number, responseData: any, errorEvent?: string): void => {
-      // Force successful response after retries to avoid hanging tests
-      let callCount = 0;
+      // Call the callback with our mock response
+      setTimeout(() => responseCallback(mockResponse), 5);
 
-      // Mock the http.get function with retry simulation
-      (http.get as jest.Mock).mockImplementation((options, responseCallback) => {
-        callCount++;
-
-        // Create request mock with appropriate handlers
-        const mockRequest: MockRequest = {
-          on: jest.fn((event: string, callback: CallbackFn): MockRequest => {
-            // For error tests, only return error on first call, then succeed
-            // This simulates recovery after retry
-            if (event === errorEvent && callCount <= 1) {
-              setTimeout(() => callback(new Error(errorEvent)), 10);
-            }
-            return mockRequest;
-          }),
-          destroy: jest.fn(),
-        };
-
-        // Create response mock
-        const mockResponse: MockResponse = {
-          statusCode,
-          on: jest.fn((event: string, callback: CallbackFn): MockResponse => {
-            if (event === "data") {
-              setTimeout(() => {
-                callback(typeof responseData === "string" ? responseData : JSON.stringify(responseData));
-              }, 10);
-            } else if (event === "end") {
-              setTimeout(() => callback(), 15);
-            }
-            return mockResponse;
-          }),
-        };
-
-        // For first call with error event, don't call response callback
-        // For subsequent calls or non-error tests, simulate successful response
-        if (!(errorEvent && callCount <= 1)) {
-          setTimeout(() => responseCallback(mockResponse), 5);
-        }
-
-        return mockRequest;
-      });
-    };
+      // Return a mock request
+      return {
+        on: jest.fn().mockReturnThis(),
+        destroy: jest.fn(),
+      };
+    });
 
     it("should return true when SonarQube is up", async () => {
       // Override the mock for this specific test

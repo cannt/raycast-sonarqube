@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
@@ -134,8 +133,6 @@ const MockCommand = (props: any) => (
 );
 
 // Import after all mocks are set up
-import { getPreferenceValues, showToast, openExtensionPreferences, Toast } from "@raycast/api";
-import { isSonarQubeRunning, runInNewTerminal } from "../../../utils";
 import { __ } from "../../../i18n";
 
 describe("startAnalyzeOpenSonarQube comprehensive tests", () => {

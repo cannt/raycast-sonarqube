@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ActionPanel, Action, List, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { useProjectLoader } from "../../hooks/useProjectLoader";
 import { __ } from "../../i18n";

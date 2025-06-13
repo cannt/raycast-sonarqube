@@ -76,10 +76,6 @@ export async function isSonarQubeRunning(options?: {
   if (detailed) {
     const originalLastErrorString = String(lastError);
     const lowerLastError = originalLastErrorString.toLowerCase();
-    const charCodes = originalLastErrorString
-      .split("")
-      .map((c) => c.charCodeAt(0))
-      .join(",");
 
     // Direct check for the exact string, case-insensitive
     const isExactTimeoutString =

@@ -18,18 +18,13 @@ const mockToast = {
   get title() {
     return this._title;
   },
-  set message(value) {
+  set message(value: string) {
     this._message = value;
   },
-  get message() {
+  get message(): string {
     return this._message;
   },
 };
-
-// Create functions to check if properties were set to specific values
-const mockToastStyleCalledWith = (value: string) => mockToast._style === value;
-const mockToastTitleCalledWith = (value: string) => mockToast._title === value;
-const mockToastMessageCalledWith = (value: string) => mockToast._message === value;
 
 const mockShowToast = jest.fn().mockResolvedValue(mockToast);
 
@@ -117,9 +112,7 @@ jest.mock("../index", () => {
 });
 
 // Import modules after setting up mocks
-import { LocalStorage, showToast, Toast } from "@raycast/api";
-import { exec } from "child_process";
-import * as http from "http";
+import { LocalStorage } from "@raycast/api";
 
 // Import the utils module and its types
 import * as utils from "../index";
@@ -127,9 +120,6 @@ import { Project, generateId, saveProjects, loadProjects, isSonarQubeRunning } f
 
 // Define shorthand references for mocked dependencies
 const localStorageMock = LocalStorage as jest.Mocked<typeof LocalStorage>;
-const showToastMock = showToast as jest.Mock;
-const execMock = exec as unknown as jest.Mock;
-const httpGetMock = http.get as unknown as jest.Mock;
 
 // Reset mocks before each test
 beforeEach(() => {
@@ -146,6 +136,8 @@ describe("generateId", () => {
 });
 
 // Add a passing test for this module
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 describe("Utils module", () => {
   it("should be properly defined", () => {
     expect(utils).toBeDefined();

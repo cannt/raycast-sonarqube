@@ -1,5 +1,4 @@
-import { showToast, Toast, LocalStorage } from "@raycast/api";
-import * as http from "http";
+// Necessary imports will be added as needed
 
 // Mock the utils module directly
 jest.mock("../index", () => {
@@ -39,6 +38,8 @@ jest.mock("http", () => ({
 }));
 
 // Import utils file after mocks are set up
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { isSonarQubeRunning } from "../index";
 
 describe("utils.ts - additional branch coverage", () => {

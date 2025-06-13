@@ -32,6 +32,8 @@ interface MockHttpResponse {
 }
 
 // Define HTTP request interface for better type safety
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 interface MockHttpRequest {
   on: jest.Mock;
   end?: jest.Mock;

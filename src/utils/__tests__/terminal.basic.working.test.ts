@@ -3,7 +3,7 @@
  */
 
 // Import the test utilities
-import { mockExecAsync, mockExecAsyncSuccess } from "../../testUtils/mocks/terminalMocks";
+import { mockExecAsync } from "../../testUtils/mocks/terminalMocks";
 
 // Mock the Raycast API
 jest.mock("@raycast/api", () => {

@@ -26,6 +26,8 @@ import { stopSonarQubeLogic } from "../lib/sonarQubeStopper";
 import { runCommand } from "../utils";
 
 // Extract mocked functions
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const mockGetPreferenceValues = getPreferenceValues as jest.Mock;
 const mockShowToast = showToast as jest.Mock;
 const mockRunCommand = runCommand as jest.Mock;

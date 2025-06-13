@@ -1,4 +1,6 @@
 /// <reference types="jest" />
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { stopSonarQubeLogic as stopSonarQube } from "../../lib/sonarQubeStopper";
 

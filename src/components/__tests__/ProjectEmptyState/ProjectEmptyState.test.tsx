@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "@testing-library/react";
 import { ProjectEmptyState } from "../../ProjectEmptyState";
 import { __ } from "../../../i18n";
@@ -9,6 +8,8 @@ jest.mock("../../../i18n", () => ({
 }));
 
 // Mock the Raycast API components
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("@raycast/api", () => ({
   List: {
     EmptyView: ({ title, description, actions }: any) => (

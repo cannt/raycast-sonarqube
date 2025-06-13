@@ -1,7 +1,5 @@
 /// <reference types="jest" />
-import React from "react";
 import { render } from "@testing-library/react";
-import { getPreferenceValues } from "@raycast/api";
 
 // Mock the i18n module before importing useTranslation
 const mockTranslate = jest.fn((key: string, params?: Record<string, string>) => {
@@ -32,6 +30,8 @@ jest.mock("../index", () => ({
 import useTranslation from "../useTranslation";
 
 // Simple test component to test the hook
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 function TestComponent() {
   const { t, __, language } = useTranslation();
   return (

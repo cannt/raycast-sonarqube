@@ -1,5 +1,6 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { render } from "@testing-library/react";
 import Command from "../../../startAnalyzeOpenSonarQube";
 import { useProjectLoader } from "../../../hooks/useProjectLoader";
 import { useSonarQubePath } from "../../../hooks/useSonarQubePath";

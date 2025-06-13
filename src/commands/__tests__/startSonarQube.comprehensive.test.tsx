@@ -26,6 +26,8 @@ jest.mock("../../utils", () => ({
 }));
 
 // Mock i18n
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("../../i18n", () => ({
   __: jest.fn((key) => key),
 }));

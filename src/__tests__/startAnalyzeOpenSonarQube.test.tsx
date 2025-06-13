@@ -1,7 +1,6 @@
 /// <reference types="jest" />
 
-import React from "react";
-import { render, waitFor, act } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 // Create a toast tracking object for assertions
@@ -166,6 +165,8 @@ jest.mock("../i18n", () => ({
 }));
 
 // Import after all mocks are set up
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { StartAnalyzeOpenSonarQubeComponent } from "../lib/startAnalyzeOpenSonarQubeComponent";
 import { useProjectLoader } from "../hooks/useProjectLoader";
 

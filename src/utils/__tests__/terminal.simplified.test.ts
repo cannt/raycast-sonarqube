@@ -3,6 +3,9 @@
  * Fixed using direct module mocking approach from the test-fixing workflow
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // Create a mock toast object we can inspect in tests
 const mockToast = {
   // Properties to track toast state

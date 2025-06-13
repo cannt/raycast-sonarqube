@@ -1,4 +1,6 @@
 /// <reference types="node" />
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import ProjectForm from "../ProjectForm";
 

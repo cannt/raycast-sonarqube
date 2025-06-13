@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ["@raycast/eslint-config", "plugin:prettier/recommended"],
+  extends: ["@raycast/eslint-config", "plugin:prettier/recommended"]
 };

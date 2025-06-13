@@ -1,11 +1,11 @@
 import * as utils from "../index";
-import * as http from "http";
-import { EventEmitter } from "events";
 
 // Mock the http module
 jest.mock("http");
 
 // Mock the isSonarQubeRunning function directly
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("../index", () => {
   const originalModule = jest.requireActual("../index");
   return {

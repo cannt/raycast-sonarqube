@@ -1,8 +1,3 @@
-// Use the hook that contains the actual implementation logic
-import { useCommandSequencer } from "../../../hooks/useCommandSequencer";
-import { StartAnalyzeOpenSonarQubeComponent } from "../../../lib/startAnalyzeOpenSonarQubeComponent";
-import * as React from "react";
-
 // Create a mock function for our tests to interact with
 const performStartAnalyzeSequence = jest.fn().mockResolvedValue({});
 
@@ -38,6 +33,8 @@ jest.mock("@/utils", () => ({
 // This file is just to provide basic coverage for the startAnalyzeOpenSonarQube component
 // Since the component is complex and contains UI elements, we're taking a simplified approach
 // to improve coverage
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 describe("startAnalyzeOpenSonarQube basic coverage tests", () => {
   it("should be defined", () => {

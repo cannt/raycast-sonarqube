@@ -2,7 +2,7 @@
  * React hook for using translations in components
  * Simplified for English-only as per Raycast Store guidelines
  */
-import { t, getLanguage, __ } from "./index";
+import { t, __ } from "./index";
 
 /**
  * React hook to use translation in components

@@ -1,4 +1,4 @@
-import { showToast, Toast, LocalStorage } from "@raycast/api";
+import { showToast, Toast } from "@raycast/api";
 import * as child_process from "child_process";
 import * as http from "http";
 // Import directly from utils for the functions we'll test
@@ -9,7 +9,7 @@ jest.mock("../index", () => {
   const originalModule = jest.requireActual("../index");
   return {
     ...originalModule,
-    runCommand: jest.fn().mockImplementation(async (command, successMessage, failureMessage, options) => {
+    runCommand: jest.fn().mockImplementation(async () => {
       // We'll set the mock implementation in each test
       return Promise.resolve();
     }),
@@ -27,7 +27,7 @@ jest.mock("../index", () => {
 });
 
 // Get references to the mocked functions
-const { runCommand, runInNewTerminal, isSonarQubeRunning, execAsync, generateId, loadProjects, saveProjects } = utils;
+const { runCommand, isSonarQubeRunning, generateId } = utils;
 
 // Mock modules and functions
 jest.mock("@raycast/api", () => ({
@@ -212,6 +212,8 @@ describe("runCommand", () => {
 });
 
 // Note: runInNewTerminal tests have been moved to utils.terminal.test.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 describe("isSonarQubeRunning", () => {
   // Mock for successful HTTP response

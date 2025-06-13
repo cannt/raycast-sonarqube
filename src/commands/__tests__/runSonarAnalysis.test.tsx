@@ -262,6 +262,8 @@ import Command from "../../runSonarAnalysis";
 console.log("DEBUG ProjectForm default:", ProjectForm);
 
 // Navigation context for testing Raycast navigation
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 function NavigationTestWrapper({ children }: { children: React.ReactNode }) {
   const [stack, setStack] = useState<ReactNode[]>([]);
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { List, ActionPanel, Action, Icon } from "@raycast/api";
 import { __ } from "../i18n";
 

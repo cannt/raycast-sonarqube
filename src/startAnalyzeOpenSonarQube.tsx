@@ -1,4 +1,3 @@
-import * as React from "react";
 import { StartAnalyzeOpenSonarQubeComponent } from "./lib/startAnalyzeOpenSonarQubeComponent";
 
 /**

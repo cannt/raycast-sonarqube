@@ -3,6 +3,8 @@
 import { startSonarQubeLogic as startSonarQube } from "../../lib/sonarQubeStarter";
 
 // Mock i18n
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("../../i18n", () => ({
   __: jest.fn((key: string) => {
     // Map the keys used in the component to test-friendly values

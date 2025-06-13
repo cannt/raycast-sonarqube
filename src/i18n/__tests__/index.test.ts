@@ -8,7 +8,6 @@ jest.mock("@raycast/api", () => ({
 
 // Import translations for test validation
 import en from "../translations/en";
-import es from "../translations/es";
 
 // Don't mock the i18n module, we want to test the real implementation
 jest.unmock("../index");
@@ -18,6 +17,8 @@ import i18n from "../index";
 jest.spyOn(console, "error").mockImplementation(() => {});
 
 // Mock Intl.DateTimeFormat for system language detection tests
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const originalIntl = global.Intl;
 
 describe("i18n utils", () => {

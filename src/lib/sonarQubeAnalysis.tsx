@@ -10,10 +10,8 @@ import {
   confirmAlert,
   Keyboard,
 } from "@raycast/api";
-import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { Preferences, runInNewTerminal, Project, loadProjects, saveProjects, generateId } from "../utils";
-import * as path from "path"; // For path.basename
 import { __ } from "../i18n";
 import useTranslation from "../i18n/useTranslation";
 

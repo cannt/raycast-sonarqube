@@ -1,5 +1,5 @@
 import { Form, ActionPanel, Action, useNavigation } from "@raycast/api";
-import React, { useState } from "react";
+import { useState } from "react";
 import type { Project } from "../../utils/projectManagement";
 import { __ } from "../../i18n";
 

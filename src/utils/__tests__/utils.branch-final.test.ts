@@ -8,6 +8,8 @@ jest.mock("../index", () => {
 });
 
 // Import after mocking
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { isSonarQubeRunning } from "../index";
 
 describe("utils.ts final branch coverage", () => {

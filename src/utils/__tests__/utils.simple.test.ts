@@ -13,6 +13,8 @@ import {
 } from "../index";
 
 // Simple test to verify we can access exports
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 describe("Utils Simple Tests", () => {
   it("can access SONARQUBE_PROJECTS_STORAGE_KEY", () => {
     expect(SONARQUBE_PROJECTS_STORAGE_KEY).toBe("sonarqubeProjectsList");

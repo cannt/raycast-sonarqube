@@ -70,6 +70,8 @@ import { runInNewTerminal } from "../utils/terminal";
 import { getPreferenceValues, showToast, Toast } from "@raycast/api";
 
 // Test the terminal utilities
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 describe("SonarQube Analysis Terminal Commands", () => {
   beforeEach(() => {
     // Reset all mocks and state between tests

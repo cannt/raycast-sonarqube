@@ -36,6 +36,8 @@ jest.mock("../index", () => ({
 import { __ } from "../index";
 
 // Mock the preferences API
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 jest.mock("@raycast/api", () => ({
   getPreferenceValues: jest.fn().mockReturnValue({ language: "en" }),
 }));
