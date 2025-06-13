@@ -16,7 +16,7 @@ export function ProjectForm({ project, onSubmit }: ProjectFormProps) {
   // Handle navigation.pop safely - create a function to go back
   const goBack = () => {
     if ("pop" in navigation) {
-      // @ts-ignore - TypeScript doesn't recognize pop but it may exist at runtime
+      // @ts-expect-error - TypeScript doesn't recognize pop but it may exist at runtime
       navigation.pop();
     } else {
       // Fallback if pop doesn't exist

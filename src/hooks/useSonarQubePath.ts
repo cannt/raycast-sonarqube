@@ -9,7 +9,7 @@ const DEFAULT_SONARQUBE_PORT = "9000";
  * Extracts path resolution logic from the main component
  */
 export function useSonarQubePath() {
-  const [pathError, setPathError] = useState<Error | null>(null);
+  const [pathError] = useState<string | null>(null);
   const preferences = getPreferenceValues<Preferences>();
 
   /**
