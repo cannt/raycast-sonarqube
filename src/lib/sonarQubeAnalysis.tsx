@@ -12,7 +12,7 @@ import {
 } from "@raycast/api";
 import { useState, useEffect, useCallback } from "react";
 import { Preferences, runInNewTerminal, Project, loadProjects, saveProjects, generateId } from "../utils";
-import { __ } from "../i18n";
+// __ is imported via useTranslation below
 import useTranslation from "../i18n/useTranslation";
 
 import ProjectForm from "../components/ProjectForm";

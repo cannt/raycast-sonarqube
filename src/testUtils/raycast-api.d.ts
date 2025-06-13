@@ -20,23 +20,27 @@ declare module "@raycast/api" {
   };
 
   // Preferences API
-  export function getPreferenceValues<T = any>(): T;
+  export function getPreferenceValues<T = any /* eslint-disable-line @typescript-eslint/no-explicit-any */>(): T;
   export function openExtensionPreferences(): Promise<void>;
 
   // Navigation API
   export function open(target: string): Promise<void>;
-  export function useNavigation(): { push: (component: any) => void };
+  export function useNavigation(): {
+    push: (component: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => void;
+  };
 
   // UI Components
-  export const List: any;
-  export const ActionPanel: any;
-  export const Action: any;
-  export const Icon: any;
-  export const Form: any;
-  export const Keyboard: any;
+  export const List: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  export const ActionPanel: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  export const Action: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  export const Icon: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  export const Form: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
+  export const Keyboard: any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
 
   // Utilities
-  export function confirmAlert(options: any): Promise<boolean>;
+  export function confirmAlert(
+    options: any /* eslint-disable-line @typescript-eslint/no-explicit-any */,
+  ): Promise<boolean>;
   export const LocalStorage: {
     getItem(key: string): Promise<string | null>;
     setItem(key: string, value: string): Promise<void>;
