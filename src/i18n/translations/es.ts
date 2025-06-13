@@ -20,6 +20,22 @@ const translations = {
     back: "Atrás",
   },
 
+  ai: {
+    analyzing: "La IA está analizando los resultados de SonarQube...",
+    analysisComplete: "Análisis de IA Completo",
+    viewReport: "Ver el informe detallado de análisis de IA",
+    waitingForResults: "Esperando a que SonarQube procese los resultados...",
+    fetchingResults: "Obteniendo resultados del análisis de SonarQube...",
+    noResults: "No se encontraron resultados de análisis",
+    verifyCompletion: "Asegúrate de que el análisis de SonarQube se completó correctamente",
+    analysisFailed: "Error al analizar resultados con IA",
+    fixSuggestion: "Obtener Sugerencia de Corrección",
+    fixIssue: "Corregir Problema {{number}}",
+    aiSummary: "Análisis de IA para {{projectName}}",
+    openInSonarQube: "Abrir en SonarQube",
+    copyAnalysis: "Copiar Análisis de IA"
+  },
+  
   commands: {
     startSonarQube: {
       title: "Iniciar SonarQube",

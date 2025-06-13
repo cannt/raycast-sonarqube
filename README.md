@@ -193,9 +193,71 @@ Terminal interaction has been significantly enhanced:
             * `es` - Spanish
             * If not specified, the extension will attempt to use your system language.
 
+6.  **AI Features Setup:**
+    *   The extension now leverages Raycast AI for advanced analysis interpretation and code fix suggestions.
+    *   No additional configuration is needed for the AI features, as they are automatically enabled.
+    *   AI features work by analyzing the SonarQube analysis results from your configured SonarQube server.
+
 ## Usage
 
 Once configured, you can search for the commands in Raycast using English or Spanish terms (e.g., "Start SonarQube", "Iniciar SonarQube", "Analyze RFID", "Ejecutar Análisis RFID").
+
+## AI-Powered Features
+
+The extension now includes powerful AI capabilities to help you understand and fix code issues detected by SonarQube.
+
+### AI Analysis Interpretation
+
+After running a SonarQube analysis on your project, the extension will:
+
+1. Automatically fetch the analysis results from your SonarQube server
+2. Send the results to Raycast AI for intelligent interpretation
+3. Display a comprehensive analysis report with:
+   - A summary of the most critical issues
+   - Key quality metrics explained in plain language
+   - Prioritized list of issues that need attention
+
+### AI Code Fix Suggestions
+
+For each code issue detected by SonarQube, you can:
+
+1. Select the issue in the analysis results view
+2. Choose "Get Fix Suggestion" from the action menu
+3. Receive an AI-generated code fix with explanation of:
+   - What's causing the issue
+   - How the suggested fix resolves the problem
+   - Best practices to avoid similar issues in the future
+
+### Using AI Features
+
+1. Run an analysis on your project using the "Run Sonar Analysis" command
+2. Once the analysis completes, the extension will automatically display the AI analysis results
+3. Review the analysis summary and metrics to understand your code quality
+4. For specific issues, use the action menu to request AI fix suggestions
+5. Copy suggestions directly to your clipboard for easy implementation
+
+> Note: AI features require Raycast AI to be available on your Raycast installation. The extension respects your SonarQube server configuration and will use the same URL and authentication settings you've configured for analysis.
+
+### AI Features Screenshot Guide
+
+Here's what you can expect from the new AI-powered features:
+
+1. **Running Analysis with AI Integration**
+   ```
+   [Screenshot: The analysis running progress with "AI is analyzing your SonarQube results" message]
+   ```
+
+2. **AI Analysis Results View**
+   ```
+   [Screenshot: The AI analysis results screen showing summary, metrics, and issue list]
+   ```
+
+3. **Getting AI Fix Suggestions**
+   ```
+   [Screenshot: The action menu with "Get Fix Suggestion" option and resulting AI suggestion]
+   ```
+
+> Note: These placeholder screenshots should be replaced with actual screenshots once the feature is deployed and tested in production environments.
 
 ## Continuous Integration
 
@@ -265,6 +327,12 @@ We've organized our tests by component, making it easy to maintain and extend. Y
 
 - **Codecov Integration**: Adding Codecov to provide visual coverage reports and track changes over time
 - **Auto-releases**: Setting up automatic releases when version changes are detected
+
+### New AI-Powered Features (June 2025)
+
+- **AI Analysis Interpretation**: Quickly understand SonarQube analysis results with AI-generated summaries
+- **AI Code Fix Suggestions**: Get intelligent fix suggestions for code issues detected by SonarQube
+- **Interactive AI Tools**: Request AI explanations and fixes directly from the analysis results view
 
 *   **Enhanced SonarQube Status Detection (May 2025):**
     *   ✅ Intelligent status detection with detailed information about SonarQube state

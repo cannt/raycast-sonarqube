@@ -31,6 +31,22 @@ const translations = {
     progressTracking: "Progress: {{status}}",
   },
 
+  ai: {
+    analyzing: "AI is analyzing your SonarQube results...",
+    analysisComplete: "AI Analysis Complete",
+    viewReport: "View the detailed AI analysis report",
+    waitingForResults: "Waiting for SonarQube to process results...",
+    fetchingResults: "Fetching SonarQube analysis results...",
+    noResults: "No analysis results found",
+    verifyCompletion: "Make sure SonarQube analysis completed successfully",
+    analysisFailed: "Failed to analyze results with AI",
+    fixSuggestion: "Get Fix Suggestion",
+    fixIssue: "Fix Issue {{number}}",
+    aiSummary: "AI Analysis for {{projectName}}",
+    openInSonarQube: "Open in SonarQube",
+    copyAnalysis: "Copy AI Analysis"
+  },
+  
   commands: {
     startSonarQube: {
       title: "Start SonarQube",
