@@ -197,53 +197,6 @@ Terminal interaction has been significantly enhanced:
 
 Once configured, you can search for the commands in Raycast using English or Spanish terms (e.g., "Start SonarQube", "Iniciar SonarQube", "Analyze RFID", "Ejecutar Análisis RFID").
 
-## Testing & Development
-
-This extension includes a comprehensive test suite with near-complete coverage across all components, ensuring robust functionality and reliability:
-
-### Test Coverage (as of May 2025)
-
-```
--------------------------------------------|---------|----------|---------|---------|----------------------
-File                                       | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s    
--------------------------------------------|---------|----------|---------|---------|----------------------
-All files                                  |   94.85 |    89.34 |   94.12 |   94.87 |                      
- src                                       |   93.65 |    88.12 |   93.05 |   93.68 |                      
-  ProjectForm.tsx                          |     100 |      100 |     100 |     100 |                      
-  openSonarQubeApp.tsx                     |     100 |      100 |     100 |     100 |                      
-  runSonarAnalysis.tsx                     |   96.42 |    91.66 |   88.88 |   96.22 | 134,188              
-  startAnalyzeOpenSonarQube.refactored.tsx |     100 |    88.88 |     100 |     100 | 52                   
-  startSonarQube.tsx                       |     100 |      100 |     100 |     100 |                      
-  stopSonarQube.tsx                        |   94.44 |      100 |     100 |   94.44 | 39                   
-  utils.ts                                 |   86.53 |    71.64 |   94.73 |      86 | Various lines        
- src/components                            |     100 |      100 |     100 |     100 |                      
- src/hooks                                 |     100 |    88.23 |     100 |     100 |                      
- src/i18n                                  |   91.52 |       88 |   83.33 |   91.52 |                      
- src/i18n/translations                     |     100 |      100 |     100 |     100 |                      
--------------------------------------------|---------|----------|---------|---------|----------------------
-```
-
-### Key Testing Features
-
-- **Complete Utility Testing**: Core utilities and functions have 100% statement, branch, and function coverage
-- **UI Component Testing**: All UI components are thoroughly tested with **Jest** and **@testing-library/react**
-- **Mock Infrastructure**: Comprehensive mocks for Raycast API components, enabling accurate simulation of the extension environment
-- **Edge Case Coverage**: Error paths and edge cases are exhaustively tested
-- **Form Validation**: Complete validation testing for all user inputs and form interactions
-
-### Running Tests
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with coverage report
-npm test -- --coverage
-
-# Test a specific file
-npm test -- src/utils.test.ts
-```
-
 ## Continuous Integration
 
 We've set up GitHub Actions to handle our CI pipeline. Tests run automatically when we push changes to main or open a PR.
