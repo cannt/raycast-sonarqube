@@ -8,18 +8,17 @@ import {
   Icon,
   useNavigation,
   confirmAlert,
-  Keyboard
+  Keyboard,
 } from "@raycast/api";
 import { useState, useEffect, useCallback } from "react";
-import { 
-  Preferences, 
-  runInNewTerminal, 
-  Project, 
-  loadProjects, 
-  saveProjects, 
+import {
+  Preferences,
+  runInNewTerminal,
+  Project,
+  loadProjects,
+  saveProjects,
   generateId,
-  fetchSonarQubeResults, 
-  SonarQubeResults 
+  fetchSonarQubeResults,
 } from "../utils";
 // __ is imported via useTranslation below
 import useTranslation from "../i18n/useTranslation";
@@ -119,7 +118,7 @@ export function RunSonarAnalysisComponent() {
         targetOpenPath = `http://localhost:${port}`;
         serverUrl = targetOpenPath;
       }
-      
+
       // Run analysis commands in terminal
       const analysisCommands = [
         `cd "${projectPath}"`,
@@ -129,66 +128,62 @@ export function RunSonarAnalysisComponent() {
         `open "${targetOpenPath}"`,
         `echo "--- ${__("terminal.completed")} ---"`,
       ];
-      
+
       await runInNewTerminal(
         analysisCommands,
         __("commands.runSonarAnalysis.analysisSuccess"),
         __("commands.runSonarAnalysis.analysisError"),
         { trackProgress: true },
       );
-      
+
       // After analysis completes, fetch results and use AI to interpret them
       try {
         // Wait a bit for SonarQube to process results
         await showToast({
           style: Toast.Style.Animated,
-          title: __("Waiting for SonarQube to process results...")
+          title: __("Waiting for SonarQube to process results..."),
         });
-        
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        
+
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+
         // Extract project key from path (simple heuristic - might need to be adjusted)
         const projectKey = projectPath.split("/").pop() || projectName;
-        
+
         // Show toast while fetching results
         await showToast({
           style: Toast.Style.Animated,
-          title: __("Fetching SonarQube analysis results...")
+          title: __("Fetching SonarQube analysis results..."),
         });
-        
+
         // Fetch analysis results
         const results = await fetchSonarQubeResults(projectKey, serverUrl);
-        
+
         // If we successfully got results with issues or metrics
         if ((results.issues && results.issues.length > 0) || (results.metrics && results.metrics.length > 0)) {
           // Show AI is analyzing
           await showToast({
             style: Toast.Style.Animated,
-            title: __("AI is analyzing your SonarQube results...")
+            title: __("AI is analyzing your SonarQube results..."),
           });
-          
+
           // Get AI interpretation
           const interpretation = await interpretAnalysisResults(results);
-          
+
           // Show success toast
           await showToast({
             style: Toast.Style.Success,
             title: __("AI Analysis Complete"),
-            message: __("View the detailed AI analysis report")
+            message: __("View the detailed AI analysis report"),
           });
-          
+
           // Show results in a new view
-          push(<AnalysisResultsView 
-            results={results} 
-            interpretation={interpretation} 
-            projectName={projectName} 
-          />);
+          push(<AnalysisResultsView results={results} interpretation={interpretation} projectName={projectName} />);
         } else {
           // No results found
           await showToast({
             style: Toast.Style.Failure,
             title: __("No analysis results found"),
-            message: __("Make sure SonarQube analysis completed successfully")
+            message: __("Make sure SonarQube analysis completed successfully"),
           });
         }
       } catch (error) {
@@ -196,7 +191,7 @@ export function RunSonarAnalysisComponent() {
         await showToast({
           style: Toast.Style.Failure,
           title: __("Failed to analyze results with AI"),
-          message: error instanceof Error ? error.message : String(error)
+          message: error instanceof Error ? error.message : String(error),
         });
       }
     },

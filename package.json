@@ -7,7 +7,10 @@
   "icon": "sonarqube-icon.png",
   "author": "juan_angel_trujillo_jimenez",
   "license": "MIT",
-  "categories": ["Developer Tools", "Productivity"],
+  "categories": [
+    "Developer Tools",
+    "Productivity"
+  ],
   "repository": "https://github.com/cannt/raycast-sonarqube",
   "preferences": [
     {
@@ -53,7 +56,9 @@
   "commands": [
     {
       "name": "startSonarQube",
-      "source": { "file": "./src/startSonarQube.tsx" },
+      "source": {
+        "file": "./src/startSonarQube.tsx"
+      },
       "title": "Start Sonarqube",
       "description": "Starts the local SonarQube instance using Podman. Checks if SonarQube is already running and notifies the user if so. / Inicia la instancia local de SonarQube usando Podman. Verifica si SonarQube ya está en ejecución y notifica al usuario en ese caso.",
       "keywords": [
@@ -69,7 +74,9 @@
     },
     {
       "name": "stopSonarQube",
-      "source": { "file": "./src/stopSonarQube.tsx" },
+      "source": {
+        "file": "./src/stopSonarQube.tsx"
+      },
       "title": "Stop Sonarqube",
       "description": "Stops the local SonarQube instance and Podman machine. Attempts to stop ongoing Gradle tasks in any running projects.",
       "keywords": [
@@ -85,7 +92,9 @@
     },
     {
       "name": "openSonarQubeApp",
-      "source": { "file": "./src/openSonarQubeApp.tsx" },
+      "source": {
+        "file": "./src/openSonarQubeApp.tsx"
+      },
       "title": "Open Sonarqube",
       "description": "Opens the SonarQube application.",
       "keywords": [
@@ -103,7 +112,9 @@
     },
     {
       "name": "runSonarAnalysis",
-      "source": { "file": "./src/runSonarAnalysis.tsx" },
+      "source": {
+        "file": "./src/runSonarAnalysis.tsx"
+      },
       "title": "Run Sonarqube Analysis",
       "description": "Select a project to run SonarQube analysis and open the app. Manage projects from this command.",
       "keywords": [
@@ -121,7 +132,9 @@
     },
     {
       "name": "startAnalyzeOpenSonarQube",
-      "source": { "file": "./src/startAnalyzeOpenSonarQube.tsx" },
+      "source": {
+        "file": "./src/startAnalyzeOpenSonarQube.tsx"
+      },
       "title": "Start Sonarqube & Analyze Project",
       "description": "Starts SonarQube, then select a project to run analysis. Manage projects from this command.",
       "keywords": [
@@ -142,7 +155,9 @@
     },
     {
       "name": "projectManager",
-      "source": { "file": "./src/projectManager.tsx" },
+      "source": {
+        "file": "./src/projectManager.tsx"
+      },
       "title": "Manage Sonarqube Projects",
       "description": "Add, edit, or delete projects for SonarQube analysis. / Añadir, editar o eliminar proyectos para análisis de SonarQube.",
       "keywords": [
@@ -163,7 +178,7 @@
   "dependencies": {
     "@raycast/api": "^1.98.2",
     "child_process": "^1.0.2",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.7.0"
   },
   "capabilities": {
     "ai": true
@@ -182,6 +197,7 @@
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
     "@types/node": "~20.12.12",
+    "@types/node-fetch": "^2.6.12",
     "@types/testing-library__react": "^10.0.1",
     "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",

@@ -1,4 +1,4 @@
-import { Detail, ActionPanel, Action, Icon } from "@raycast/api";
+import { ActionPanel, Action, Icon, List } from "@raycast/api";
 import { useState } from "react";
 import { suggestCodeFixes } from "../lib/aiService";
 import { SonarQubeResults, SonarQubeIssue } from "../utils/sonarQubeResults";
@@ -16,7 +16,7 @@ export default function AnalysisResultsView({ results, interpretation, projectNa
   const [selectedIssue, setSelectedIssue] = useState<SonarQubeIssue | null>(null);
   const [suggestedFix, setSuggestedFix] = useState<string | null>(null);
   const [isLoadingFix, setIsLoadingFix] = useState(false);
-  
+
   /**
    * Fetches AI-generated fix suggestion for a specific issue
    */
@@ -32,69 +32,10 @@ export default function AnalysisResultsView({ results, interpretation, projectNa
       setIsLoadingFix(false);
     }
   };
-  
-  /**
-   * Formats the analysis results as markdown for display
-   */
-  const formatResults = () => {
-    // Get metric ratings for code quality
-    const getMetricValue = (metricKey: string): string => {
-      const metric = results.metrics.find(m => m.metric === metricKey);
-      return metric ? metric.value : "N/A";
-    };
 
-    // Initialize markdown content
-    let markdown = `# AI Analysis for ${projectName}\n\n`;
-    
-    // Add AI interpretation
-    markdown += "## Summary\n\n";
-    markdown += interpretation + "\n\n";
-    
-    // Add key metrics
-    markdown += "## Key Metrics\n\n";
-    if (results.metrics && results.metrics.length > 0) {
-      markdown += "| Metric | Value |\n";
-      markdown += "|--------|-------|\n";
-      markdown += `| Bugs | ${getMetricValue("bugs")} |\n`;
-      markdown += `| Vulnerabilities | ${getMetricValue("vulnerabilities")} |\n`;
-      markdown += `| Code Smells | ${getMetricValue("code_smells")} |\n`;
-      markdown += `| Coverage | ${getMetricValue("coverage")}% |\n`;
-      markdown += `| Duplicated Lines | ${getMetricValue("duplicated_lines_density")}% |\n`;
-      markdown += `| Reliability | ${formatRating(getMetricValue("reliability_rating"))} |\n`;
-      markdown += `| Security | ${formatRating(getMetricValue("security_rating"))} |\n`;
-      markdown += `| Maintainability | ${formatRating(getMetricValue("sqale_rating"))} |\n`;
-    } else {
-      markdown += "No metrics found.\n";
-    }
-    
-    // Add issues section
-    markdown += "\n## Issues\n\n";
-    if (results.issues && results.issues.length > 0) {
-      results.issues.slice(0, 10).forEach((issue, index) => {
-        markdown += `### Issue ${index + 1}: ${issue.message}\n\n`;
-        markdown += `- **Severity**: ${issue.severity}\n`;
-        markdown += `- **Type**: ${issue.type}\n`;
-        markdown += `- **File**: ${issue.component.split(':').pop()}\n`;
-        markdown += `- **Line**: ${issue.line || 'N/A'}\n\n`;
-      });
-      
-      if (results.issues.length > 10) {
-        markdown += `\n*...and ${results.issues.length - 10} more issues*\n`;
-      }
-    } else {
-      markdown += "No issues found. Great job!\n";
-    }
-    
-    // Add AI fix suggestion if available
-    if (selectedIssue && suggestedFix) {
-      markdown += "\n## AI Fix Suggestion\n\n";
-      markdown += `For issue: "${selectedIssue.message}"\n\n`;
-      markdown += "```\n" + suggestedFix + "\n```\n";
-    }
-    
-    return markdown;
-  };
-  
+  // Function removed: formatResults was previously used with the Detail component
+  // Now using List.Item.Detail components instead
+
   /**
    * Format SonarQube rating (1-5) as text description
    */
@@ -114,34 +55,113 @@ export default function AnalysisResultsView({ results, interpretation, projectNa
         return rating;
     }
   };
-  
+
   return (
-    <Detail
-      markdown={formatResults()}
-      actions={
-        <ActionPanel>
-          {results.issues && results.issues.length > 0 && (
-            <ActionPanel.Submenu title="Get Fix Suggestion" icon={Icon.Code}>
-              {results.issues.slice(0, 10).map((issue, index) => (
-                <Action
-                  key={index}
-                  title={`Fix Issue ${index + 1}`}
-                  icon={isLoadingFix ? Icon.Clock : Icon.Code}
-                  onAction={() => handleGetFixSuggestion(issue)}
-                />
-              ))}
-            </ActionPanel.Submenu>
-          )}
-          <Action.OpenInBrowser
-            title="Open in SonarQube"
-            url={`http://localhost:${9000}/dashboard?id=${results.projectKey}`}
-          />
-          <Action.CopyToClipboard
-            title="Copy AI Analysis"
-            content={interpretation}
-          />
-        </ActionPanel>
-      }
-    />
+    <List isLoading={isLoadingFix} searchBarPlaceholder="Search issues...">
+      {/* AI Analysis Summary Section */}
+      <List.Section title="AI Analysis Summary">
+        <List.Item
+          title="Analysis Summary"
+          detail={<List.Item.Detail markdown={interpretation} />}
+          actions={
+            <ActionPanel>
+              <Action.CopyToClipboard title="Copy AI Analysis" content={interpretation} />
+              <Action.OpenInBrowser
+                title="Open in Sonarqube"
+                url={`http://localhost:9000/dashboard?id=${projectName}`}
+              />
+            </ActionPanel>
+          }
+        />
+      </List.Section>
+
+      {/* Key Metrics Section */}
+      <List.Section title="Key Metrics">
+        {results.metrics &&
+          [
+            { key: "bugs", label: "Bugs" },
+            { key: "vulnerabilities", label: "Vulnerabilities" },
+            { key: "code_smells", label: "Code Smells" },
+            { key: "coverage", label: "Coverage", suffix: "%" },
+            { key: "duplicated_lines_density", label: "Duplicated Lines", suffix: "%" },
+            { key: "reliability_rating", label: "Reliability Rating", format: formatRating },
+            { key: "security_rating", label: "Security Rating", format: formatRating },
+            { key: "sqale_rating", label: "Maintainability Rating", format: formatRating },
+          ].map((metric) => {
+            const value = results.metrics.find((m) => m.metric === metric.key);
+            const displayValue = metric.format
+              ? metric.format(value?.value?.toString() || "N/A")
+              : `${value?.value || "N/A"}${metric.suffix || ""}`;
+
+            return (
+              <List.Item
+                key={metric.key}
+                title={metric.label}
+                accessoryTitle={displayValue}
+                icon={
+                  metric.key.includes("rating")
+                    ? displayValue.includes("A")
+                      ? Icon.CircleProgress100
+                      : displayValue.includes("B")
+                        ? Icon.CircleProgress75
+                        : displayValue.includes("C")
+                          ? Icon.CircleProgress50
+                          : displayValue.includes("D")
+                            ? Icon.CircleProgress25
+                            : Icon.ExclamationMark
+                    : undefined
+                }
+              />
+            );
+          })}
+      </List.Section>
+
+      {/* Issues Section */}
+      <List.Section title="Issues">
+        {results.issues && results.issues.length > 0 ? (
+          results.issues.slice(0, 10).map((issue, index) => (
+            <List.Item
+              key={index}
+              title={`${issue.severity}: ${issue.message}`}
+              subtitle={`${issue.component.split(":").pop()} (Line ${issue.line || "N/A"})`}
+              icon={
+                issue.severity === "CRITICAL"
+                  ? Icon.ExclamationMark
+                  : issue.severity === "BLOCKER"
+                    ? Icon.Stop
+                    : issue.severity === "MAJOR"
+                      ? Icon.Warning
+                      : Icon.Information
+              }
+              actions={
+                <ActionPanel>
+                  <Action
+                    title="Get Fix Suggestion"
+                    icon={isLoadingFix ? Icon.Clock : Icon.Code}
+                    onAction={() => handleGetFixSuggestion(issue)}
+                  />
+                </ActionPanel>
+              }
+              detail={
+                selectedIssue === issue && suggestedFix ? (
+                  <List.Item.Detail
+                    markdown={`## AI Fix Suggestion
+
+For issue: "${issue.message}"
+
+\`\`\`
+${suggestedFix}
+\`\`\`
+`}
+                  />
+                ) : undefined
+              }
+            />
+          ))
+        ) : (
+          <List.Item title="No issues found" subtitle="Great job!" icon={Icon.Checkmark} />
+        )}
+      </List.Section>
+    </List>
   );
 }

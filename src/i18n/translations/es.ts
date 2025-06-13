@@ -33,9 +33,9 @@ const translations = {
     fixIssue: "Corregir Problema {{number}}",
     aiSummary: "Análisis de IA para {{projectName}}",
     openInSonarQube: "Abrir en SonarQube",
-    copyAnalysis: "Copiar Análisis de IA"
+    copyAnalysis: "Copiar Análisis de IA",
   },
-  
+
   commands: {
     startSonarQube: {
       title: "Iniciar SonarQube",

@@ -8,14 +8,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 type ExtensionPreferences = {
-  /** SonarQube Podman Directory - Directory containing Podman setup for SonarQube. / Directorio con la configuración de Podman para SonarQube. */
+  /** SonarQube Podman Directory - Directory containing Podman setup for SonarQube. */
   "sonarqubePodmanDir": string,
-  /** SonarQube App Path (Optional) - Optional path to a SonarQube application. If specified, this app will be opened instead of the URL. Leave blank to use the URL. / Ruta opcional a la aplicación de SonarQube. Si se especifica, esta aplicación se abrirá en lugar de la URL. Dejar en blanco para usar la URL. */
+  /** SonarQube App Path (Optional) - Optional path to a SonarQube application. If specified, this app will be opened instead of the URL. Leave blank to use the URL. */
   "sonarqubeAppPath"?: string,
-  /** SonarQube Port (Optional) - Custom port for SonarQube. Default is 9000. Only used when no app path is specified. / Puerto personalizado para SonarQube. El valor predeterminado es 9000. Solo se usa cuando no se especifica una ruta de aplicación. */
+  /** SonarQube Port (Optional) - Custom port for SonarQube. Default is 9000. Only used when no app path is specified. */
   "sonarqubePort": string,
-  /** Language / Idioma - Interface language for the extension. If set to 'Auto-detect', will try to use your system language. / Idioma de la interfaz para la extensión. Si se establece en 'Detección automática', se intentará usar el idioma del sistema. */
-  "language": "auto" | "en" | "es"
+  /** Language - Interface language for the extension (currently only English is fully supported). */
+  "language": "en"
 }
 
 /** Preferences accessible in all the extension's commands */

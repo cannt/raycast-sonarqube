@@ -36,25 +36,25 @@ export interface SonarQubeResults {
  * @returns Object containing issues and metrics data
  */
 export async function fetchSonarQubeResults(
-  projectKey: string, 
-  serverUrl: string = "http://localhost:9000"
+  projectKey: string,
+  serverUrl: string = "http://localhost:9000",
 ): Promise<SonarQubeResults> {
   try {
     // Extract project key from path if needed (simple heuristic)
     // This may need to be adjusted based on how project keys are actually structured in your environment
     const simplifiedProjectKey = projectKey.split("/").pop() || projectKey;
-    
+
     // Fetch issues
     const issuesResponse = await fetch(
-      `${serverUrl}/api/issues/search?projectKeys=${simplifiedProjectKey}&resolved=false`
+      `${serverUrl}/api/issues/search?projectKeys=${simplifiedProjectKey}&resolved=false`,
     );
-    
+
     if (!issuesResponse.ok) {
       throw new Error(`Error fetching issues: ${issuesResponse.statusText}`);
     }
-    
+
     const issuesData = await issuesResponse.json();
-    
+
     // Fetch metrics
     const keyMetrics = [
       "bugs",
@@ -64,38 +64,38 @@ export async function fetchSonarQubeResults(
       "duplicated_lines_density",
       "security_rating",
       "reliability_rating",
-      "sqale_rating"
+      "sqale_rating",
     ].join(",");
-    
+
     const metricsResponse = await fetch(
-      `${serverUrl}/api/measures/component?component=${simplifiedProjectKey}&metricKeys=${keyMetrics}`
+      `${serverUrl}/api/measures/component?component=${simplifiedProjectKey}&metricKeys=${keyMetrics}`,
     );
-    
+
     if (!metricsResponse.ok) {
       throw new Error(`Error fetching metrics: ${metricsResponse.statusText}`);
     }
-    
+
     const metricsData = await metricsResponse.json();
-    
+
     return {
       issues: issuesData.issues || [],
       metrics: metricsData.component?.measures || [],
-      projectKey: simplifiedProjectKey
+      projectKey: simplifiedProjectKey,
     };
   } catch (error) {
     console.error("Error fetching SonarQube results:", error);
-    
+
     await showToast({
       style: Toast.Style.Failure,
       title: "Failed to fetch SonarQube results",
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     });
-    
+
     // Return empty results on error
     return {
       issues: [],
       metrics: [],
-      projectKey
+      projectKey,
     };
   }
 }
