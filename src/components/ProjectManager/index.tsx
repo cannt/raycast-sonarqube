@@ -56,11 +56,7 @@ export function ProjectManager() {
           icon={Icon.Warning}
           actions={
             <ActionPanel>
-              <Action
-                title={__("common.retry")}
-                onAction={() => refreshProjects()}
-                icon={Icon.RotateClockwise}
-              />
+              <Action title={__("common.retry")} onAction={() => refreshProjects()} icon={Icon.RotateClockwise} />
             </ActionPanel>
           }
         />
@@ -100,10 +96,7 @@ export function ProjectManager() {
   };
 
   return (
-    <List
-      isLoading={isLoading}
-      searchBarPlaceholder={__("commands.runSonarAnalysis.searchPlaceholder")}
-    >
+    <List isLoading={isLoading} searchBarPlaceholder={__("commands.runSonarAnalysis.searchPlaceholder")}>
       {/* Projects section */}
       <List.Section title={__("projects.management.title")}>
         {projects.length > 0 ? (
@@ -159,4 +152,3 @@ export function ProjectManager() {
     </List>
   );
 }
-
