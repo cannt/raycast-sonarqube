@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ActionPanel, Action, List, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { useProjectLoader } from "../../hooks/useProjectLoader";
 import { __ } from "../../i18n";
@@ -8,8 +7,7 @@ import { Project, saveProject, deleteProject } from "../../utils/projectManageme
  * ProjectManager - Component for managing SonarQube projects
  */
 export function ProjectManager() {
-  const { projects, isLoading, error } = useProjectLoader();
-  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+  const { projects, isLoading, error, refreshProjects } = useProjectLoader();
   const navigation = useNavigation();
 
   // Function to handle project save
@@ -25,7 +23,7 @@ export function ProjectManager() {
         title: __("projects.form.saveSuccess"),
       });
       // Trigger refresh of project list
-      setRefreshTrigger((prev) => prev + 1);
+      refreshProjects();
     } catch (err) {
       showToast({
         style: Toast.Style.Failure,
@@ -44,7 +42,7 @@ export function ProjectManager() {
         title: __("projects.form.deleteSuccess"),
       });
       // Trigger refresh of project list
-      setRefreshTrigger((prev) => prev + 1);
+      refreshProjects();
     } catch (err) {
       showToast({
         style: Toast.Style.Failure,
@@ -66,7 +64,7 @@ export function ProjectManager() {
             <ActionPanel>
               <Action
                 title={__("common.retry")}
-                onAction={() => setRefreshTrigger((prev) => prev + 1)}
+                onAction={() => refreshProjects()}
                 icon={Icon.RotateClockwise}
               />
             </ActionPanel>
@@ -81,8 +79,8 @@ export function ProjectManager() {
     const FormWrapper = () => {
       const handleSubmit = (values: { name: string; path: string }) => {
         handleSaveProject(values);
-        // Refresh trigger will cause component to reload with new data
-        setRefreshTrigger((prev) => prev + 1);
+        // Refresh projects to reload data
+        refreshProjects();
       };
 
       return <ProjectForm onSubmit={handleSubmit} />;
@@ -97,8 +95,8 @@ export function ProjectManager() {
     const FormWrapper = () => {
       const handleSubmit = (values: { name: string; path: string }) => {
         handleSaveProject(values, project.id);
-        // Refresh trigger will cause component to reload with new data
-        setRefreshTrigger((prev) => prev + 1);
+        // Refresh projects to reload data
+        refreshProjects();
       };
 
       return <ProjectForm project={project} onSubmit={handleSubmit} />;
@@ -111,8 +109,6 @@ export function ProjectManager() {
     <List
       isLoading={isLoading}
       searchBarPlaceholder={__("commands.runSonarAnalysis.searchPlaceholder")}
-      // Force refresh when the trigger changes
-      key={`project-list-${refreshTrigger}`}
     >
       {/* Projects section */}
       <List.Section title={__("projects.management.title")}>
