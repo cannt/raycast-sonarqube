@@ -1,7 +1,9 @@
 import { ActionPanel, Action, List, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useProjectLoader } from "../../hooks/useProjectLoader";
 import { __ } from "../../i18n";
 import { Project, saveProject, deleteProject } from "../../utils/projectManagement";
+import { ProjectForm } from "../ProjectForm";
 
 /**
  * ProjectManager - Component for managing SonarQube projects
@@ -25,11 +27,7 @@ export function ProjectManager() {
       // Trigger refresh of project list
       refreshProjects();
     } catch (err) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: __("projects.form.saveError"),
-        message: String(err),
-      });
+      showFailureToast(err, { title: __("projects.form.saveError") });
     }
   };
 
@@ -44,11 +42,7 @@ export function ProjectManager() {
       // Trigger refresh of project list
       refreshProjects();
     } catch (err) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: __("projects.form.deleteError"),
-        message: String(err),
-      });
+      showFailureToast(err, { title: __("projects.form.deleteError") });
     }
   };
 
@@ -166,5 +160,3 @@ export function ProjectManager() {
   );
 }
 
-// Import ProjectForm component
-import { ProjectForm } from "../ProjectForm";
